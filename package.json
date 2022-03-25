@@ -1,0 +1,22 @@
+{
+  "name": "dolinq",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "newta",
+  "license": "MIT",
+  "scripts": {
+    "start": "node ./build/index.js",
+    "build": "tsc -p .",
+    "dev": "nodemon --files ./src/index.ts",
+    "lint": "yarn eslint . --ext .ts"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.23",
+    "@typescript-eslint/eslint-plugin": "^5.16.0",
+    "@typescript-eslint/parser": "^5.16.0",
+    "eslint": "^8.11.0",
+    "nodemon": "^2.0.15",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.3"
+  }
+}
