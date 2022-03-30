@@ -12,12 +12,89 @@
         "ecmaVersion": "latest",
         "sourceType": "module",
         "project": "./tsconfig.json"
-
     },
     "plugins": [
         "@typescript-eslint"
     ],
     "rules": {
-        "require-await": "warn"
-    }
+        "require-await": "warn",
+        "no-debugger": "off",
+        "no-alert": "off",
+        "no-await-in-loop": "off",
+        "no-return-assign": [
+            "error",
+            "except-parens"
+        ],
+        "no-restricted-syntax": [
+            "error",
+            "ForInStatement",
+            "LabeledStatement",
+            "WithStatement"
+        ],
+        "no-unused-vars": [
+            "warn",
+            {
+                "ignoreRestSiblings": true,
+                "argsIgnorePattern": "res|next|^err"
+            }
+        ],
+        "prefer-const": [
+            "warn",
+            {
+                "destructuring": "all"
+            }
+        ],
+        "arrow-body-style": [
+            "warn",
+            "as-needed"
+        ],
+        "no-unused-expressions": [
+            "error",
+            {
+                "allowTaggedTemplates": true
+            }
+        ],
+        "no-param-reassign": [
+            "error",
+            {
+                "props": false
+            }
+        ],
+        "no-console": "off",
+        "import/prefer-default-export": "off",
+        "import": "off",
+        "func-names": "off",
+        "space-before-function-paren": "off",
+        "comma-dangle": "off",
+        "max-len": "off",
+        "import/extensions": "off",
+        "no-underscore-dangle": "off",
+        "consistent-return": "off",
+        "radix": "off",
+        "no-shadow": [
+            "error",
+            {
+                "hoist": "all",
+                "allow": [
+                    "resolve",
+                    "reject",
+                    "done",
+                    "next",
+                    "err",
+                    "error"
+                ]
+            }
+        ],
+        "quotes": [
+            "warn",
+            "single",
+            {
+                "avoidEscape": true,
+                "allowTemplateLiterals": true
+            }
+        ]
+    },
+    "ignorePatterns": [
+        "build/*"
+    ]
 }
