@@ -1,13 +1,13 @@
 import { Router, Request, Response } from 'express';
 import App from '../app';
-import { AppKeys } from '../config/keys/keys';
+import { AppKeys } from '../config/keys/app_keys';
 
-export default interface BaseRouter {
+export default interface I_BaseRouter {
   path: string;
   router: Router;
 }
 
-export class InitialRouter implements BaseRouter {
+export class InitialRouter implements I_BaseRouter {
   constructor() {
     this.router = Router();
     this.initRoutes();

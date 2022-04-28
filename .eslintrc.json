@@ -31,13 +31,6 @@
             "LabeledStatement",
             "WithStatement"
         ],
-        "no-unused-vars": [
-            "warn",
-            {
-                "ignoreRestSiblings": true,
-                "argsIgnorePattern": "res|next|^err"
-            }
-        ],
         "prefer-const": [
             "warn",
             {
@@ -61,6 +54,7 @@
             }
         ],
         "no-console": "off",
+        "no-unused-vars": "off",
         "import/prefer-default-export": "off",
         "import": "off",
         "func-names": "off",
@@ -83,6 +77,17 @@
                     "err",
                     "error"
                 ]
+            }
+        ],
+        "@typescript-eslint/naming-convention": [
+            "warn",
+            {
+                "selector": "interface",
+                "format": [],
+                "custom": {
+                    "regex": "^I_[A-Z]",
+                    "match": true
+                }
             }
         ],
         "quotes": [

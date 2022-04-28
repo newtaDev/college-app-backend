@@ -49,6 +49,7 @@ class App {
 
   private initialiseErrorHandling(): void {
     //TODO
+    // this.express.use(routeNotFoundMiddleware);
     // this.express.use(errorMiddleware);
   }
 
