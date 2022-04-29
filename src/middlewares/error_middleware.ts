@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import { RouteNotFoundException } from '../utils/exceptions/exceptions';
 import { ExceptionsOnErrorMiddleware } from '../utils/interfaces/@types/common';
 import {
   I_ResFailure,
@@ -23,7 +22,10 @@ export function errorMiddleware(
       path: _errorStack?.at(1)?.split('src').at(-1)?.split(')').at(0),
     },
   };
-  if (error.constructor === RouteNotFoundException) {
+  // if (error.constructor === RouteNotFoundException) { // also works
+
+  //check if err obj has any property or methords named as routeInfo
+  if ('routeInfo' in error) {
     _error = { ..._error, routeInfo: error.routeInfo };
   }
   res.status(error.statuscode).send(_error);
