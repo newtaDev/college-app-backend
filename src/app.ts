@@ -1,6 +1,8 @@
 import express, { Application } from 'express';
 import mongoose from 'mongoose';
-
+import morgan from 'morgan';
+import { errorMiddleware } from './middlewares/error_middleware';
+import { routeNotFoundMiddleware } from './middlewares/route_not_found_middleware';
 import BaseRouter, { InitialRouter } from './routers/router';
 // import errorMiddleware from './middlewares/error_middleware';
 
@@ -33,6 +35,7 @@ class App {
 
   private initialiseMiddlewares() {
     this.express.use(express.json());
+    this.express.use(morgan('dev'));
     this.express.use(express.urlencoded({ extended: false }));
     //TODO
   }
@@ -49,8 +52,8 @@ class App {
 
   private initialiseErrorHandling(): void {
     //TODO
-    // this.express.use(routeNotFoundMiddleware);
-    // this.express.use(errorMiddleware);
+    this.express.use(routeNotFoundMiddleware);
+    this.express.use(errorMiddleware);
   }
 
   private initialiseDatabaseConnection(mongoUri: string): void {
