@@ -15,11 +15,11 @@ export class InitialRouter implements I_BaseRouter {
   path = '/';
   router: Router;
   private initRoutes(): void {
-    // return all the routes use in `APP`
+    // display all the routes use in `APP`
     this.router.get(this.path, (req: Request, res: Response) => {
       const paths: string[] = [];
-      App.routers.forEach(ctr => {
-        paths.push(ctr.path);
+      App.routers.forEach(route => {
+        paths.push(route.path);
       });
       res.send({
         enviroment: AppKeys.env,

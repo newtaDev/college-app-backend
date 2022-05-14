@@ -8,9 +8,8 @@ import BaseRouter, { InitialRouter } from './routers/router';
 
 class App {
   public express: Application;
-  /*   3000  */
   public port: number;
-  /*   /v1  */
+  // @default: /v1
   public version: string;
   static routers: BaseRouter[];
   constructor({
@@ -21,12 +20,12 @@ class App {
   }: {
     appRouters: BaseRouter[];
     port: number;
-    version: string;
+    version?: string;
     mongoUri: string;
   }) {
     this.express = express();
     this.port = port;
-    this.version = version;
+    this.version = version ?? '/v1';
     this.initialiseDatabaseConnection(mongoUri);
     this.initialiseMiddlewares();
     this.initialiseControllers(appRouters);
@@ -64,7 +63,7 @@ class App {
 
   public listen(): void {
     this.express.listen(this.port, () => {
-      console.log(`App listening on the port  http://localhost:${this.port}`);
+      console.log(`App listening to http://localhost:${this.port}`);
     });
   }
 }
