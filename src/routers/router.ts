@@ -15,20 +15,29 @@ export class InitialRouter implements I_BaseRouter {
   path = '/';
   router: Router;
   private initRoutes(): void {
-    // display all the routes use in `APP`
-    this.router.get(this.path, (req: Request, res: Response) => {
+    // welcome
+    this.router.get('/', (req: Request, res: Response) => {
+      res.send('Welcome to our API');
+    });
+    // Check health
+    this.router.get('/health', (req: Request, res: Response) => {
+      res.status(200).send({
+        status: 'Healthy',
+      });
+    });
+    this.router.get('/info', (req: Request, res: Response) => {
+      // Get all main routes in the api
       const paths: string[] = [];
       App.routers.forEach(route => {
         paths.push(route.path);
       });
       res.send({
+        status: 'Healthy',
+        name: 'Express Typescript Template',
+        version: AppKeys.app_version,
         enviroment: AppKeys.env,
         routes: paths,
       });
     });
-
-    this.router.get('/health', (req: Request, res: Response) =>
-      res.sendStatus(200)
-    );
   }
 }

@@ -41,12 +41,12 @@ class App {
 
   private initialiseControllers(routers: BaseRouter[]): void {
     App.routers = routers;
-    // Initial route
+    // Initial route config
     this.express.use('/', new InitialRouter().router);
-    // Other routs
-    routers.forEach((controller: BaseRouter) => {
-      this.express.use(`/api${this.version}`, controller.router);
-    });
+    // Other routes config
+    for (const router of routers) {
+      this.express.use(`/api${this.version}`, router.router);
+    }
   }
 
   private initialiseErrorHandling(): void {

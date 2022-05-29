@@ -1,16 +1,13 @@
 import { _Secrets } from './secrets';
 
 export class AppKeys {
-  private static _mongo_uri = `mongodb+srv://${_Secrets.MONGO_USERNAME}:${_Secrets.MONGO_PASSWORD}@cluster0.vhi4o.mongodb.net`;
+  static jwt_access_key = `pre_encoder_access_token${_Secrets.JWT_ACCESS_KEY}`;
+  static jwt_refresh_key = `pre_encoder_refresh_token${_Secrets.JWT_ACCESS_KEY}`;
+  static port = process.env.PORT;
+  static env = process.env.NODE_ENV;
+  static app_version = 'v1';
 
+  private static _mongo_uri = `mongodb+srv://${_Secrets.MONGO_USERNAME}:${_Secrets.MONGO_PASSWORD}@cluster0.vhi4o.mongodb.net`;
   static db_conn_str = (db: string): string =>
     `${this._mongo_uri}/${db}?retryWrites=true&w=majority`;
-
-  static jwt_access_key = `pre_encoder_access_token${_Secrets.JWT_ACCESS_KEY}`;
-
-  static jwt_refresh_key = `pre_encoder_refresh_token${_Secrets.JWT_ACCESS_KEY}`;
-
-  static port = process.env.PORT;
-
-  static env = process.env.NODE_ENV;
 }
