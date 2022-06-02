@@ -6,6 +6,7 @@ export class AppKeys {
   static port = process.env.PORT;
   static env = process.env.NODE_ENV;
   static app_version = 'v1';
+  static app_name = 'Express Typescript Template';
 
   private static _mongo_uri = `mongodb+srv://${_Secrets.MONGO_USERNAME}:${_Secrets.MONGO_PASSWORD}@cluster0.vhi4o.mongodb.net`;
   static db_conn_str = (db: string): string =>

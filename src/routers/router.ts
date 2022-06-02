@@ -22,7 +22,8 @@ export class InitialRouter implements I_BaseRouter {
     // Check health
     this.router.get('/health', (req: Request, res: Response) => {
       res.status(200).send({
-        status: 'Healthy',
+        status: 'OK',
+        upTime: process.uptime(),
       });
     });
     this.router.get('/info', (req: Request, res: Response) => {
@@ -32,9 +33,10 @@ export class InitialRouter implements I_BaseRouter {
         paths.push(route.path);
       });
       res.send({
-        status: 'Healthy',
-        name: 'Express Typescript Template',
-        version: AppKeys.app_version,
+        status: 'OK',
+        name: AppKeys.app_name,
+        app_version: AppKeys.app_version,
+        node_version: process.version,
         enviroment: AppKeys.env,
         routes: paths,
       });

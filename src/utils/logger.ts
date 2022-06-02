@@ -1,5 +1,5 @@
 import { createLogger, format, Logger, transports } from 'winston';
-import { AppKeys } from './keys/app_keys';
+import { AppKeys } from '../config/keys/app_keys';
 
 const prodLogger= () =>
   createLogger({
