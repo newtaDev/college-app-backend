@@ -12,7 +12,7 @@ interface I_ApiErrorRes {
   message: string;
   devMsg: string;
   statuscode: number;
-  errorStack?: string | unknown;
+  errorStack?: ErrorStack | unknown;
 }
 
 interface I_RouteNotFound extends I_ApiErrorRes {

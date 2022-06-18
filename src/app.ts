@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import { errorMiddleware } from './middlewares/error_middleware';
 import { routeNotFoundMiddleware } from './middlewares/route_not_found_middleware';
 import BaseRouter, { InitialRouter } from './routers/router';
+import logger from './utils/logger';
 // import errorMiddleware from './middlewares/error_middleware';
 
 class App {
@@ -54,11 +55,14 @@ class App {
     this.express.use(routeNotFoundMiddleware);
     this.express.use(errorMiddleware);
   }
-
-  private initialiseDatabaseConnection(mongoUri: string): void {
+   async initialiseDatabaseConnection(mongoUri: string): Promise<void> {
     // const { MONGO_USER, MONGO_PASSWORD, MONGO_PATH } = process.env;
-
-    mongoose.connect(mongoUri);
+    try {
+      await mongoose.connect(mongoUri);
+      logger.info('Connected to database');
+    } catch (error) {
+      logger.error('Error connecting to database: ', error);
+    }
   }
 
   public listen(): void {

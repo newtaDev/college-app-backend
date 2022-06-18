@@ -18,11 +18,11 @@ export class ApiException extends Error {
     this.msg = params.message;
     this.devMsg = params.devMsg ?? this.message;
     this.statuscode = params.statuscode ?? 500;
-    this.errorStack = ApiException.errorStackTrace(this);
+    this.errorStack = ApiException.getStackTrace(this);
   }
 
   // retuens a minimalistic error stack trace
-  static errorStackTrace(_stack: Error): ErrorStack {
+  static getStackTrace(_stack: Error): ErrorStack {
     const _errorStack = _stack.stack?.split('(');
     return {
       info: _errorStack?.at(0),

@@ -1,7 +1,7 @@
 import { createLogger, format, Logger, transports } from 'winston';
 import { AppKeys } from '../config/keys/app_keys';
 
-const prodLogger= () =>
+const prodLogger = () =>
   createLogger({
     level: 'warn',
     // format: winston.format.simple(),
@@ -10,7 +10,7 @@ const prodLogger= () =>
     transports: [
       new transports.Console(),
       new transports.File({
-        filename: 'errors.log',
+        filename: AppKeys.error_log_path,
       }),
     ],
   });
@@ -25,7 +25,7 @@ const devLoger = () => {
   return createLogger({
     level: 'debug',
     format: format.combine(
-      format.colorize({ colors: { info: 'blue', debug: 'white' } }),
+      format.colorize({ colors: { info: 'blue', debug: 'green' } }),
       format.prettyPrint(),
       format.timestamp({ format: 'HH:mm:ss - a' }),
       myFormat,
