@@ -12,6 +12,7 @@ interface I_ApiErrorRes {
   message: string;
   devMsg: string;
   statuscode: number;
+  errorDetails?: unknown;
   errorStack?: ErrorStack | unknown;
 }
 

@@ -1,6 +1,6 @@
 import { createLogger, format, Logger, transports } from 'winston';
 import { AppKeys } from '../config/keys/app_keys';
-
+import _ from 'lodash';
 const prodLogger = () =>
   createLogger({
     level: 'warn',
@@ -16,11 +16,16 @@ const prodLogger = () =>
   });
 
 const devLoger = () => {
-  const myFormat = format.printf(({ level, message, timestamp }) =>
-    typeof message == 'object'
-      ? `${timestamp} [ ${level} ]:  ${JSON.stringify(message)}`
-      : `${timestamp} [ ${level} ]:  ${message}`
-  );
+  const myFormat = format.printf(({ level, message, ...others }) => {
+    // removes `timestamp` filed from `object`
+    const rawMessage = _.omit(others, ['timestamp']);
+    const _msgAsObject: object = JSON.parse(JSON.stringify(rawMessage));
+    if (!_.isEmpty(_msgAsObject)) console.log(_msgAsObject);
+
+    return typeof message == 'object'
+      ? `[ ${level} ]:  ${JSON.stringify(message)}`
+      : `[ ${level} ]:  ${message}`;
+  });
 
   return createLogger({
     level: 'debug',

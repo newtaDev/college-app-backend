@@ -5,7 +5,6 @@ import {
   I_RouteNotFound,
 } from '../shared/@types/exceptions';
 import { ApiException } from '../shared/exceptions/api_exceptions';
-import logger from '../utils/logger';
 
 export function errorMiddleware(
   error: ExceptionsOnErrorMiddleware,
@@ -22,10 +21,12 @@ export function errorMiddleware(
     statuscode: error.statuscode ?? 500,
     message: error.msg ?? 'Internal server error',
     devMsg: error.devMsg ?? error.message,
+    errorDetails: error.errorDetails,
     // if `error` is instaceOf `Error` class, then only add '_stackTrace'  to `_error` object
     ...(error instanceof Error && _stackTrace),
   };
-  logger.debug(error);
+  // logger.debug(error);
+  // console.error(error);
   // checks if err obj has any property or methords named as routeInfo
   // this also works
   // if (error.constructor === RouteNotFoundException) {

@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import App from '../app';
 import { AppKeys } from '../config/keys/app_keys';
+import { authMiddleware } from '../middlewares/auth_middleware';
 
 export default interface I_BaseRouter {
   path: string;
@@ -20,12 +21,15 @@ export class InitialRouter implements I_BaseRouter {
       res.send('Welcome to our API');
     });
     // Check health
-    this.router.get('/health', (req: Request, res: Response) => {
-      res.status(200).send({
-        status: 'OK',
-        upTime: process.uptime(),
-      });
-    });
+    this.router.get(
+      '/health',
+      (req: Request, res: Response) => {
+        res.status(200).send({
+          status: 'OK',
+          upTime: process.uptime(),
+        });
+      }
+    );
     this.router.get('/info', (req: Request, res: Response) => {
       // Get all main routes in the api
       const paths: string[] = [];

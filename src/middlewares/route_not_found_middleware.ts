@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { RouteNotFoundException } from '../shared/exceptions/api_exceptions';
-import { I_RouteNotFoundParams } from '../shared/interfaces/params_interface';
+import { I_RouteNotFoundParams } from '../shared/interfaces/params_interfaces';
 
 export const routeNotFoundMiddleware = (
   req: Request,
@@ -11,6 +11,7 @@ export const routeNotFoundMiddleware = (
     message: 'ROUTE NOT FOUND',
     devMsg: 'This route doesn\'t exist',
     routeInfo: {
+      method:req.method,
       path: req.path,
       query: req.query,
       param: req.params,
