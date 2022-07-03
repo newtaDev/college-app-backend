@@ -52,8 +52,8 @@ class App {
 
   private initialiseErrorHandling(): void {
     //TODO
-    this.express.use(routeNotFoundMiddleware);
-    this.express.use(errorMiddleware);
+    this.express.use(routeNotFoundMiddleware());
+    this.express.use(errorMiddleware());
   }
    async initialiseDatabaseConnection(mongoUri: string): Promise<void> {
     // const { MONGO_USER, MONGO_PASSWORD, MONGO_PATH } = process.env;

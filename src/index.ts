@@ -1,9 +1,9 @@
 import App from './app';
 import { AppKeys } from './config/keys/app_keys';
-import { TokensRouter } from './routers/token.routes';
+import { TokenRouter } from './routers/token.routes';
 
 const app = new App({
-  appRouters: [new TokensRouter()],
+  appRouters: [new TokenRouter()],
   mongoUri: AppKeys.db_conn_str('minimalShop'),
   port: Number.parseInt((AppKeys.port ?? 1377) as string),
   version: '/v1',

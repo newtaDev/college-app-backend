@@ -1,7 +1,6 @@
 import { Router, Request, Response } from 'express';
 import App from '../app';
 import { AppKeys } from '../config/keys/app_keys';
-import { authMiddleware } from '../middlewares/auth_middleware';
 
 export default interface I_BaseRouter {
   path: string;

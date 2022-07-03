@@ -11,7 +11,7 @@ import { validateSchemaMiddleware } from '../middlewares/validation_middleware';
 import I_BaseRouter from './router';
 import { authMiddleware } from '../middlewares/auth_middleware';
 
-export class TokensRouter implements I_BaseRouter {
+export class TokenRouter implements I_BaseRouter {
   constructor() {
     this.router = Router();
     this.initRoutes();
