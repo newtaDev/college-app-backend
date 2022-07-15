@@ -3,7 +3,7 @@ import {
   ExceptionsOnErrorMiddleware,
   I_ApiErrorRes,
   I_RouteNotFound,
-} from '../shared/@types/exceptions';
+} from '../shared/types/exceptions';
 import { ApiException } from '../shared/exceptions/api_exceptions';
 
 export const errorMiddleware =

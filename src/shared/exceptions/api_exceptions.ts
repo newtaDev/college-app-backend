@@ -1,4 +1,4 @@
-import { ApiResStatus, ErrorStack } from '../@types/exceptions';
+import { ApiResStatus, ErrorStack } from '../types/exceptions';
 import {
   I_ApiExceptionsParams,
   I_RouteNotFoundParams,

@@ -5,22 +5,23 @@ import { successResponse } from '../../shared/interfaces/req_res_interfaces';
 import {
   createAccessToken,
   createRefreshToken,
-  verfyAccessToken,
-  verfyRefreshToken,
+  verifyAccessToken,
+  verifyRefreshToken,
 } from '../../shared/services/jwt/jwt_service';
+
+/**
+ * First trys to verify token from `refresh token` and then creates new `access and refresh token` form it
+ */
 export const createAccessTokenFromRefreshToken = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    // const payload: JwtPayload = verfyRefreshToken(
-    //   req.body.refreshToken
-    // ) as JwtPayload;
-    // if (jwtError) throw new Error('Invalid token');
-    // console.log(payload);
-    const accessToken = createAccessToken({ name: 'newta -a' });
-    const refreshToken = createRefreshToken({ name: 'newta -r' });
+    const payload = verifyRefreshToken(req.body.refreshToken) as JwtPayload;
+    console.log(payload);
+    const accessToken = createAccessToken(payload.data);
+    const refreshToken = createRefreshToken(payload.data);
     const _response = successResponse({
       accessToken,
       refreshToken,
@@ -37,20 +38,20 @@ export const createAccessTokenFromRefreshToken = (
   }
 };
 
+/**
+ * First trys to decode data from `refresh token` if faies jumps to `access token`
+ */
 export const decodeDataFromToken = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    /**
-     * First trys to decode data from `refresh token` if faies jumps to `access token`
-     */
     try {
-      const payload = verfyRefreshToken(req.body.token) as JwtPayload;
+      const payload = verifyRefreshToken(req.body.token) as JwtPayload;
       res.send(successResponse(payload));
     } catch (error) {
-      const payload = verfyAccessToken(req.body.token) as JwtPayload;
+      const payload = verifyAccessToken(req.body.token) as JwtPayload;
       res.send(successResponse(payload));
     }
   } catch (error) {

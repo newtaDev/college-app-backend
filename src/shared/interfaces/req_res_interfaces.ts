@@ -1,4 +1,4 @@
-import { ApiResStatus } from '../@types/exceptions';
+import { ApiResStatus } from '../types/exceptions';
 
 export interface I_ResSuccess {
   status: ApiResStatus;

@@ -8,7 +8,7 @@ import {
   decodeDataFromTokenValidator,
 } from '../modules/token/token.validator';
 import { validateSchemaMiddleware } from '../middlewares/validation_middleware';
-import I_BaseRouter from './router';
+import I_BaseRouter from './routes';
 import { authMiddleware } from '../middlewares/auth_middleware';
 
 export class TokenRouter implements I_BaseRouter {
@@ -21,7 +21,7 @@ export class TokenRouter implements I_BaseRouter {
   private initRoutes(): void {
     // route for creating access token from refresh token
     this.router.post(
-      `${this.path}/new`,
+      `${this.path}/re_create`,
       validateSchemaMiddleware({ body: createTokenWithRefreshTokenValidator }),
       createAccessTokenFromRefreshToken
     );

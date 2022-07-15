@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 import { ApiException } from '../shared/exceptions/api_exceptions';
-import { verfyAccessToken } from '../shared/services/jwt/jwt_service';
+import { verifyAccessToken } from '../shared/services/jwt/jwt_service';
 import logger from '../utils/logger';
+import {} from '../shared/types/global_types';
 
 export const authMiddleware =
   () => (req: Request, res: Response, next: NextFunction) => {
@@ -12,7 +13,7 @@ export const authMiddleware =
         throw new Error('No token Found');
       const accessToken = bearerToken.split('Bearer ')[1];
       /** verify Access Token */
-      const payload = verfyAccessToken(accessToken) as JwtPayload;
+      const payload = verifyAccessToken(accessToken) as JwtPayload;
       req.user = payload.data;
       logger.info('Route Authorized');
       next();

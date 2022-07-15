@@ -33,7 +33,7 @@ const createRefreshToken = (payload: object) => {
   }
 };
 
-const verfyAccessToken = (token: string): string | JwtPayload => {
+const verifyAccessToken = (token: string): string | JwtPayload => {
   try {
     const payload = jwt.verify(token, AppKeys.jwt_access_key as jwt.Secret);
     logger.info('--- Verified Access Token ---');
@@ -43,7 +43,7 @@ const verfyAccessToken = (token: string): string | JwtPayload => {
     throw error;
   }
 };
-const verfyRefreshToken = (token: string): string | JwtPayload => {
+const verifyRefreshToken = (token: string): string | JwtPayload => {
   try {
     const payload = jwt.verify(token, AppKeys.jwt_refresh_key as jwt.Secret);
     logger.info(`--- Verified Refresh Token ---`);
@@ -57,6 +57,6 @@ const verfyRefreshToken = (token: string): string | JwtPayload => {
 export {
   createAccessToken,
   createRefreshToken,
-  verfyAccessToken,
-  verfyRefreshToken,
+  verifyAccessToken,
+  verifyRefreshToken,
 };
