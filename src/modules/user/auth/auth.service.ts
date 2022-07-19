@@ -1,8 +1,37 @@
 import { userDb } from '../../../config/database/user.db';
+import { UserType } from '../../../utils/enums';
+import { I_Admin } from '../admin.model';
+import { I_Faculty } from '../faculty.model';
+import { I_Student } from '../student.model';
 import { I_Teacher } from '../teacher.model';
 
-export const registerAsTeacher = (teacher: I_Teacher) =>
-  userDb.Admin.create(teacher);
+const registerAsTeacher = (teacher: I_Teacher) =>
+  userDb.Teacher.create(teacher);
+const registerAsStudent = (student: I_Student) =>
+  userDb.Student.create(student);
+const registerAsFaculty = (faculty: I_Faculty) =>
+  userDb.Faculty.create(faculty);
+const registerAsAdmin = (admin: I_Admin) => userDb.Admin.create(admin);
 
-export const loginTeacher = (email: string) =>
-  userDb.Teacher.findOne({ email: email });
+const loginUser = (email: string, userType: UserType) => {
+  switch (userType) {
+    case UserType.admin:
+      return userDb.Admin.findOne({ email: email });
+    case UserType.staff:
+      return userDb.Faculty.findOne({ email: email });
+    case UserType.principal:
+      return userDb.Faculty.findOne({ email: email });
+    case UserType.student:
+      return userDb.Student.findOne({ email: email });
+    case UserType.teacher:
+      return userDb.Teacher.findOne({ email: email });
+  }
+};
+
+export default {
+  registerAsStudent,
+  registerAsTeacher,
+  registerAsFaculty,
+  registerAsAdmin,
+  loginUser,
+};
