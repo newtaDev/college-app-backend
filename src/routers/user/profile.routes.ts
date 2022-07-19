@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import I_BaseRouter from './routes';
+import I_BaseRouter from '../routes';
 
 export class ProfileRouter implements I_BaseRouter {
   constructor() {

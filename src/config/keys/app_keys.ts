@@ -6,10 +6,13 @@ export class AppKeys {
   static port = process.env.PORT;
   static env = process.env.NODE_ENV;
   static app_version = 'v1';
+  static default_db = 'default_db';
   static app_name = 'College App Backend';
   static error_log_path = 'error.log';
 
   private static _mongo_uri = `mongodb+srv://${_Secrets.MONGO_USERNAME}:${_Secrets.MONGO_PASSWORD}@cluster0.vhi4o.mongodb.net`;
-  static db_conn_str = (db: string): string =>
-    `${this._mongo_uri}/${db}?retryWrites=true&w=majority`;
+  static db_conn_str = (db: string): string => {
+    this.default_db = db;
+    return `${this._mongo_uri}/${db}?retryWrites=true&w=majority`;
+  };
 }

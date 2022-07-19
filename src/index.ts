@@ -1,12 +1,12 @@
 import App from './app';
 import { AppKeys } from './config/keys/app_keys';
-import { AuthRouter } from './routers/auth.routes';
-import { ProfileRouter } from './routers/profile.routes';
 import { TokenRouter } from './routers/token.routes';
+import { userRoutes } from './routers/user/user.routes';
 
 const app = new App({
-  appRouters: [new TokenRouter(), new AuthRouter(), new ProfileRouter()],
-  mongoUri: AppKeys.db_conn_str('minimalShop'),
+  appRouters: [new TokenRouter(), ...userRoutes],
+  // mongoUri: AppKeys.db_conn_str('college_app'),
+  mongoUri: 'mongodb://127.0.0.1:27017',
   port: Number.parseInt((AppKeys.port ?? 1377) as string),
   version: '/v1',
 });

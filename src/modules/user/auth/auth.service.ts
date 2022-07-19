@@ -1,5 +1,5 @@
 import { db } from '../../../config/database/db';
-import { I_User, I_UserDocument } from '../user.model';
+import { I_User, I_UserDocument } from '../faculty.model';
 
 export const registerUser = (user: I_User): Promise<I_UserDocument> =>
   db.User.create(user);

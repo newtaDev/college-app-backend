@@ -1,9 +1,8 @@
 import mongoose from 'mongoose';
-import { I_UserDocument, userSchema } from '../../modules/user/user.model';
+import { AppKeys } from '../keys/app_keys';
+const _db = mongoose.connection.useDb(AppKeys.default_db);
 
-const _db = mongoose.connection.useDb('main_db');
-
-/// This will be the main database
+/// This will be the default db
 export const db = {
-  User: _db.model<I_UserDocument>('User', userSchema),
+  // User: _db.model<I_Faculty>('User', facultySchema),
 };
