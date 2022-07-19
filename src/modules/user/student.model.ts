@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose';
+import { Model, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
 
@@ -11,10 +11,18 @@ export interface I_Student {
   courseId: string; //TODO: convert to mongo id
   classId: string; //TODO: convert to mongo id
   mySubjectIds: string[];
-  isPasswordValid?(password: string): Promise<boolean>;
 }
 
-export const studentSchema = new Schema<I_Student>(
+interface I_StudentMethods {
+  isPasswordValid(password: string): Promise<boolean>;
+}
+export type StudentModel = Model<I_Student, unknown, I_StudentMethods>;
+
+export const studentSchema = new Schema<
+  I_Student,
+  StudentModel,
+  I_StudentMethods
+>(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },

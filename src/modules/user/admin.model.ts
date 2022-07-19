@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose';
+import { Model, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
 
@@ -7,10 +7,13 @@ export interface I_Admin {
   email: string;
   userType: UserType.admin | UserType.superAdmin;
   password: string;
-  isPasswordValid?(password: string): Promise<boolean>;
 }
+interface I_AdminMethods {
+  isPasswordValid(password: string): Promise<boolean>;
+}
+export type AdminModel = Model<I_Admin, unknown, I_AdminMethods>;
 
-export const adminSchema = new Schema<I_Admin>(
+export const adminSchema = new Schema<I_Admin, AdminModel, I_AdminMethods>(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },

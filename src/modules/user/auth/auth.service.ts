@@ -1,9 +1,8 @@
-import { db } from '../../../config/database/db';
-import { I_User, I_UserDocument } from '../faculty.model';
+import { userDb } from '../../../config/database/user.db';
+import { I_Teacher } from '../teacher.model';
 
-export const registerUser = (user: I_User): Promise<I_UserDocument> =>
-  db.User.create(user);
-  
-export const loginUser = async (
-  email: string
-): Promise<I_UserDocument | null> => await db.User.findOne({ email: email });
+export const registerAsTeacher = (teacher: I_Teacher) =>
+  userDb.Admin.create(teacher);
+
+export const loginTeacher = (email: string) =>
+  userDb.Teacher.findOne({ email: email });

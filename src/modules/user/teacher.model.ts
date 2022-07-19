@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose';
+import { Model, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType, Week } from '../../utils/enums';
 import { I_AssignedBy } from '../../shared/interfaces/interfaces';
@@ -67,9 +67,16 @@ export interface I_Teacher {
   collegeId: string; //TODO: convert to mongo id
   userType: UserType.teacher;
   assignedClasses: I_AssignedClasses[];
-  isPasswordValid?(password: string): Promise<boolean>;
 }
-export const teacherSchema = new Schema<I_Teacher>(
+interface I_TeacherMethods {
+  isPasswordValid(password: string): Promise<boolean>;
+}
+export type TeacherModel = Model<I_Teacher, unknown, I_TeacherMethods>;
+export const teacherSchema = new Schema<
+  I_Teacher,
+  TeacherModel,
+  I_TeacherMethods
+>(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
