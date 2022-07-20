@@ -1,7 +1,7 @@
 import { Model, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
-import { studentUsersList, StudentUserTypes } from '../../shared/types/roles';
+import { studentUsersList, StudentUserTypes } from '../../utils/roles';
 
 export interface I_Student {
   name: string;

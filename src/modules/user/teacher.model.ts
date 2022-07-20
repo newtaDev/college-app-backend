@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import { UserType, Week } from '../../utils/enums';
 import { I_AssignedBy } from '../../shared/interfaces/interfaces';
 import { Validators } from '../../utils/validators';
-import { teacherUsersList, TeacherUserTypes } from '../../shared/types/roles';
+import { teacherUsersList, TeacherUserTypes } from '../../utils/roles';
 
 interface I_AssignedOn {
   time: string;

@@ -1,7 +1,7 @@
 import { Model, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
-import { adminUsersList, AdminUserTypes } from '../../shared/types/roles';
+import { adminUsersList, AdminUserTypes } from '../../utils/roles';
 
 export interface I_Admin {
   name: string;
