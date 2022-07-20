@@ -39,6 +39,7 @@ export const studentSchema = new Schema<
     },
     mySubjectIds: {
       type: [String], //TODO convert to mongo Id
+      default: [],
       required: true,
     },
   },

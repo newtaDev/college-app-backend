@@ -1,4 +1,4 @@
-import { Model, Schema } from 'mongoose';
+import { Model, Schema, ValidatorProps } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType, Week } from '../../utils/enums';
 import { I_AssignedBy } from '../../shared/interfaces/interfaces';
@@ -16,50 +16,44 @@ interface I_AssignedClasses {
   assignedBy?: I_AssignedBy;
 }
 
-const assignedClassesSchema = new Schema<I_AssignedClasses>(
-  {
-    subjectId: { type: String, required: true },
-    classId: { type: String, required: true },
-    assignedOn: {
-      type: {
-        time: {
-          type: String,
-          required: true,
-          validate: {
-            validator: Validators.is24HoursTime,
-            message: props =>
-              `${props.value} is not valid Time! ex: 07:20 or ex: 18:10`,
-          },
-        },
-        week: {
-          type: String,
-          enum: Week,
-          required: true,
-        },
-      },
+const _assignedOn = {
+  type: {
+    time: {
+      type: String,
       required: true,
-    },
-    assignedBy: {
-      type: {
-        userType: {
-          type: String,
-          enum: UserType,
-          required: true,
-        },
-        name: {
-          type: String,
-          required: true,
-        },
-        userId: {
-          type: String,
-          required: true,
-        },
+      validate: {
+        validator: Validators.is24HoursTime,
+        message: (props: ValidatorProps) =>
+          `${props.value} is not valid Time! ex: 07:20 or ex: 18:10`,
       },
+    },
+    week: {
+      type: String,
+      enum: Week,
       required: true,
     },
   },
-  { timestamps: true }
-);
+  required: true,
+};
+
+const _assignedBy = {
+  type: {
+    userType: {
+      type: String,
+      enum: UserType,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    userId: {
+      type: String,
+      required: true,
+    },
+  },
+  required: true,
+};
 
 export interface I_Teacher {
   name: string;
@@ -73,6 +67,17 @@ interface I_TeacherMethods {
   isPasswordValid(password: string): Promise<boolean>;
 }
 export type TeacherModel = Model<I_Teacher, unknown, I_TeacherMethods>;
+
+/// Mongoos schemas
+const assignedClassesSchema = new Schema<I_AssignedClasses>(
+  {
+    subjectId: { type: String, required: true },
+    classId: { type: String, required: true },
+    assignedOn: _assignedOn,
+    assignedBy: _assignedBy,
+  },
+  { timestamps: true }
+);
 export const teacherSchema = new Schema<
   I_Teacher,
   TeacherModel,
