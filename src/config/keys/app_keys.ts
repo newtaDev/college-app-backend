@@ -6,7 +6,7 @@ export class AppKeys {
   static port = process.env.PORT;
   static env = process.env.NODE_ENV;
   static app_version = 'v1';
-  static default_db = 'default_db';
+  static default_db = 'college_db';
   static app_name = 'College App Backend';
   static error_log_path = 'error.log';
 

@@ -32,7 +32,7 @@ const _createdOrModifiedBy = {
   required: false,
 };
 
-export const courseSchema = new Schema<I_Subject>(
+export const subjectSchema = new Schema<I_Subject>(
   {
     name: { type: String, required: true },
     collegeId: { type: String, required: true },
