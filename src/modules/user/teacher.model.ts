@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import { UserType, Week } from '../../utils/enums';
 import { I_AssignedBy } from '../../shared/interfaces/interfaces';
 import { Validators } from '../../utils/validators';
+import { teacherUsersList, TeacherUserTypes } from '../../shared/types/roles';
 
 interface I_AssignedOn {
   time: string;
@@ -65,7 +66,7 @@ export interface I_Teacher {
   email: string;
   password: string;
   collegeId: string; //TODO: convert to mongo id
-  userType: UserType.teacher;
+  userType: TeacherUserTypes;
   assignedClasses: I_AssignedClasses[];
 }
 interface I_TeacherMethods {
@@ -84,7 +85,7 @@ export const teacherSchema = new Schema<
     collegeId: { type: String, required: true },
     userType: {
       type: String,
-      enum: [UserType.teacher],
+      enum: teacherUsersList,
       default: UserType.teacher,
       required: true,
     },

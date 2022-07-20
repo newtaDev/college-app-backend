@@ -1,11 +1,12 @@
 import { Model, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
+import { adminUsersList, AdminUserTypes } from '../../shared/types/roles';
 
 export interface I_Admin {
   name: string;
   email: string;
-  userType: UserType.admin | UserType.superAdmin;
+  userType: AdminUserTypes;
   password: string;
 }
 interface I_AdminMethods {
@@ -20,7 +21,7 @@ export const adminSchema = new Schema<I_Admin, AdminModel, I_AdminMethods>(
     password: { type: String, required: true },
     userType: {
       type: String,
-      enum: [UserType.admin, UserType.superAdmin],
+      enum: adminUsersList,
       default: UserType.admin,
       required: true,
     },

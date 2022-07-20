@@ -1,13 +1,14 @@
 import { Model, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
+import { facultyUsersList, FacultyUserTypes } from '../../shared/types/roles';
 
 export interface I_Faculty {
   name: string;
   email: string;
   password: string;
   collegeId: string; //TODO: convert to mongo id
-  userType: UserType.staff | UserType.principal;
+  userType: FacultyUserTypes;
 }
 interface I_FacultyMethods {
   isPasswordValid(password: string): Promise<boolean>;
@@ -26,7 +27,7 @@ export const facultySchema = new Schema<
     collegeId: { type: String, required: true },
     userType: {
       type: String,
-      enum: [UserType.staff, UserType.principal],
+      enum: facultyUsersList,
       default: UserType.staff,
       required: true,
     },

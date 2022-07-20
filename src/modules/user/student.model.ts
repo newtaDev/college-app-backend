@@ -1,12 +1,13 @@
 import { Model, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
+import { studentUsersList, StudentUserTypes } from '../../shared/types/roles';
 
 export interface I_Student {
   name: string;
   email: string;
   password: string;
-  userType: UserType.student;
+  userType: StudentUserTypes;
   collegeId: string; //TODO: convert to mongo id
   courseId: string; //TODO: convert to mongo id
   classId: string; //TODO: convert to mongo id
@@ -32,7 +33,7 @@ export const studentSchema = new Schema<
     classId: { type: String, required: true },
     userType: {
       type: String,
-      enum: [UserType.student],
+      enum: studentUsersList,
       default: UserType.student,
       required: true,
     },
