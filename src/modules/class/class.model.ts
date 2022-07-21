@@ -18,11 +18,6 @@ export interface I_Class {
 }
 const _createdOrModifiedBy = {
   type: {
-    userType: {
-      type: String,
-      enum: UserType,
-      required: true,
-    },
     name: {
       type: String,
       required: true,

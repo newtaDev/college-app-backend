@@ -7,6 +7,7 @@ export interface I_Admin {
   name: string;
   email: string;
   userType: AdminUserTypes;
+  collegeId?: string; //TODO: convert to mongo id
   password: string;
 }
 interface I_AdminMethods {
@@ -19,6 +20,7 @@ export const adminSchema = new Schema<I_Admin, AdminModel, I_AdminMethods>(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    collegeId: { type: String },
     userType: {
       type: String,
       enum: adminUsersList,

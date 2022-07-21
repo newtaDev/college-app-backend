@@ -21,7 +21,7 @@ export class Validators {
   static mongoIdValidator(msg?: string) {
     return Joi.string()
       .custom(isValidMongoId)
-      .message(msg ?? '{{#label}} Invalid Mongo Id');
+      .message(msg ?? '{{#label}} is invalid (Invalid mongo id)');
   }
   static is24HoursTime(value: string): boolean {
     return /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(value);

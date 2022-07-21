@@ -1,4 +1,17 @@
 import { Router } from 'express';
+import {
+  createSubject,
+  deleteSubjectById,
+  findSubjectById,
+  getAllSubjects,
+  updateSubjectById,
+} from '../modules/subject/subject.controller';
+import {
+  validateCreateSubject,
+  validateSubjectByIdParam,
+} from '../modules/subject/subject.validator';
+import { validateSchemaMiddleware } from '../middlewares/validation_middleware';
+
 import I_BaseRouter from './routes';
 
 export class SubjectRouter implements I_BaseRouter {
@@ -9,10 +22,26 @@ export class SubjectRouter implements I_BaseRouter {
   path = '/subjects';
   router: Router;
   private initRoutes(): void {
-    this.router.get(this.path);
-    this.router.post(this.path);
-    this.router.get(`${this.path}/:subjectId`);
-    this.router.put(`${this.path}/:subjectId`);
-    this.router.delete(`${this.path}/:subjectId`);
+    this.router.get(this.path, getAllSubjects);
+    this.router.post(
+      this.path,
+      validateSchemaMiddleware({ body: validateCreateSubject }),
+      createSubject
+    );
+    this.router.get(
+      `${this.path}/:subjectId`,
+      validateSchemaMiddleware({ params: validateSubjectByIdParam }),
+      findSubjectById
+    );
+    this.router.put(
+      `${this.path}/:subjectId`,
+      validateSchemaMiddleware({ params: validateSubjectByIdParam }),
+      updateSubjectById
+    );
+    this.router.delete(
+      `${this.path}/:subjectId`,
+      validateSchemaMiddleware({ params: validateSubjectByIdParam }),
+      deleteSubjectById
+    );
   }
 }

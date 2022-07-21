@@ -4,4 +4,5 @@ export interface I_JwtUserPayload {
   id: string;
   name: string;
   userType: UserType;
+  collegeId?: string;
 }

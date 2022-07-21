@@ -32,6 +32,7 @@ export const loginUser = async (
       id: _user.id,
       name: _user.name,
       userType: _user.userType,
+      collegeId: _user.collegeId,
     };
     const accessToken = createAccessToken(payload);
     const refreshToken = createRefreshToken(payload);
@@ -68,6 +69,7 @@ export const registerAsTeacher = async (
       id: _user.id,
       name: _user.name,
       userType: _user.userType,
+      collegeId: _user.collegeId,
     };
     const accessToken = createAccessToken(payload);
     const refreshToken = createRefreshToken(payload);
@@ -102,6 +104,7 @@ export const registerAsStudent = async (
       id: _user.id,
       name: _user.name,
       userType: _user.userType,
+      collegeId: _user.collegeId,
     };
     const accessToken = createAccessToken(payload);
     const refreshToken = createRefreshToken(payload);
@@ -136,6 +139,7 @@ export const registerAsFaculty = async (
       id: _user.id,
       name: _user.name,
       userType: _user.userType,
+      collegeId: _user.collegeId,
     };
     const accessToken = createAccessToken(payload);
     const refreshToken = createRefreshToken(payload);
@@ -170,6 +174,7 @@ export const registerAsAdmin = async (
       id: _user.id,
       name: _user.name,
       userType: _user.userType,
+      collegeId: _user.collegeId,
     };
     const accessToken = createAccessToken(payload);
     const refreshToken = createRefreshToken(payload);

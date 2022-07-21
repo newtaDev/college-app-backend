@@ -37,6 +37,7 @@ export const validateAdminRegistration = joiObject<I_Admin>({
   name: Joi.string().max(30).required(),
   password: Joi.string().required(),
   userType: Joi.string().valid(...Object.values(UserType)),
+  collegeId: Validators.mongoIdValidator(),
 });
 export const validateUserLogin = joiObject({
   email: Joi.string().email().required(),

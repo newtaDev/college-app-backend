@@ -9,8 +9,8 @@ export const createCollege = async (
   next: NextFunction
 ) => {
   try {
-    const college = await collgeServices.create(req.body);
-    res.status(201).send(successResponse(college));
+    const _college = await collgeServices.create(req.body);
+    res.status(201).send(successResponse(_college));
   } catch (error) {
     return next(
       new ApiException({
@@ -27,12 +27,12 @@ export const updateCollegeById = async (
   next: NextFunction
 ) => {
   try {
-    const college = await collgeServices.updateById(
+    const _college = await collgeServices.updateById(
       req.params.collegeId,
       req.body
     );
-    if (!college) throw Error('College not found');
-    res.send(successResponse(college));
+    if (!_college) throw Error('College not found');
+    res.send(successResponse(_college));
   } catch (error) {
     return next(
       new ApiException({
@@ -50,8 +50,8 @@ export const getAllColleges = async (
   next: NextFunction
 ) => {
   try {
-    const college = await collgeServices.listAll();
-    res.send(successResponse(college));
+    const _college = await collgeServices.listAll();
+    res.send(successResponse(_college));
   } catch (error) {
     return next(
       new ApiException({
@@ -68,9 +68,9 @@ export const findCollegeById = async (
   next: NextFunction
 ) => {
   try {
-    const college = await collgeServices.findById(req.params.collegeId);
-    if (!college) throw Error('College not found');
-    res.send(successResponse(college));
+    const _college = await collgeServices.findById(req.params.collegeId);
+    if (!_college) throw Error('College not found');
+    res.send(successResponse(_college));
   } catch (error) {
     return next(
       new ApiException({
@@ -87,9 +87,9 @@ export const deleteCollegeById = async (
   next: NextFunction
 ) => {
   try {
-    const college = await collgeServices.deleteById(req.params.collegeId);
-    if (!college) throw Error('College not found');
-    res.send(successResponse(college));
+    const _college = await collgeServices.deleteById(req.params.collegeId);
+    if (!_college) throw Error('College not found');
+    res.send(successResponse(_college));
   } catch (error) {
     return next(
       new ApiException({

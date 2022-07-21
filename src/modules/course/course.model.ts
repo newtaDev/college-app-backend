@@ -5,7 +5,6 @@ import {
   I_CreatedBy,
   I_LastModifiedBy,
 } from '../../shared/interfaces/interfaces';
-import { UserType } from '../../utils/enums';
 
 export interface I_Course {
   name: string;
@@ -17,11 +16,6 @@ export interface I_Course {
 }
 const _createdOrModifiedBy = {
   type: {
-    userType: {
-      type: String,
-      enum: UserType,
-      required: true,
-    },
     name: {
       type: String,
       required: true,

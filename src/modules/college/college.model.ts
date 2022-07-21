@@ -5,7 +5,6 @@ import {
   I_CreatedBy,
   I_LastModifiedBy,
 } from '../../shared/interfaces/interfaces';
-import { UserType } from '../../utils/enums';
 
 export interface I_College {
   name: string;
@@ -20,11 +19,6 @@ export interface I_College {
 }
 const _createdOrModifiedBy = {
   type: {
-    userType: {
-      type: String,
-      enum: UserType,
-      required: true,
-    },
     name: {
       type: String,
       required: true,
@@ -39,7 +33,7 @@ const _createdOrModifiedBy = {
 
 export const collegeSchema = new Schema<I_College>(
   {
-    name: { type: String, required: true },
+    name: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     landPhone: { type: Number },
     mobile: { type: Number, required: true },
