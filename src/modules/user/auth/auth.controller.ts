@@ -12,6 +12,7 @@ import { I_Faculty } from '../faculty.model';
 import { I_Admin } from '../admin.model';
 import { I_Student } from '../student.model';
 import { I_Teacher } from '../teacher.model';
+import { adminUsersList } from '../../../utils/roles';
 
 /// Login
 export const loginUser = async (
@@ -27,12 +28,16 @@ export const loginUser = async (
     if (!_user) throw Error(`${_userType} not found`);
     if (!(await _user.isPasswordValid(_password)))
       throw new Error("password doesn't match");
+    const isAdmin = [...adminUsersList]
+      .map(userType => userType == _user.userType)
+      .includes(true);
     //create access and refresh token
     const payload: I_JwtUserPayload = {
       id: _user.id,
       name: _user.name,
       userType: _user.userType,
       collegeId: _user.collegeId,
+      isAdmin: isAdmin,
     };
     const accessToken = createAccessToken(payload);
     const refreshToken = createRefreshToken(payload);
@@ -70,6 +75,7 @@ export const registerAsTeacher = async (
       name: _user.name,
       userType: _user.userType,
       collegeId: _user.collegeId,
+      isAdmin: false,
     };
     const accessToken = createAccessToken(payload);
     const refreshToken = createRefreshToken(payload);
@@ -105,6 +111,7 @@ export const registerAsStudent = async (
       name: _user.name,
       userType: _user.userType,
       collegeId: _user.collegeId,
+      isAdmin: false,
     };
     const accessToken = createAccessToken(payload);
     const refreshToken = createRefreshToken(payload);
@@ -140,6 +147,7 @@ export const registerAsFaculty = async (
       name: _user.name,
       userType: _user.userType,
       collegeId: _user.collegeId,
+      isAdmin: false,
     };
     const accessToken = createAccessToken(payload);
     const refreshToken = createRefreshToken(payload);
@@ -175,6 +183,7 @@ export const registerAsAdmin = async (
       name: _user.name,
       userType: _user.userType,
       collegeId: _user.collegeId,
+      isAdmin: false,
     };
     const accessToken = createAccessToken(payload);
     const refreshToken = createRefreshToken(payload);

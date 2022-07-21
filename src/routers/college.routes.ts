@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { validateSchemaMiddleware } from '../middlewares/validation_middleware';
+import { authMiddleware } from '../middlewares/auth_middleware';
 import {
   getAllColleges,
   findCollegeById,
@@ -21,25 +22,29 @@ export class CollegeRouter implements I_BaseRouter {
   path = '/colleges';
   router: Router;
   private initRoutes(): void {
-    this.router.get(this.path, getAllColleges);
+    this.router.get(this.path, authMiddleware(),getAllColleges);
     this.router.post(
       this.path,
-      validateSchemaMiddleware({ body: validateCreateCollege }),
+      [authMiddleware(),
+      validateSchemaMiddleware({ body: validateCreateCollege })],
       createCollege
     );
     this.router.get(
       `${this.path}/:collegeId`,
-      validateSchemaMiddleware({ params: validateCollegeByIdParam }),
+      [authMiddleware(),
+      validateSchemaMiddleware({ params: validateCollegeByIdParam })],
       findCollegeById
     );
     this.router.put(
       `${this.path}/:collegeId`,
-      validateSchemaMiddleware({ params: validateCollegeByIdParam }),
+      [authMiddleware(),
+      validateSchemaMiddleware({ params: validateCollegeByIdParam })],
       updateCollegeById
     );
     this.router.delete(
       `${this.path}/:collegeId`,
-      validateSchemaMiddleware({ params: validateCollegeByIdParam }),
+      [authMiddleware(),
+      validateSchemaMiddleware({ params: validateCollegeByIdParam })],
       deleteCollegeById
     );
   }

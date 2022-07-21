@@ -6,7 +6,6 @@ import {
   I_CreatedBy,
   I_LastModifiedBy,
 } from '../../shared/interfaces/interfaces';
-import { UserType } from '../../utils/enums';
 
 export interface I_Class {
   name: string;
@@ -17,17 +16,14 @@ export interface I_Class {
   lastModifiedBy?: I_LastModifiedBy;
 }
 const _createdOrModifiedBy = {
-  type: {
-    name: {
-      type: String,
-      required: true,
-    },
-    userId: {
-      type: String,
-      required: true,
-    },
+  name: {
+    type: String,
+    required: true,
   },
-  required: false,
+  userId: {
+    type: String,
+    required: true,
+  },
 };
 
 export const classSchema = new Schema<I_Class>(
@@ -35,9 +31,9 @@ export const classSchema = new Schema<I_Class>(
     name: { type: String, required: true },
     classNumber: { type: Number, required: true },
     collegeId: { type: String, required: true },
-    assignedTo: { ..._createdOrModifiedBy, required: true },
-    createdBy: _createdOrModifiedBy,
-    lastModifiedBy: _createdOrModifiedBy,
+    assignedTo: { type: _createdOrModifiedBy, required: true },
+    createdBy: { type: _createdOrModifiedBy, required: false },
+    lastModifiedBy: { type: _createdOrModifiedBy, required: false },
   },
   { timestamps: true }
 );

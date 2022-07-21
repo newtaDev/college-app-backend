@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { validateSchemaMiddleware } from '../middlewares/validation_middleware';
+import { authMiddleware } from '../middlewares/auth_middleware';
 import {
   createCourse,
   getAllCourses,
@@ -21,25 +22,37 @@ export class CourseRouter implements I_BaseRouter {
   path = '/courses';
   router: Router;
   private initRoutes(): void {
-    this.router.get(this.path, getAllCourses);
+    this.router.get(this.path, authMiddleware(), getAllCourses);
     this.router.post(
       this.path,
-      validateSchemaMiddleware({ body: validateCreateCourse }),
+      [
+        authMiddleware(),
+        validateSchemaMiddleware({ body: validateCreateCourse }),
+      ],
       createCourse
     );
     this.router.get(
       `${this.path}/:courseId`,
-      validateSchemaMiddleware({ params: validateCourseByIdParam }),
+      [
+        authMiddleware(),
+        validateSchemaMiddleware({ params: validateCourseByIdParam }),
+      ],
       findCourseById
     );
     this.router.put(
       `${this.path}/:courseId`,
-      validateSchemaMiddleware({ params: validateCourseByIdParam }),
+      [
+        authMiddleware(),
+        validateSchemaMiddleware({ params: validateCourseByIdParam }),
+      ],
       updateCourseById
     );
     this.router.delete(
       `${this.path}/:courseId`,
-      validateSchemaMiddleware({ params: validateCourseByIdParam }),
+      [
+        authMiddleware(),
+        validateSchemaMiddleware({ params: validateCourseByIdParam }),
+      ],
       deleteCourseById
     );
   }

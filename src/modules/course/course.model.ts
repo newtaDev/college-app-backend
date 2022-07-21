@@ -9,8 +9,8 @@ import {
 export interface I_Course {
   name: string;
   collegeId: string; //TODO: convert to mongo id
-  mainSubjectIds: string[]; //TODO: convert to mongo id
-  optionalSubjectIds: string[]; //TODO: convert to mongo id
+  mainSubjectIds?: string[]; //TODO: convert to mongo id
+  optionalSubjectIds?: string[]; //TODO: convert to mongo id
   createdBy?: I_CreatedBy;
   lastModifiedBy?: I_LastModifiedBy;
 }
@@ -35,12 +35,10 @@ export const courseSchema = new Schema<I_Course>(
     mainSubjectIds: {
       type: [String], //TODO convert to mongo Id
       default: [],
-      required: true,
     },
     optionalSubjectIds: {
       type: [String], //TODO convert to mongo Id
       default: [],
-      required: false,
     },
     createdBy: _createdOrModifiedBy,
     lastModifiedBy: _createdOrModifiedBy,

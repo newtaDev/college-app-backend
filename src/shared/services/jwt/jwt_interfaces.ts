@@ -5,4 +5,5 @@ export interface I_JwtUserPayload {
   name: string;
   userType: UserType;
   collegeId?: string;
+  isAdmin: boolean;
 }

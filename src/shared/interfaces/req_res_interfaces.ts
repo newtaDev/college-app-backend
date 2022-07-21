@@ -14,7 +14,7 @@ export interface I_ResSuccess {
 // }
 
 export function successResponse(
-  res: object,
+  res: object | null,
   beforeRes?: object
 ): I_ResSuccess {
   return {

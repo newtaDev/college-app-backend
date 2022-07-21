@@ -9,6 +9,14 @@ export const createCourse = async (
   next: NextFunction
 ) => {
   try {
+    if (
+      await courseService.isCourseAlreadyCreated(
+        req.body.name,
+        req.user.collegeId
+      )
+    ) {
+      throw Error('Course Name Already exists');
+    }
     const _course = await courseService.create(req.body);
     res.status(201).send(successResponse(_course));
   } catch (error) {
@@ -27,11 +35,11 @@ export const updateCourseById = async (
   next: NextFunction
 ) => {
   try {
+    await _canCourseModified(req);
     const _course = await courseService.updateById(
       req.params.courseId,
       req.body
     );
-    if (!_course) throw Error('Course not found');
     res.send(successResponse(_course));
   } catch (error) {
     return next(
@@ -87,8 +95,9 @@ export const deleteCourseById = async (
   next: NextFunction
 ) => {
   try {
+    const _findCourse = _isCourseBelogsToMyCollege(req);
+    if (!_findCourse) throw Error('Course not found');
     const _course = await courseService.deleteById(req.params.courseId);
-    if (!_course) throw Error('Course not found');
     res.send(successResponse(_course));
   } catch (error) {
     return next(
@@ -99,4 +108,22 @@ export const deleteCourseById = async (
       })
     );
   }
+};
+
+const _canCourseModified = async (req: Request) => {
+  const _findCourse = await _isCourseBelogsToMyCollege(req);
+  if (!_findCourse) throw Error('Course not found');
+  if (req.body.name != null && _findCourse?.name != req.body.name) {
+    const _isCourseAlreadyCreated = await courseService.isCourseAlreadyCreated(
+      req.body.name,
+      req.user.collegeId
+    );
+    if (_isCourseAlreadyCreated) throw Error('Course name already exists');
+  }
+};
+const _isCourseBelogsToMyCollege = async (req: Request) => {
+  const _findCourse = await courseService.findById(req.params.courseId);
+  if (_findCourse?.collegeId != req.user.collegeId)
+    throw Error("You can't modify/delete Course of other college");
+  return _findCourse;
 };

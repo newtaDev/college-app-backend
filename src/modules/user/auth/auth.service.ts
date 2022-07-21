@@ -14,13 +14,16 @@ const registerAsFaculty = (faculty: I_Faculty) =>
 const registerAsAdmin = (admin: I_Admin) => userDb.Admin.create(admin);
 
 const loginUser = (email: string, userType: UserType) => {
+  /// Find using `userType` if multiple `userType` is present in same collection
   switch (userType) {
     case UserType.admin:
-      return userDb.Admin.findOne({ email: email });
+      return userDb.Admin.findOne({ email: email, userType });
+    case UserType.superAdmin:
+      return userDb.Admin.findOne({ email: email, userType });
     case UserType.staff:
-      return userDb.Faculty.findOne({ email: email });
+      return userDb.Faculty.findOne({ email: email, userType });
     case UserType.principal:
-      return userDb.Faculty.findOne({ email: email });
+      return userDb.Faculty.findOne({ email: email, userType });
     case UserType.student:
       return userDb.Student.findOne({ email: email });
     case UserType.teacher:

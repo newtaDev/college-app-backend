@@ -12,6 +12,7 @@ import {
 } from '../modules/class/class.validator';
 import { validateSchemaMiddleware } from '../middlewares/validation_middleware';
 import I_BaseRouter from './routes';
+import { authMiddleware } from '../middlewares/auth_middleware';
 
 export class ClassRouter implements I_BaseRouter {
   constructor() {
@@ -21,25 +22,37 @@ export class ClassRouter implements I_BaseRouter {
   path = '/classes';
   router: Router;
   private initRoutes(): void {
-    this.router.get(this.path, getAllClasses);
+    this.router.get(this.path, authMiddleware(), getAllClasses);
     this.router.post(
       this.path,
-      validateSchemaMiddleware({ body: validateCreateClass }),
+      [
+        authMiddleware(),
+        validateSchemaMiddleware({ body: validateCreateClass }),
+      ],
       createClass
     );
     this.router.get(
       `${this.path}/:classId`,
-      validateSchemaMiddleware({ params: validateClassByIdParam }),
+      [
+        authMiddleware(),
+        validateSchemaMiddleware({ params: validateClassByIdParam }),
+      ],
       findClassById
     );
     this.router.put(
       `${this.path}/:classId`,
-      validateSchemaMiddleware({ params: validateClassByIdParam }),
+      [
+        authMiddleware(),
+        validateSchemaMiddleware({ params: validateClassByIdParam }),
+      ],
       updateClassById
     );
     this.router.delete(
       `${this.path}/:classId`,
-      validateSchemaMiddleware({ params: validateClassByIdParam }),
+      [
+        authMiddleware(),
+        validateSchemaMiddleware({ params: validateClassByIdParam }),
+      ],
       deleteClassById
     );
   }

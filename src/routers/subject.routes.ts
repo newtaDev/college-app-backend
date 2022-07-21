@@ -10,6 +10,7 @@ import {
   validateCreateSubject,
   validateSubjectByIdParam,
 } from '../modules/subject/subject.validator';
+import { authMiddleware } from '../middlewares/auth_middleware';
 import { validateSchemaMiddleware } from '../middlewares/validation_middleware';
 
 import I_BaseRouter from './routes';
@@ -22,25 +23,37 @@ export class SubjectRouter implements I_BaseRouter {
   path = '/subjects';
   router: Router;
   private initRoutes(): void {
-    this.router.get(this.path, getAllSubjects);
+    this.router.get(this.path, authMiddleware(), getAllSubjects);
     this.router.post(
       this.path,
-      validateSchemaMiddleware({ body: validateCreateSubject }),
+      [
+        authMiddleware(),
+        validateSchemaMiddleware({ body: validateCreateSubject }),
+      ],
       createSubject
     );
     this.router.get(
       `${this.path}/:subjectId`,
-      validateSchemaMiddleware({ params: validateSubjectByIdParam }),
+      [
+        authMiddleware(),
+        validateSchemaMiddleware({ params: validateSubjectByIdParam }),
+      ],
       findSubjectById
     );
     this.router.put(
       `${this.path}/:subjectId`,
-      validateSchemaMiddleware({ params: validateSubjectByIdParam }),
+      [
+        authMiddleware(),
+        validateSchemaMiddleware({ params: validateSubjectByIdParam }),
+      ],
       updateSubjectById
     );
     this.router.delete(
       `${this.path}/:subjectId`,
-      validateSchemaMiddleware({ params: validateSubjectByIdParam }),
+      [
+        authMiddleware(),
+        validateSchemaMiddleware({ params: validateSubjectByIdParam }),
+      ],
       deleteSubjectById
     );
   }
