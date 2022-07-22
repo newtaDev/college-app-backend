@@ -1,13 +1,14 @@
-import { Model, Schema } from 'mongoose';
+import { Model, Schema, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
 import { adminUsersList, AdminUserTypes } from '../../utils/roles';
+import { collegeDb } from '../../config/database/college.db';
 
 export interface I_Admin {
   name: string;
   email: string;
   userType: AdminUserTypes;
-  collegeId?: string; //TODO: convert to mongo id
+  collegeId?: Types.ObjectId;
   password: string;
 }
 interface I_AdminMethods {
@@ -20,7 +21,7 @@ export const adminSchema = new Schema<I_Admin, AdminModel, I_AdminMethods>(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    collegeId: { type: String },
+    collegeId: { type: Schema.Types.ObjectId, ref: collegeDb.College },
     userType: {
       type: String,
       enum: adminUsersList,

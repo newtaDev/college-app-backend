@@ -58,7 +58,7 @@ class App {
   async initialiseDatabaseConnection(mongoUri: string): Promise<void> {
     // const { MONGO_USER, MONGO_PASSWORD, MONGO_PATH } = process.env;
     try {
-      mongoose.set('runValidators', true)
+      mongoose.set('runValidators', true);
       await mongoose.connect(mongoUri);
       logger.info('Connected to database');
     } catch (error) {

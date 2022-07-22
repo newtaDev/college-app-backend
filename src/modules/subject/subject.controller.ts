@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { db } from '../../config/database/db';
+import { collegeDb } from '../../config/database/college.db';
 import { ApiException } from '../../shared/exceptions/api_exceptions';
 import { successResponse } from '../../shared/interfaces/req_res_interfaces';
 import courseService from '../course/course.service';
@@ -21,7 +21,7 @@ export const createSubject = async (
       throw Error('Subject Name Already exists');
     }
     const subject = await subjectService.create(req.body);
-    const course = await db.Course.findOneAndUpdate(
+    const course = await collegeDb.Course.findOneAndUpdate(
       {
         _id: subject.courseId,
         collegeId: subject.collegeId,
@@ -142,7 +142,7 @@ const _canSubjectModified = async (req: Request) => {
     const _isSubjectAlreadyCreated =
       await subjectService.isSubjectAlreadyCreated(
         req.body.name,
-        _findSubject.courseId,
+        _findSubject.courseId.toString(),
         req.user.collegeId
       );
     if (_isSubjectAlreadyCreated)

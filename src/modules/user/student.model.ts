@@ -1,17 +1,18 @@
-import { Model, Schema } from 'mongoose';
+import { Model, Schema, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
 import { studentUsersList, StudentUserTypes } from '../../utils/roles';
+import { collegeDb } from '../../config/database/college.db';
 
 export interface I_Student {
   name: string;
   email: string;
   password: string;
   userType: StudentUserTypes;
-  collegeId: string; //TODO: convert to mongo id
-  courseId: string; //TODO: convert to mongo id
-  classId: string; //TODO: convert to mongo id
-  mySubjectIds: string[];
+  collegeId: Types.ObjectId;
+  courseId: Types.ObjectId;
+  classId: Types.ObjectId;
+  mySubjectIds: Types.ObjectId[];
 }
 
 interface I_StudentMethods {
@@ -28,9 +29,9 @@ export const studentSchema = new Schema<
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    collegeId: { type: String, required: true },
-    courseId: { type: String, required: true },
-    classId: { type: String, required: true },
+    collegeId: { type: Schema.Types.ObjectId, required: true, ref: collegeDb.College },
+    courseId: { type: Schema.Types.ObjectId, required: true, ref: collegeDb.Course },
+    classId: { type: Schema.Types.ObjectId, required: true, ref: collegeDb.Class },
     userType: {
       type: String,
       enum: studentUsersList,
@@ -38,9 +39,10 @@ export const studentSchema = new Schema<
       required: true,
     },
     mySubjectIds: {
-      type: [String], //TODO convert to mongo Id
+      type: [Schema.Types.ObjectId], //TODO convert to mongo Id
       default: [],
       required: true,
+      ref: collegeDb.Subject,
     },
   },
   { timestamps: true }

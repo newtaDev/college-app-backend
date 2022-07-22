@@ -1,6 +1,6 @@
 // Model and schema for Course
 
-import { Schema } from 'mongoose';
+import { Types, Schema } from 'mongoose';
 import {
   I_CreatedBy,
   I_LastModifiedBy,
@@ -8,9 +8,9 @@ import {
 
 export interface I_Course {
   name: string;
-  collegeId: string; //TODO: convert to mongo id
-  mainSubjectIds?: string[]; //TODO: convert to mongo id
-  optionalSubjectIds?: string[]; //TODO: convert to mongo id
+  collegeId: Types.ObjectId;
+  mainSubjectIds?: Types.ObjectId[];
+  optionalSubjectIds?: Types.ObjectId[];
   createdBy?: I_CreatedBy;
   lastModifiedBy?: I_LastModifiedBy;
 }
@@ -21,7 +21,7 @@ const _createdOrModifiedBy = {
       required: true,
     },
     userId: {
-      type: String,
+      type: Schema.Types.ObjectId,
       required: true,
     },
   },
@@ -31,14 +31,20 @@ const _createdOrModifiedBy = {
 export const courseSchema = new Schema<I_Course>(
   {
     name: { type: String, required: true },
-    collegeId: { type: String, required: true },
+    collegeId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'College',
+    },
     mainSubjectIds: {
-      type: [String], //TODO convert to mongo Id
+      type: [Schema.Types.ObjectId],
       default: [],
+      ref: 'Subject',
     },
     optionalSubjectIds: {
-      type: [String], //TODO convert to mongo Id
+      type: [Schema.Types.ObjectId],
       default: [],
+      ref: 'Subject',
     },
     createdBy: _createdOrModifiedBy,
     lastModifiedBy: _createdOrModifiedBy,

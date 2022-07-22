@@ -1,21 +1,21 @@
-import { Model, Schema, ValidatorProps } from 'mongoose';
+import { Model, Schema, Types, ValidatorProps } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType, Week } from '../../utils/enums';
 import { I_AssignedBy } from '../../shared/interfaces/interfaces';
 import { Validators } from '../../utils/validators';
 import { teacherUsersList, TeacherUserTypes } from '../../utils/roles';
+import { collegeDb } from '../../config/database/college.db';
 
 interface I_AssignedOn {
   time: string;
   week: Week;
 }
 interface I_AssignedClasses {
-  subjectId: string; //TODO: convert to mongo id
-  classId: string; //TODO: convert to mongo id
+  subjectId: Types.ObjectId;
+  classId: Types.ObjectId;
   assignedOn: I_AssignedOn;
   assignedBy?: I_AssignedBy;
 }
-
 const _assignedOn = {
   type: {
     time: {
@@ -48,7 +48,7 @@ const _assignedBy = {
       required: true,
     },
     userId: {
-      type: String,
+      type: Types.ObjectId,
       required: true,
     },
   },
@@ -59,7 +59,7 @@ export interface I_Teacher {
   name: string;
   email: string;
   password: string;
-  collegeId: string; //TODO: convert to mongo id
+  collegeId: Types.ObjectId;
   userType: TeacherUserTypes;
   assignedClasses: I_AssignedClasses[];
 }
@@ -71,8 +71,16 @@ export type TeacherModel = Model<I_Teacher, unknown, I_TeacherMethods>;
 /// Mongoos schemas
 const assignedClassesSchema = new Schema<I_AssignedClasses>(
   {
-    subjectId: { type: String, required: true },
-    classId: { type: String, required: true },
+    subjectId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: collegeDb.Subject,
+    },
+    classId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: collegeDb.Class,
+    },
     assignedOn: _assignedOn,
     assignedBy: _assignedBy,
   },
@@ -87,7 +95,11 @@ export const teacherSchema = new Schema<
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    collegeId: { type: String, required: true },
+    collegeId: {
+      type: Schema.Types.ObjectId,
+      ref: collegeDb.College,
+      required: true,
+    },
     userType: {
       type: String,
       enum: teacherUsersList,

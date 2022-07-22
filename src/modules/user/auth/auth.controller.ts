@@ -36,7 +36,7 @@ export const loginUser = async (
       id: _user.id,
       name: _user.name,
       userType: _user.userType,
-      collegeId: _user.collegeId,
+      collegeId: _user.collegeId?.toString(),
       isAdmin: isAdmin,
     };
     const accessToken = createAccessToken(payload);
@@ -74,7 +74,7 @@ export const registerAsTeacher = async (
       id: _user.id,
       name: _user.name,
       userType: _user.userType,
-      collegeId: _user.collegeId,
+      collegeId: _user.collegeId?.toString(),
       isAdmin: false,
     };
     const accessToken = createAccessToken(payload);
@@ -110,7 +110,7 @@ export const registerAsStudent = async (
       id: _user.id,
       name: _user.name,
       userType: _user.userType,
-      collegeId: _user.collegeId,
+      collegeId: _user.collegeId.toString(),
       isAdmin: false,
     };
     const accessToken = createAccessToken(payload);
@@ -146,7 +146,7 @@ export const registerAsFaculty = async (
       id: _user.id,
       name: _user.name,
       userType: _user.userType,
-      collegeId: _user.collegeId,
+      collegeId: _user.collegeId.toString(),
       isAdmin: false,
     };
     const accessToken = createAccessToken(payload);
@@ -182,7 +182,7 @@ export const registerAsAdmin = async (
       id: _user.id,
       name: _user.name,
       userType: _user.userType,
-      collegeId: _user.collegeId,
+      collegeId: _user.collegeId?.toString(),
       isAdmin: false,
     };
     const accessToken = createAccessToken(payload);

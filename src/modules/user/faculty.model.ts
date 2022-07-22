@@ -1,13 +1,14 @@
-import { Model, Schema } from 'mongoose';
+import { Model, Schema, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
 import { facultyUsersList, FacultyUserTypes } from '../../utils/roles';
+import { collegeDb } from '../../config/database/college.db';
 
 export interface I_Faculty {
   name: string;
   email: string;
   password: string;
-  collegeId: string; //TODO: convert to mongo id
+  collegeId: Types.ObjectId;
   userType: FacultyUserTypes;
 }
 interface I_FacultyMethods {
@@ -24,7 +25,7 @@ export const facultySchema = new Schema<
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    collegeId: { type: String, required: true },
+    collegeId: { type: Schema.Types.ObjectId, required: true, ref: collegeDb.College },
     userType: {
       type: String,
       enum: facultyUsersList,

@@ -11,8 +11,8 @@ export class AppKeys {
   static error_log_path = 'error.log';
 
   private static _mongo_uri = `mongodb+srv://${_Secrets.MONGO_USERNAME}:${_Secrets.MONGO_PASSWORD}@cluster0.vhi4o.mongodb.net`;
-  static db_conn_str = (db: string): string => {
-    this.default_db = db;
-    return `${this._mongo_uri}/${db}?retryWrites=true&w=majority`;
+  static db_conn_str = (db?: string): string => {
+    if (db) this.default_db = db;
+    return `${this._mongo_uri}/${this.default_db}?retryWrites=true&w=majority`;
   };
 }

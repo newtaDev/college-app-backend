@@ -1,6 +1,6 @@
 // Model and schema for Class
 
-import { Schema } from 'mongoose';
+import { Schema, Types } from 'mongoose';
 import {
   I_ClassAssignedTo,
   I_CreatedBy,
@@ -10,7 +10,7 @@ import {
 export interface I_Class {
   name: string;
   classNumber: number;
-  collegeId: string; //TODO: convert to mongo id
+  collegeId: Types.ObjectId;
   assignedTo: I_ClassAssignedTo;
   createdBy?: I_CreatedBy;
   lastModifiedBy?: I_LastModifiedBy;
@@ -21,7 +21,7 @@ const _createdOrModifiedBy = {
     required: true,
   },
   userId: {
-    type: String,
+    type: Schema.Types.ObjectId,
     required: true,
   },
 };
@@ -30,7 +30,7 @@ export const classSchema = new Schema<I_Class>(
   {
     name: { type: String, required: true },
     classNumber: { type: Number, required: true },
-    collegeId: { type: String, required: true },
+    collegeId: { type: Schema.Types.ObjectId, required: true, ref: 'College' },
     assignedTo: { type: _createdOrModifiedBy, required: true },
     createdBy: { type: _createdOrModifiedBy, required: false },
     lastModifiedBy: { type: _createdOrModifiedBy, required: false },
