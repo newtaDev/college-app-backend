@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ApiException } from '../../shared/exceptions/api_exceptions';
 import { successResponse } from '../../shared/interfaces/req_res_interfaces';
+import collegeService from '../college/college.service';
 import courseService from './course.service';
 
 export const createCourse = async (
@@ -9,6 +10,8 @@ export const createCourse = async (
   next: NextFunction
 ) => {
   try {
+    const _college = await collegeService.findById(req.body.collegeId);
+    if (!_college) throw Error("College id doesn't exists");
     if (
       await courseService.isCourseAlreadyCreated(
         req.body.name,
@@ -35,6 +38,10 @@ export const updateCourseById = async (
   next: NextFunction
 ) => {
   try {
+    if (req.body.collegeId) {
+      const _college = await collegeService.findById(req.body.collegeId);
+      if (!_college) throw Error("College id doesn't exists");
+    }
     await _canCourseModified(req);
     const _course = await courseService.updateById(
       req.params.courseId,

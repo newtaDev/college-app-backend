@@ -12,6 +12,7 @@ export const validateCreateClass = joiObject<I_Class>({
   name: Joi.string().required(),
   classNumber: Joi.string().required(),
   collegeId: Validators.mongoIdValidator().required(),
+  courseId: Validators.mongoIdValidator().required(),
   assignedTo: Joi.object<I_ClassAssignedTo>({
     name: Joi.string().required(),
     userId: Validators.mongoIdValidator().required(),

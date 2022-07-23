@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { ApiException } from '../../shared/exceptions/api_exceptions';
 import { successResponse } from '../../shared/interfaces/req_res_interfaces';
+import collegeService from '../college/college.service';
+import courseService from '../course/course.service';
 import classService from './class.service';
 
 export const createClass = async (
@@ -9,6 +11,10 @@ export const createClass = async (
   next: NextFunction
 ) => {
   try {
+    const _college = await collegeService.findById(req.body.collegeId);
+    if (!_college) throw Error("College id doesn't exists");
+    const _course = await courseService.findById(req.body.courseId);
+    if (!_course) throw Error("Course id doesn't exists");
     if (
       await classService.isClassAlreadyCreated(
         req.body.name,
@@ -35,6 +41,16 @@ export const updateClassById = async (
   next: NextFunction
 ) => {
   try {
+    /// only check if collegeId updated
+    if (req.body.collegeId) {
+      const _college = await collegeService.findById(req.body.collegeId);
+      if (!_college) throw Error("College id doesn't exists");
+    }
+    /// only check if courseId updated
+    if (req.body.courseId) {
+      const _course = await courseService.findById(req.body.courseId);
+      if (!_course) throw Error("Course id doesn't exists");
+    }
     await _canClassModified(req);
     const _class = await classService.updateById(req.params.classId, req.body);
     res.send(successResponse(_class));

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { collegeDb } from '../../config/database/college.db';
 import { ApiException } from '../../shared/exceptions/api_exceptions';
 import { successResponse } from '../../shared/interfaces/req_res_interfaces';
+import collegeService from '../college/college.service';
 import courseService from '../course/course.service';
 import subjectService from './subject.service';
 
@@ -11,6 +11,10 @@ export const createSubject = async (
   next: NextFunction
 ) => {
   try {
+    const _college = await collegeService.findById(req.body.collegeId);
+    if (!_college) throw Error("College id doesn't exists");
+    const _course = await courseService.findById(req.body.courseId);
+    if (!_course) throw Error("Course id doesn't exists");
     if (
       await subjectService.isSubjectAlreadyCreated(
         req.body.name,
@@ -21,24 +25,7 @@ export const createSubject = async (
       throw Error('Subject Name Already exists');
     }
     const subject = await subjectService.create(req.body);
-    const course = await collegeDb.Course.findOneAndUpdate(
-      {
-        _id: subject.courseId,
-        collegeId: subject.collegeId,
-      },
-      {
-        $push: {
-          ...(subject.isMainSubject && { mainSubjectIds: subject.id }),
-          ...(!subject.isMainSubject && { optionalSubjectIds: subject.id }),
-        },
-      },
-      { new: true }
-    );
-    if (!course) {
-      await subjectService.deleteById(subject.id);
-      throw Error('Invalid courseId');
-    }
-
+    const course = await courseService.insertSubjectIdToCourse(subject);
     res.status(201).send(successResponse({ subject, course }));
   } catch (error) {
     return next(
@@ -56,6 +43,16 @@ export const updateSubjectById = async (
   next: NextFunction
 ) => {
   try {
+    /// only check if collegeId updated
+    if (req.body.collegeId) {
+      const _college = await collegeService.findById(req.body.collegeId);
+      if (!_college) throw Error("College id doesn't exists");
+    }
+    /// only check if courseId updated
+    if (req.body.courseId) {
+      const _course = await courseService.findById(req.body.courseId);
+      if (!_course) throw Error("Course id doesn't exists");
+    }
     await _canSubjectModified(req);
     const subject = await subjectService.updateById(
       req.params.subjectId,

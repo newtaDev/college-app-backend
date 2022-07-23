@@ -11,6 +11,7 @@ export interface I_Class {
   name: string;
   classNumber: number;
   collegeId: Types.ObjectId;
+  courseId: Types.ObjectId;
   assignedTo: I_ClassAssignedTo;
   createdBy?: I_CreatedBy;
   lastModifiedBy?: I_LastModifiedBy;
@@ -31,6 +32,7 @@ export const classSchema = new Schema<I_Class>(
     name: { type: String, required: true },
     classNumber: { type: Number, required: true },
     collegeId: { type: Schema.Types.ObjectId, required: true, ref: 'College' },
+    courseId: { type: Schema.Types.ObjectId, required: true, ref: 'Course' },
     assignedTo: { type: _createdOrModifiedBy, required: true },
     createdBy: { type: _createdOrModifiedBy, required: false },
     lastModifiedBy: { type: _createdOrModifiedBy, required: false },

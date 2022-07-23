@@ -13,6 +13,8 @@ import { I_Admin } from '../admin.model';
 import { I_Student } from '../student.model';
 import { I_Teacher } from '../teacher.model';
 import { adminUsersList } from '../../../utils/roles';
+import collegeService from '../../college/college.service';
+import courseService from '../../course/course.service';
 
 /// Login
 export const loginUser = async (
@@ -67,6 +69,8 @@ export const registerAsTeacher = async (
   next: NextFunction
 ) => {
   try {
+    const _college = await collegeService.findById(req.body.collegeId);
+    if (!_college) throw Error("College id doesn't exists");
     const _body = req.body as I_Teacher;
     const _user = await authService.registerAsTeacher(_body);
     //create access and refresh token
@@ -103,6 +107,11 @@ export const registerAsStudent = async (
   next: NextFunction
 ) => {
   try {
+    const _college = await collegeService.findById(req.body.collegeId);
+    if (!_college) throw Error("College id doesn't exists");
+    const _course = await courseService.findById(req.body.courseId);
+    if (!_course) throw Error("Course id doesn't exists");
+    
     const _body = req.body as I_Student;
     const _user = await authService.registerAsStudent(_body);
     //create access and refresh token
