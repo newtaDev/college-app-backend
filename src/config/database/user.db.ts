@@ -20,7 +20,9 @@ import {
   teacherSchema,
 } from '../../modules/user/teacher.model';
 
-const _db = mongoose.connection.useDb('user_db');
+/// will re-assign from app.ts
+// eslint-disable-next-line prefer-const
+let _db = mongoose.connection.useDb('user_db');
 
 /// This is users database
 export const userDb = {
@@ -28,4 +30,8 @@ export const userDb = {
   Faculty: _db.model<I_Faculty, FacultyModel>('Faculty', facultySchema),
   Admin: _db.model<I_Admin, AdminModel>('Admin', adminSchema),
   Student: _db.model<I_Student, StudentModel>('Student', studentSchema),
+};
+
+export default {
+  _db,
 };

@@ -5,6 +5,8 @@ import { errorMiddleware } from './middlewares/error_middleware';
 import { routeNotFoundMiddleware } from './middlewares/route_not_found_middleware';
 import BaseRouter, { InitialRouter } from './routers/routes';
 import logger from './utils/logger';
+import college from './config/database/college.db';
+import user from './config/database/user.db';
 // import errorMiddleware from './middlewares/error_middleware';
 
 class App {
@@ -58,8 +60,16 @@ class App {
   async initialiseDatabaseConnection(mongoUri: string): Promise<void> {
     // const { MONGO_USER, MONGO_PASSWORD, MONGO_PATH } = process.env;
     try {
+      /// by default mongo validators run only while [creating] a document
+      /// This method will ensure to run validators on every changes like [create/update]
       mongoose.set('runValidators', true);
-      await mongoose.connect(mongoUri);
+      /// default db [college_db]
+      const _db = await mongoose.connect(`${mongoUri}/college_db`);
+      college._db = _db.connection;
+      console.log(mongoose.connections.length);
+      /// new connection [user_db]
+      user._db = mongoose.createConnection(`${mongoUri}/user_db`);
+      console.log(mongoose.connections.length);
       logger.info('Connected to database');
     } catch (error) {
       logger.error('Error connecting to database: ', error);
