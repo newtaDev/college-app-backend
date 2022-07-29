@@ -9,6 +9,5 @@ export const validateCourseByIdParam = joiObject({
 export const validateCreateCourse = joiObject<I_Course>({
   name: Joi.string().required(),
   collegeId: Validators.mongoIdValidator().required(),
-  mainSubjectIds: Joi.array().items(Validators.mongoIdValidator()),
-  optionalSubjectIds: Joi.array().items(Validators.mongoIdValidator()),
+  totalSem: Joi.number().required(),
 });

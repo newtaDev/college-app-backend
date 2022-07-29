@@ -27,7 +27,6 @@ export const validateStudentRegistration = joiObject<I_Student>({
   password: Joi.string().required(),
   classId: Validators.mongoIdValidator().required(),
   collegeId: Validators.mongoIdValidator().required(),
-  courseId: Validators.mongoIdValidator().required(),
   userType: Joi.string().valid(...Object.values(UserType)),
   mySubjectIds: Joi.array().items(Validators.mongoIdValidator()), //"mySubjectIds":["62d629dec8fa5623574e387a"]
 });

@@ -9,8 +9,7 @@ import {
 export interface I_Course {
   name: string;
   collegeId: Types.ObjectId;
-  mainSubjectIds?: Types.ObjectId[];
-  optionalSubjectIds?: Types.ObjectId[];
+  totalSem: number;
   createdBy?: I_CreatedBy;
   lastModifiedBy?: I_LastModifiedBy;
 }
@@ -36,16 +35,7 @@ export const courseSchema = new Schema<I_Course>(
       required: true,
       ref: 'College',
     },
-    mainSubjectIds: {
-      type: [Schema.Types.ObjectId],
-      default: [],
-      ref: 'Subject',
-    },
-    optionalSubjectIds: {
-      type: [Schema.Types.ObjectId],
-      default: [],
-      ref: 'Subject',
-    },
+    totalSem: { type: Number, required: true },
     createdBy: _createdOrModifiedBy,
     lastModifiedBy: _createdOrModifiedBy,
   },

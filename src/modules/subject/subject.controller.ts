@@ -5,6 +5,7 @@ import collegeService from '../college/college.service';
 import courseService from '../course/course.service';
 import subjectService from './subject.service';
 
+
 export const createSubject = async (
   req: Request,
   res: Response,
@@ -25,8 +26,7 @@ export const createSubject = async (
       throw Error('Subject Name Already exists');
     }
     const subject = await subjectService.create(req.body);
-    const course = await courseService.insertSubjectIdToCourse(subject);
-    res.status(201).send(successResponse({ subject, course }));
+    res.status(201).send(successResponse(subject));
   } catch (error) {
     return next(
       new ApiException({
@@ -59,10 +59,7 @@ export const updateSubjectById = async (
       req.body
     );
     if (!subject) throw Error('Subject not found');
-    const course = await courseService.removeAndInsertSubjectIdToCourse(
-      subject
-    );
-    res.send(successResponse({ subject, course }));
+    res.send(successResponse(subject));
   } catch (error) {
     return next(
       new ApiException({
@@ -117,8 +114,7 @@ export const deleteSubjectById = async (
   next: NextFunction
 ) => {
   try {
-    const _findSubject = await _isSubjectBelogsToMyCollege(req);
-    if (!_findSubject) throw Error('Subject not found');
+     await _isSubjectBelogsToMyCollege(req);
     const _subject = await subjectService.deleteById(req.params.subjectId);
     res.send(successResponse(_subject));
   } catch (error) {
@@ -134,21 +130,21 @@ export const deleteSubjectById = async (
 
 const _canSubjectModified = async (req: Request) => {
   const _findSubject = await _isSubjectBelogsToMyCollege(req);
-  if (!_findSubject) throw Error('Subject not found');
   if (req.body.name != null && _findSubject?.name != req.body.name) {
     const _isSubjectAlreadyCreated =
-      await subjectService.isSubjectAlreadyCreated(
-        req.body.name,
-        _findSubject.courseId.toString(),
-        req.user.collegeId
+    await subjectService.isSubjectAlreadyCreated(
+      req.body.name,
+      _findSubject.courseId.toString(),
+      req.user.collegeId
       );
-    if (_isSubjectAlreadyCreated)
+      if (_isSubjectAlreadyCreated)
       throw Error('Subject name with same courseId already exists');
-  }
-};
-const _isSubjectBelogsToMyCollege = async (req: Request) => {
-  const _findSubject = await subjectService.findById(req.params.subjectId);
-  if (_findSubject?.collegeId != req.user.collegeId)
+    }
+  };
+  const _isSubjectBelogsToMyCollege = async (req: Request) => {
+    const _findSubject = await subjectService.findById(req.params.subjectId);
+    if (!_findSubject) throw Error('Subject not found');
+  if (_findSubject?.collegeId.toString() != req.user.collegeId)
     throw Error("You can't modify/delete subject of other college");
   return _findSubject;
 };

@@ -10,6 +10,9 @@ import {
 export interface I_Class {
   name: string;
   classNumber: number;
+  currentSem: number; //based on totalSem in course
+  batch: number;
+  isCollegeCompleted: boolean;
   collegeId: Types.ObjectId;
   courseId: Types.ObjectId;
   assignedTo: I_ClassAssignedTo;
@@ -33,6 +36,9 @@ export const classSchema = new Schema<I_Class>(
     classNumber: { type: Number, required: true },
     collegeId: { type: Schema.Types.ObjectId, required: true, ref: 'College' },
     courseId: { type: Schema.Types.ObjectId, required: true, ref: 'Course' },
+    batch: { type: Number, required: true },
+    isCollegeCompleted: { type: Boolean, required: true, default: false },
+    currentSem: { type: Number, required: true },
     assignedTo: { type: _createdOrModifiedBy, required: true },
     createdBy: { type: _createdOrModifiedBy, required: false },
     lastModifiedBy: { type: _createdOrModifiedBy, required: false },

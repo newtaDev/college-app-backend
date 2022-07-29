@@ -66,11 +66,10 @@ class App {
       /// default db [college_db]
       const _db = await mongoose.connect(`${mongoUri}/college_db`);
       college._db = _db.connection;
-      console.log(mongoose.connections.length);
       /// new connection [user_db]
       user._db = mongoose.createConnection(`${mongoUri}/user_db`);
-      console.log(mongoose.connections.length);
       logger.info('Connected to database');
+      logger.info(`Total Connections: ${mongoose.connections.length}`);
     } catch (error) {
       logger.error('Error connecting to database: ', error);
     }

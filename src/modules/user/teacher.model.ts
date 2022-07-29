@@ -1,59 +1,8 @@
-import { Model, Schema, Types, ValidatorProps } from 'mongoose';
+import { Model, Schema, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
-import { UserType, Week } from '../../utils/enums';
-import { I_AssignedBy } from '../../shared/interfaces/interfaces';
-import { Validators } from '../../utils/validators';
+import { UserType } from '../../utils/enums';
 import { teacherUsersList, TeacherUserTypes } from '../../utils/roles';
 import { collegeDb } from '../../config/database/college.db';
-
-interface I_AssignedOn {
-  time: string;
-  week: Week;
-}
-interface I_AssignedClasses {
-  subjectId: Types.ObjectId;
-  classId: Types.ObjectId;
-  assignedOn: I_AssignedOn;
-  assignedBy?: I_AssignedBy;
-}
-const _assignedOn = {
-  type: {
-    time: {
-      type: String,
-      required: true,
-      validate: {
-        validator: Validators.is24HoursTime,
-        message: (props: ValidatorProps) =>
-          `${props.value} is not valid Time! ex: 07:20 or ex: 18:10`,
-      },
-    },
-    week: {
-      type: String,
-      enum: Week,
-      required: true,
-    },
-  },
-  required: true,
-};
-
-const _assignedBy = {
-  type: {
-    userType: {
-      type: String,
-      enum: UserType,
-      required: true,
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    userId: {
-      type: Types.ObjectId,
-      required: true,
-    },
-  },
-  required: true,
-};
 
 export interface I_Teacher {
   name: string;
@@ -61,31 +10,12 @@ export interface I_Teacher {
   password: string;
   collegeId: Types.ObjectId;
   userType: TeacherUserTypes;
-  assignedClasses: I_AssignedClasses[];
 }
 interface I_TeacherMethods {
   isPasswordValid(password: string): Promise<boolean>;
 }
 export type TeacherModel = Model<I_Teacher, unknown, I_TeacherMethods>;
 
-/// Mongoos schemas
-const assignedClassesSchema = new Schema<I_AssignedClasses>(
-  {
-    subjectId: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: collegeDb.Subject,
-    },
-    classId: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: collegeDb.Class,
-    },
-    assignedOn: _assignedOn,
-    assignedBy: _assignedBy,
-  },
-  { timestamps: true }
-);
 export const teacherSchema = new Schema<
   I_Teacher,
   TeacherModel,
@@ -106,7 +36,6 @@ export const teacherSchema = new Schema<
       default: UserType.teacher,
       required: true,
     },
-    assignedClasses: [assignedClassesSchema],
   },
   {
     timestamps: true,

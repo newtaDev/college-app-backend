@@ -102,8 +102,7 @@ export const deleteCourseById = async (
   next: NextFunction
 ) => {
   try {
-    const _findCourse = _isCourseBelogsToMyCollege(req);
-    if (!_findCourse) throw Error('Course not found');
+    await _isCourseBelogsToMyCollege(req);
     const _course = await courseService.deleteById(req.params.courseId);
     res.send(successResponse(_course));
   } catch (error) {
@@ -119,7 +118,6 @@ export const deleteCourseById = async (
 
 const _canCourseModified = async (req: Request) => {
   const _findCourse = await _isCourseBelogsToMyCollege(req);
-  if (!_findCourse) throw Error('Course not found');
   if (req.body.name != null && _findCourse?.name != req.body.name) {
     const _isCourseAlreadyCreated = await courseService.isCourseAlreadyCreated(
       req.body.name,
@@ -130,7 +128,8 @@ const _canCourseModified = async (req: Request) => {
 };
 const _isCourseBelogsToMyCollege = async (req: Request) => {
   const _findCourse = await courseService.findById(req.params.courseId);
-  if (_findCourse?.collegeId != req.user.collegeId)
+  if (!_findCourse) throw Error('Course not found');
+  if (_findCourse?.collegeId.toString() != req.user.collegeId)
     throw Error("You can't modify/delete Course of other college");
   return _findCourse;
 };

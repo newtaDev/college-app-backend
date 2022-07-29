@@ -10,7 +10,6 @@ export interface I_Student {
   password: string;
   userType: StudentUserTypes;
   collegeId: Types.ObjectId;
-  courseId: Types.ObjectId;
   classId: Types.ObjectId;
   mySubjectIds: Types.ObjectId[];
 }
@@ -30,7 +29,6 @@ export const studentSchema = new Schema<
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     collegeId: { type: Schema.Types.ObjectId, required: true, ref: collegeDb.College },
-    courseId: { type: Schema.Types.ObjectId, required: true, ref: collegeDb.Course },
     classId: { type: Schema.Types.ObjectId, required: true, ref: collegeDb.Class },
     userType: {
       type: String,
@@ -39,7 +37,7 @@ export const studentSchema = new Schema<
       required: true,
     },
     mySubjectIds: {
-      type: [Schema.Types.ObjectId], //TODO convert to mongo Id
+      type: [Schema.Types.ObjectId],
       default: [],
       required: true,
       ref: collegeDb.Subject,

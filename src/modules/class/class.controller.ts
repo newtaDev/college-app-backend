@@ -15,6 +15,8 @@ export const createClass = async (
     if (!_college) throw Error("College id doesn't exists");
     const _course = await courseService.findById(req.body.courseId);
     if (!_course) throw Error("Course id doesn't exists");
+    if (req.body.currentSem == 0 || req.body.currentSem > _course.totalSem)
+      throw Error(`currentSem must be in between 1 - ${_course.totalSem}`);
     if (
       await classService.isClassAlreadyCreated(
         req.body.name,
@@ -108,8 +110,7 @@ export const deleteClassById = async (
   next: NextFunction
 ) => {
   try {
-    const _findClass = await _isClassBelogsToMyCollege(req);
-    if (!_findClass) throw Error('Class not found');
+    await _isClassBelogsToMyCollege(req);
     const _class = await classService.deleteById(req.params.classId);
     res.send(successResponse(_class));
   } catch (error) {
@@ -127,18 +128,18 @@ export const deleteClassById = async (
 /// then if `name` field changed then checks for the availablity of the name
 const _canClassModified = async (req: Request) => {
   const _findClass = await _isClassBelogsToMyCollege(req);
-  if (!_findClass) throw Error('Class not found');
   if (req.body.name != null && _findClass?.name != req.body.name) {
     const _isClassAlreadyCreated = await classService.isClassAlreadyCreated(
       req.body.name,
       req.user.collegeId
-    );
-    if (_isClassAlreadyCreated) throw Error('Class name already exists');
-  }
-};
-const _isClassBelogsToMyCollege = async (req: Request) => {
-  const _findClass = await classService.findById(req.params.classId);
-  if (_findClass?.collegeId != req.user.collegeId)
+      );
+      if (_isClassAlreadyCreated) throw Error('Class name already exists');
+    }
+  };
+  const _isClassBelogsToMyCollege = async (req: Request) => {
+    const _findClass = await classService.findById(req.params.classId);
+    if (!_findClass) throw Error('Class not found');
+  if (_findClass?.collegeId.toString() != req.user.collegeId)
     throw Error("You can't modify/delete Class of other college");
   return _findClass;
 };

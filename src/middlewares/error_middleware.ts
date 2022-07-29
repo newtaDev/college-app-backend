@@ -27,8 +27,6 @@ export const errorMiddleware =
       // if `error` is instaceOf `Error` class, then only add '_stackTrace'  to `_error` object
       ...(error instanceof Error && _stackTrace),
     };
-    // logger.debug(error);
-    // console.error(error);
     // checks if err obj has any property or methords named as routeInfo
     // this also works
     // if (error.constructor === RouteNotFoundException) {
