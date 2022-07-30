@@ -1,10 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { ApiException } from '../../shared/exceptions/api_exceptions';
+import { isMongoIdExitsOrValid } from '../../shared/functions/verify_mongo_ids';
 import { successResponse } from '../../shared/interfaces/req_res_interfaces';
-import collegeService from '../college/college.service';
-import courseService from '../course/course.service';
 import subjectService from './subject.service';
-
 
 export const createSubject = async (
   req: Request,
@@ -12,20 +10,26 @@ export const createSubject = async (
   next: NextFunction
 ) => {
   try {
-    const _college = await collegeService.findById(req.body.collegeId);
-    if (!_college) throw Error("College id doesn't exists");
-    const _course = await courseService.findById(req.body.courseId);
-    if (!_course) throw Error("Course id doesn't exists");
+    const collegeId = req.body.collegeId ?? req.user.collegeId;
+    if (!collegeId) throw Error('[body.collegeId]/[user.collegeId] is required');
+    const body = {
+      ...req.body,
+      collegeId,
+    };
+    await isMongoIdExitsOrValid({
+      collegeId: collegeId,
+      courseId: req.body.courseId,
+    });
     if (
       await subjectService.isSubjectAlreadyCreated(
         req.body.name,
         req.body.courseId,
-        req.user.collegeId
+        collegeId
       )
     ) {
       throw Error('Subject Name Already exists');
     }
-    const subject = await subjectService.create(req.body);
+    const subject = await subjectService.create(body);
     res.status(201).send(successResponse(subject));
   } catch (error) {
     return next(
@@ -43,16 +47,10 @@ export const updateSubjectById = async (
   next: NextFunction
 ) => {
   try {
-    /// only check if collegeId updated
-    if (req.body.collegeId) {
-      const _college = await collegeService.findById(req.body.collegeId);
-      if (!_college) throw Error("College id doesn't exists");
-    }
-    /// only check if courseId updated
-    if (req.body.courseId) {
-      const _course = await courseService.findById(req.body.courseId);
-      if (!_course) throw Error("Course id doesn't exists");
-    }
+    await isMongoIdExitsOrValid({
+      collegeId: req.body.collegeI,
+      courseId: req.body.courseId,
+    });
     await _canSubjectModified(req);
     const subject = await subjectService.updateById(
       req.params.subjectId,
@@ -114,7 +112,7 @@ export const deleteSubjectById = async (
   next: NextFunction
 ) => {
   try {
-     await _isSubjectBelogsToMyCollege(req);
+    await _isSubjectBelogsToMyCollege(req);
     const _subject = await subjectService.deleteById(req.params.subjectId);
     res.send(successResponse(_subject));
   } catch (error) {
@@ -132,18 +130,18 @@ const _canSubjectModified = async (req: Request) => {
   const _findSubject = await _isSubjectBelogsToMyCollege(req);
   if (req.body.name != null && _findSubject?.name != req.body.name) {
     const _isSubjectAlreadyCreated =
-    await subjectService.isSubjectAlreadyCreated(
-      req.body.name,
-      _findSubject.courseId.toString(),
-      req.user.collegeId
+      await subjectService.isSubjectAlreadyCreated(
+        req.body.name,
+        _findSubject.courseId.toString(),
+        req.user.collegeId
       );
-      if (_isSubjectAlreadyCreated)
+    if (_isSubjectAlreadyCreated)
       throw Error('Subject name with same courseId already exists');
-    }
-  };
-  const _isSubjectBelogsToMyCollege = async (req: Request) => {
-    const _findSubject = await subjectService.findById(req.params.subjectId);
-    if (!_findSubject) throw Error('Subject not found');
+  }
+};
+const _isSubjectBelogsToMyCollege = async (req: Request) => {
+  const _findSubject = await subjectService.findById(req.params.subjectId);
+  if (!_findSubject) throw Error('Subject not found');
   if (_findSubject?.collegeId.toString() != req.user.collegeId)
     throw Error("You can't modify/delete subject of other college");
   return _findSubject;

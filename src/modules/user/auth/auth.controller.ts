@@ -15,6 +15,8 @@ import { I_Teacher } from '../teacher.model';
 import { adminUsersList } from '../../../utils/roles';
 import collegeService from '../../college/college.service';
 import courseService from '../../course/course.service';
+import classService from '../../class/class.service';
+import { isMongoIdExitsOrValid } from '../../../shared/functions/verify_mongo_ids';
 
 /// Login
 export const loginUser = async (
@@ -107,11 +109,11 @@ export const registerAsStudent = async (
   next: NextFunction
 ) => {
   try {
-    const _college = await collegeService.findById(req.body.collegeId);
-    if (!_college) throw Error("College id doesn't exists");
-    const _course = await courseService.findById(req.body.courseId);
-    if (!_course) throw Error("Course id doesn't exists");
-    
+    await isMongoIdExitsOrValid({
+      collegeId: req.body.collegeId,
+      classId: req.body.classId,
+    });
+
     const _body = req.body as I_Student;
     const _user = await authService.registerAsStudent(_body);
     //create access and refresh token

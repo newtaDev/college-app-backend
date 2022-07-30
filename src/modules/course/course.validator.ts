@@ -8,6 +8,6 @@ export const validateCourseByIdParam = joiObject({
 });
 export const validateCreateCourse = joiObject<I_Course>({
   name: Joi.string().required(),
-  collegeId: Validators.mongoIdValidator().required(),
+  collegeId: Validators.mongoIdValidator(),
   totalSem: Joi.number().required(),
 });

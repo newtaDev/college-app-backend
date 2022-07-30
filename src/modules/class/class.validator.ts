@@ -11,7 +11,7 @@ export const validateClassByIdParam = joiObject({
 export const validateCreateClass = joiObject<I_Class>({
   name: Joi.string().required(),
   classNumber: Joi.string().required(),
-  collegeId: Validators.mongoIdValidator().required(),
+  collegeId: Validators.mongoIdValidator(),
   courseId: Validators.mongoIdValidator().required(),
   currentSem: Joi.number().required(),
   batch: Joi.number().required(),

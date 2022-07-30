@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ApiException } from '../../shared/exceptions/api_exceptions';
+import { isMongoIdExitsOrValid } from '../../shared/functions/verify_mongo_ids';
 import { successResponse } from '../../shared/interfaces/req_res_interfaces';
-import collegeService from '../college/college.service';
 import courseService from './course.service';
 
 export const createCourse = async (
@@ -10,17 +10,20 @@ export const createCourse = async (
   next: NextFunction
 ) => {
   try {
-    const _college = await collegeService.findById(req.body.collegeId);
-    if (!_college) throw Error("College id doesn't exists");
-    if (
-      await courseService.isCourseAlreadyCreated(
-        req.body.name,
-        req.user.collegeId
-      )
-    ) {
+    const collegeId = req.body.collegeId ?? req.user.collegeId;
+    if (!collegeId)
+      throw Error('[body.collegeId]/[user.collegeId] is required');
+    const body = {
+      ...req.body,
+      collegeId,
+    };
+    await isMongoIdExitsOrValid({
+      collegeId: collegeId,
+    });
+    if (await courseService.isCourseAlreadyCreated(req.body.name, collegeId)) {
       throw Error('Course Name Already exists');
     }
-    const _course = await courseService.create(req.body);
+    const _course = await courseService.create(body);
     res.status(201).send(successResponse(_course));
   } catch (error) {
     return next(
@@ -38,10 +41,9 @@ export const updateCourseById = async (
   next: NextFunction
 ) => {
   try {
-    if (req.body.collegeId) {
-      const _college = await collegeService.findById(req.body.collegeId);
-      if (!_college) throw Error("College id doesn't exists");
-    }
+    await isMongoIdExitsOrValid({
+      collegeId: req.body.collegeId,
+    });
     await _canCourseModified(req);
     const _course = await courseService.updateById(
       req.params.courseId,

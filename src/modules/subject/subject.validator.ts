@@ -8,7 +8,7 @@ export const validateSubjectByIdParam = joiObject({
 });
 export const validateCreateSubject = joiObject<I_Subject>({
   name: Joi.string().required(),
-  collegeId: Validators.mongoIdValidator().required(),
+  collegeId: Validators.mongoIdValidator(),
   courseId: Validators.mongoIdValidator().required(),
   isMainSubject: Joi.boolean().required(),
 });
