@@ -1,3 +1,4 @@
+import { FilterQuery } from 'mongoose';
 import { userDb } from '../../../config/database/user.db';
 import { UserType } from '../../../utils/enums';
 import { I_Admin } from '../admin.model';
@@ -31,10 +32,14 @@ const loginUser = (email: string, userType: UserType) => {
   }
 };
 
+const findOneTeacher = (query: FilterQuery<I_Teacher>) =>
+  userDb.Teacher.findOne(query);
+
 export default {
   registerAsStudent,
   registerAsTeacher,
   registerAsFaculty,
   registerAsAdmin,
+  findOneTeacher,
   loginUser,
 };

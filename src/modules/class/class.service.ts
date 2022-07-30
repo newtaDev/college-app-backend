@@ -1,4 +1,4 @@
-import { UpdateQuery } from 'mongoose';
+import { FilterQuery, UpdateQuery } from 'mongoose';
 import { collegeDb } from '../../config/database/college.db';
 import { I_Class } from './class.model';
 
@@ -14,10 +14,12 @@ const updateById = (classId: string, updatedData: UpdateQuery<I_Class>) =>
 const deleteById = (classId: string) =>
   collegeDb.Class.findByIdAndDelete(classId);
 
+const findOne = (query: FilterQuery<I_Class>) => collegeDb.Class.findOne(query);
+
 const isClassAlreadyCreated = (updatedName?: string, collegeId?: string) => {
   if (!collegeId) throw Error('College_id (req.user.collegeId) is required');
   if (updatedName && collegeId) {
-    return collegeDb.Class.findOne({ collegeId, name: updatedName });
+    return findOne({ collegeId, name: updatedName });
   }
   return null;
 };
@@ -25,6 +27,7 @@ export default {
   create,
   listAll,
   findById,
+  findOne,
   updateById,
   deleteById,
   isClassAlreadyCreated,

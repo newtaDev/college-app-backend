@@ -8,7 +8,7 @@
     "start": "NODE_ENV=production node ./build/index.js",
     "build": "tsc -p .",
     "dev": "NODE_ENV=development nodemon --files ./src/index.ts",
-    "lint": "yarn eslint . --ext .ts"
+    "lint": "tsc --noEmit && yarn eslint . --ext .ts"
   },
   "dependencies": {
     "@types/morgan": "^1.9.3",

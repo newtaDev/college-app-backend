@@ -2,7 +2,8 @@ import { Model, Schema, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
 import { facultyUsersList, FacultyUserTypes } from '../../utils/roles';
-import { collegeDb } from '../../config/database/college.db';
+import db from '../../config/database/db';
+import { College } from '../college/college.model';
 
 export interface I_Faculty {
   name: string;
@@ -25,7 +26,11 @@ export const facultySchema = new Schema<
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    collegeId: { type: Schema.Types.ObjectId, required: true, ref: collegeDb.College },
+    collegeId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: College,
+    },
     userType: {
       type: String,
       enum: facultyUsersList,
@@ -49,3 +54,7 @@ facultySchema.pre('save', async function (next) {
   this.password = hashedPassword;
   next();
 });
+export const Faculty = db.user.model<I_Faculty, FacultyModel>(
+  'Faculty',
+  facultySchema
+);

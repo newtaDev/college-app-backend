@@ -2,7 +2,8 @@ import { Model, Schema, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
 import { adminUsersList, AdminUserTypes } from '../../utils/roles';
-import { collegeDb } from '../../config/database/college.db';
+import db from '../../config/database/db';
+import { College } from '../college/college.model';
 
 export interface I_Admin {
   name: string;
@@ -21,7 +22,7 @@ export const adminSchema = new Schema<I_Admin, AdminModel, I_AdminMethods>(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    collegeId: { type: Schema.Types.ObjectId, ref: collegeDb.College },
+    collegeId: { type: Schema.Types.ObjectId, ref: College },
     userType: {
       type: String,
       enum: adminUsersList,
@@ -45,3 +46,8 @@ adminSchema.pre('save', async function (next) {
   this.password = hashedPassword;
   next();
 });
+
+export const Admin = db.user.model<I_Admin, AdminModel>(
+  'Admin',
+  adminSchema
+);

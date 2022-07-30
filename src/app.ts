@@ -1,12 +1,11 @@
 import express, { Application } from 'express';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
+import db from './config/database/db';
 import { errorMiddleware } from './middlewares/error_middleware';
 import { routeNotFoundMiddleware } from './middlewares/route_not_found_middleware';
 import BaseRouter, { InitialRouter } from './routers/routes';
 import logger from './utils/logger';
-import college from './config/database/college.db';
-import user from './config/database/user.db';
 // import errorMiddleware from './middlewares/error_middleware';
 
 class App {
@@ -65,9 +64,9 @@ class App {
       mongoose.set('runValidators', true);
       /// default db [college_db]
       const _db = await mongoose.connect(`${mongoUri}/college_db`);
-      college._db = _db.connection;
+      db.college = _db.connection;
       /// new connection [user_db]
-      user._db = mongoose.createConnection(`${mongoUri}/user_db`);
+      db.user = mongoose.createConnection(`${mongoUri}/user_db`);
       logger.info('Connected to database');
       logger.info(`Total Connections: ${mongoose.connections.length}`);
     } catch (error) {

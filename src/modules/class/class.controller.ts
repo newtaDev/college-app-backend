@@ -15,7 +15,7 @@ export const createClass = async (
     if (!_college) throw Error("College id doesn't exists");
     const _course = await courseService.findById(req.body.courseId);
     if (!_course) throw Error("Course id doesn't exists");
-    if (req.body.currentSem == 0 || req.body.currentSem > _course.totalSem)
+    if (req.body.currentSem <= 0 || req.body.currentSem > _course.totalSem)
       throw Error(`currentSem must be in between 1 - ${_course.totalSem}`);
     if (
       await classService.isClassAlreadyCreated(

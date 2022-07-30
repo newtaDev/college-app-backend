@@ -1,6 +1,7 @@
 // Model and schema for Course
 
 import { Types, Schema } from 'mongoose';
+import db from '../../config/database/db';
 import {
   I_CreatedBy,
   I_LastModifiedBy,
@@ -41,3 +42,5 @@ export const courseSchema = new Schema<I_Course>(
   },
   { timestamps: true }
 );
+
+export const Course = db.college.model<I_Course>('Course', courseSchema);

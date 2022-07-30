@@ -2,7 +2,10 @@ import { Model, Schema, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
 import { studentUsersList, StudentUserTypes } from '../../utils/roles';
-import { collegeDb } from '../../config/database/college.db';
+import db from '../../config/database/db';
+import { College } from '../college/college.model';
+import { Class } from '../class/class.model';
+import { Subject } from '../subject/subject.model';
 
 export interface I_Student {
   name: string;
@@ -28,8 +31,16 @@ export const studentSchema = new Schema<
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    collegeId: { type: Schema.Types.ObjectId, required: true, ref: collegeDb.College },
-    classId: { type: Schema.Types.ObjectId, required: true, ref: collegeDb.Class },
+    collegeId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: College,
+    },
+    classId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: Class,
+    },
     userType: {
       type: String,
       enum: studentUsersList,
@@ -40,7 +51,7 @@ export const studentSchema = new Schema<
       type: [Schema.Types.ObjectId],
       default: [],
       required: true,
-      ref: collegeDb.Subject,
+      ref: Subject,
     },
   },
   { timestamps: true }
@@ -59,3 +70,8 @@ studentSchema.pre('save', async function (next) {
   this.password = hashedPassword;
   next();
 });
+
+export const Student = db.user.model<I_Student, StudentModel>(
+  'Student',
+  studentSchema
+);
