@@ -1,22 +1,6 @@
 import App from './app';
 import { AppKeys } from './config/keys/app_keys';
-import { ClassRouter } from './routers/class.routes';
-import { CollegeRouter } from './routers/college.routes';
-import { CourseRouter } from './routers/course.routes';
-import { SubjectRouter } from './routers/subject.routes';
-import { ClassTimeTableRouter } from './routers/time_table/class_time_table.routes';
-import { TokenRouter } from './routers/token.routes';
-import { userRoutes } from './routers/user/user.routes';
-
-const appRoutes = [
-  new TokenRouter(),
-  ...userRoutes,
-  new CollegeRouter(),
-  new ClassRouter(),
-  new CourseRouter(),
-  new SubjectRouter(),
-  new ClassTimeTableRouter(),
-];
+import { appRoutes } from './routers/routes';
 
 const app = new App({
   appRouters: appRoutes,

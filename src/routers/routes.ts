@@ -1,6 +1,13 @@
 import { Router, Request, Response } from 'express';
 import App from '../app';
 import { AppKeys } from '../config/keys/app_keys';
+import { ClassRouter } from './class.routes';
+import { CollegeRouter } from './college.routes';
+import { CourseRouter } from './course.routes';
+import { SubjectRouter } from './subject.routes';
+import { ClassTimeTableRouter } from './time_table/class_time_table.routes';
+import { TokenRouter } from './token.routes';
+import { userRoutes } from './user/user.routes';
 
 export default interface I_BaseRouter {
   path: string;
@@ -20,15 +27,12 @@ export class InitialRouter implements I_BaseRouter {
       res.send('Welcome to our API');
     });
     // Check health
-    this.router.get(
-      '/health',
-      (req: Request, res: Response) => {
-        res.status(200).send({
-          status: 'OK',
-          upTime: process.uptime(),
-        });
-      }
-    );
+    this.router.get('/health', (req: Request, res: Response) => {
+      res.status(200).send({
+        status: 'OK',
+        upTime: process.uptime(),
+      });
+    });
     this.router.get('/info', (req: Request, res: Response) => {
       // Get all main routes in the api
       const paths: string[] = [];
@@ -46,3 +50,13 @@ export class InitialRouter implements I_BaseRouter {
     });
   }
 }
+
+export const appRoutes = [
+  new TokenRouter(),
+  ...userRoutes,
+  new CollegeRouter(),
+  new ClassRouter(),
+  new CourseRouter(),
+  new SubjectRouter(),
+  new ClassTimeTableRouter(),
+];

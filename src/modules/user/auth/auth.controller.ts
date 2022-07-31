@@ -14,8 +14,6 @@ import { I_Student } from '../student.model';
 import { I_Teacher } from '../teacher.model';
 import { adminUsersList } from '../../../utils/roles';
 import collegeService from '../../college/college.service';
-import courseService from '../../course/course.service';
-import classService from '../../class/class.service';
 import { isMongoIdExitsOrValid } from '../../../shared/functions/verify_mongo_ids';
 
 /// Login

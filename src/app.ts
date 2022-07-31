@@ -13,22 +13,27 @@ class App {
   public port: number;
   // @default: /v1
   public version: string;
+  public isTestingEnv: boolean;
+  private mongoUri: string;
   static routers: BaseRouter[];
   constructor({
     appRouters,
     mongoUri,
     port,
     version,
+    isTestingEnv,
   }: {
     appRouters: BaseRouter[];
     port: number;
     version?: string;
     mongoUri: string;
+    isTestingEnv?: boolean;
   }) {
     this.express = express();
     this.port = port;
+    this.mongoUri = mongoUri;
     this.version = version ?? '/v1';
-    this.initialiseDatabaseConnection(mongoUri);
+    this.isTestingEnv = isTestingEnv ?? false;
     this.initialiseMiddlewares();
     this.initialiseControllers(appRouters);
     this.initialiseErrorHandling();
@@ -62,11 +67,19 @@ class App {
       /// by default mongo validators run only while [creating] a document
       /// This method will ensure to run validators on every changes like [create/update]
       mongoose.set('runValidators', true);
-      /// default db [college_db]
-      const _db = await mongoose.connect(`${mongoUri}/college_db`);
+      /* By default connects to [college_db]
+       connects to [college_db] if [this.isTestingEnv] is false
+       connects to [college_db_test] if [this.isTestingEnv] is true
+      */
+      const _db = await mongoose.connect(
+        `${mongoUri}/college_db${this.isTestingEnv ? '_test' : ''}`
+      );
       db.college = _db.connection;
-      /// new connection [user_db]
-      db.user = mongoose.createConnection(`${mongoUri}/user_db`);
+      /* connects to [user_db] if [this.isTestingEnv] is false
+       connects to [user_db_test] if [this.isTestingEnv] is true */
+      db.user = mongoose.createConnection(
+        `${mongoUri}/user_db${this.isTestingEnv ? '_test' : ''}`
+      );
       logger.info('Connected to database');
       logger.info(`Total Connections: ${mongoose.connections.length}`);
     } catch (error) {
@@ -74,7 +87,8 @@ class App {
     }
   }
 
-  public listen(): void {
+  public async listen(): Promise<void> {
+    await this.initialiseDatabaseConnection(this.mongoUri);
     this.express.listen(this.port, () => {
       console.log(`App listening to http://localhost:${this.port}`);
     });
