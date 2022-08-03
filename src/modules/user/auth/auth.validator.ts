@@ -8,6 +8,7 @@ import { I_Student } from '../student.model';
 import { I_Teacher } from '../teacher.model';
 
 export const validateTeacherRegistration = joiObject<I_Teacher>({
+  _id: Validators.mongoIdValidator(),
   email: Joi.string().email().required(),
   name: Joi.string().max(30).required(),
   password: Joi.string().required(),
@@ -15,6 +16,7 @@ export const validateTeacherRegistration = joiObject<I_Teacher>({
   userType: Joi.string().valid(...Object.values(UserType)),
 });
 export const validateFacultyRegistration = joiObject<I_Faculty>({
+  _id: Validators.mongoIdValidator(),
   email: Joi.string().email().required(),
   name: Joi.string().max(30).required(),
   password: Joi.string().required(),
@@ -22,6 +24,7 @@ export const validateFacultyRegistration = joiObject<I_Faculty>({
   userType: Joi.string().valid(...Object.values(UserType)),
 });
 export const validateStudentRegistration = joiObject<I_Student>({
+  _id: Validators.mongoIdValidator(),
   email: Joi.string().email().required(),
   name: Joi.string().max(30).required(),
   password: Joi.string().required(),
@@ -32,6 +35,7 @@ export const validateStudentRegistration = joiObject<I_Student>({
 });
 
 export const validateAdminRegistration = joiObject<I_Admin>({
+  _id: Validators.mongoIdValidator(),
   email: Joi.string().email().required(),
   name: Joi.string().max(30).required(),
   password: Joi.string().required(),

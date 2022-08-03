@@ -26,4 +26,11 @@ export class Validators {
   static is24HoursTime(value: string): boolean {
     return /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(value);
   }
+  static restrictUpdatingCollegeId() {
+    return Joi.string()
+      .custom(val => {
+        if (val.length >= 0) throw Error('You Cannot update collgeId');
+      })
+      .message('Updating {{#label}} is restricted');
+  }
 }

@@ -7,6 +7,7 @@ export const validateCollegeByIdParam = joiObject({
   collegeId: Validators.mongoIdValidator().required(),
 });
 export const validateCreateCollege = joiObject<I_College>({
+  _id: Validators.mongoIdValidator(),
   name: Joi.string().required(),
   email: Joi.string().required(),
   mobile: Joi.number().required(),

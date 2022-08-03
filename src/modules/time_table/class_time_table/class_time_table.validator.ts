@@ -9,6 +9,7 @@ export const validateClassTimeTableByIdParam = joiObject({
 });
 
 export const validateCreateClassTimeTable = joiObject<I_ClassTimeTable>({
+  _id: Validators.mongoIdValidator(),
   collegeId: Validators.mongoIdValidator(),
   classId: Validators.mongoIdValidator().required(),
   subjectId: Validators.mongoIdValidator().required(),

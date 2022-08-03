@@ -13,6 +13,7 @@ import {
   getAllClassTimeTables,
   updateClassTimeTableById,
 } from '../../modules/time_table/class_time_table/class_time_table.controller';
+import { restrictUpdatingCollegeId } from '../../shared/functions/update_validators';
 
 export class ClassTimeTableRouter implements I_BaseRouter {
   constructor() {
@@ -43,7 +44,10 @@ export class ClassTimeTableRouter implements I_BaseRouter {
       `${this.path}/:classTTid`,
       [
         authMiddleware(),
-        validateSchemaMiddleware({ params: validateClassTimeTableByIdParam }),
+        validateSchemaMiddleware({
+          params: validateClassTimeTableByIdParam,
+          body: restrictUpdatingCollegeId,
+        }),
       ],
       updateClassTimeTableById
     );

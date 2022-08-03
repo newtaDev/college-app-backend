@@ -13,6 +13,7 @@ import {
   validateCreateCourse,
 } from '../modules/course/course.validator';
 import I_BaseRouter from './routes';
+import { restrictUpdatingCollegeId } from '../shared/functions/update_validators';
 
 export class CourseRouter implements I_BaseRouter {
   constructor() {
@@ -43,7 +44,10 @@ export class CourseRouter implements I_BaseRouter {
       `${this.path}/:courseId`,
       [
         authMiddleware(),
-        validateSchemaMiddleware({ params: validateCourseByIdParam }),
+        validateSchemaMiddleware({
+          params: validateCourseByIdParam,
+          body: restrictUpdatingCollegeId,
+        }),
       ],
       updateCourseById
     );

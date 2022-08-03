@@ -47,4 +47,5 @@ export const collegeSchema = new Schema<I_College>(
   { timestamps: true }
 );
 
-export const College = db.college.model<I_College>('College', collegeSchema);
+export const College = () =>
+  db.college.model<I_College>('College', collegeSchema);

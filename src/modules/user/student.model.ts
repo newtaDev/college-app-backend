@@ -34,12 +34,12 @@ export const studentSchema = new Schema<
     collegeId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: College,
+      ref: College(),
     },
     classId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: Class,
+      ref: Class(),
     },
     userType: {
       type: String,
@@ -51,7 +51,7 @@ export const studentSchema = new Schema<
       type: [Schema.Types.ObjectId],
       default: [],
       required: true,
-      ref: Subject,
+      ref: Subject(),
     },
   },
   { timestamps: true }
@@ -71,7 +71,5 @@ studentSchema.pre('save', async function (next) {
   next();
 });
 
-export const Student = db.user.model<I_Student, StudentModel>(
-  'Student',
-  studentSchema
-);
+export const Student = () =>
+  db.user.model<I_Student, StudentModel>('Student', studentSchema);

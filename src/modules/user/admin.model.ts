@@ -46,8 +46,5 @@ adminSchema.pre('save', async function (next) {
   this.password = hashedPassword;
   next();
 });
-
-export const Admin = db.user.model<I_Admin, AdminModel>(
-  'Admin',
-  adminSchema
-);
+export const Admin = () =>
+  db.user.model<I_Admin, AdminModel>('Admin', adminSchema);

@@ -29,7 +29,7 @@ export const facultySchema = new Schema<
     collegeId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: College,
+      ref: College(),
     },
     userType: {
       type: String,
@@ -54,7 +54,5 @@ facultySchema.pre('save', async function (next) {
   this.password = hashedPassword;
   next();
 });
-export const Faculty = db.user.model<I_Faculty, FacultyModel>(
-  'Faculty',
-  facultySchema
-);
+export const Faculty = () =>
+  db.user.model<I_Faculty, FacultyModel>('Faculty', facultySchema);

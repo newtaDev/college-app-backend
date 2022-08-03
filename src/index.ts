@@ -9,10 +9,9 @@ const app = new App({
   port: Number.parseInt((AppKeys.port ?? 1377) as string),
   version: '/v1',
 });
-
 app.listen();
 
-// ClassTimeTable.find().populate('teacherId', '-password').then(console.log);
+// collegeDb.ClassTimeTable.find().populate('collegeId').then(console.log);
 // logger.info('asdas',{'asd':'asdss'})
 // logger.error('error log')
 // logger.debug('debug log')

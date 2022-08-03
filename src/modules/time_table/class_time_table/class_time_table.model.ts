@@ -4,6 +4,9 @@ import { I_CreatedBy } from '../../../shared/interfaces/interfaces';
 import { UserType, Week } from '../../../utils/enums';
 import { Teacher } from '../../user/teacher.model';
 import db from '../../../config/database/db';
+import { Subject } from '../../subject/subject.model';
+import { Class } from '../../class/class.model';
+import { College } from '../../college/college.model';
 export interface I_ClassTimeTable {
   subjectId: Types.ObjectId;
   classId: Types.ObjectId;
@@ -38,22 +41,22 @@ export const classTimeTableSchema = new Schema<I_ClassTimeTable>(
     subjectId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: 'Subject',
+      ref: Subject(),
     },
     classId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: 'Class',
+      ref: Class(),
     },
     collegeId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: 'College',
+      ref: College(),
     },
     teacherId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: Teacher,
+      ref: Teacher(),
     },
     endingTime: {
       type: String,
@@ -83,7 +86,5 @@ export const classTimeTableSchema = new Schema<I_ClassTimeTable>(
   { timestamps: true }
 );
 
-export const ClassTimeTable = db.college.model<I_ClassTimeTable>(
-  'ClassTimeTable',
-  classTimeTableSchema
-);
+export const ClassTimeTable = () =>
+  db.college.model<I_ClassTimeTable>('ClassTimeTable', classTimeTableSchema);

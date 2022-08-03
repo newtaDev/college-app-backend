@@ -1,4 +1,5 @@
 import express, { Application } from 'express';
+import { Server } from 'http';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
 import db from './config/database/db';
@@ -67,29 +68,45 @@ class App {
       /// by default mongo validators run only while [creating] a document
       /// This method will ensure to run validators on every changes like [create/update]
       mongoose.set('runValidators', true);
+
       /* By default connects to [college_db]
-       connects to [college_db] if [this.isTestingEnv] is false
-       connects to [college_db_test] if [this.isTestingEnv] is true
+      connects to [college_db] if [this.isTestingEnv] is false
+      connects to [college_db_test] if [this.isTestingEnv] is true
       */
       const _db = await mongoose.connect(
-        `${mongoUri}/college_db${this.isTestingEnv ? '_test' : ''}`
+        `${mongoUri}/college_db4${this.isTestingEnv ? '_test' : ''}`
       );
       db.college = _db.connection;
       /* connects to [user_db] if [this.isTestingEnv] is false
        connects to [user_db_test] if [this.isTestingEnv] is true */
       db.user = mongoose.createConnection(
-        `${mongoUri}/user_db${this.isTestingEnv ? '_test' : ''}`
+        `${mongoUri}/user_db4${this.isTestingEnv ? '_test' : ''}`
       );
       logger.info('Connected to database');
-      logger.info(`Total Connections: ${mongoose.connections.length}`);
+      logger.info(`Total DB Connections: ${mongoose.connections.length}`);
+      this.getDbNames();
     } catch (error) {
       logger.error('Error connecting to database: ', error);
     }
   }
 
-  public async listen(): Promise<void> {
+  private getDbNames(): void {
+    let _connectionNames = 'DB Names: \n  [\n';
+    /// setting delay for 1 sec
+    /// becaz for some reason [db.user] is not updated asyncronsly
+    setTimeout(() => {
+      const _allConnections = [db.college, db.user];
+      _allConnections.forEach(conn => {
+        _connectionNames += `\t${conn.name},\n`;
+      });
+      logger.info(`${_connectionNames}  ]`);
+      ///
+    }, 1000);
+  }
+
+  public async listen(): Promise<Server> {
     await this.initialiseDatabaseConnection(this.mongoUri);
-    this.express.listen(this.port, () => {
+    return this.express.listen(this.port, () => {
       console.log(`App listening to http://localhost:${this.port}`);
     });
   }

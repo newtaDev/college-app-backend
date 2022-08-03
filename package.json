@@ -9,7 +9,8 @@
     "build": "tsc -p .",
     "dev": "NODE_ENV=development nodemon --files ./src/index.ts",
     "lint": "tsc --noEmit && yarn eslint . --ext .ts",
-    "test": "jest"
+    "test": "jest",
+    "test:inOrder": "jest src/__test__/_run_test_in_order.test.ts"
   },
   "dependencies": {
     "@types/morgan": "^1.9.3",

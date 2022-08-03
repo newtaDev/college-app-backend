@@ -2,20 +2,20 @@ import { FilterQuery, UpdateQuery } from 'mongoose';
 import { collegeDb } from '../../config/database/college.db';
 import { I_Subject } from './subject.model';
 
-const create = (params: I_Subject) => collegeDb.Subject.create(params);
+const create = (params: I_Subject) => collegeDb.Subject().create(params);
 
-const listAll = () => collegeDb.Subject.find();
+const listAll = () => collegeDb.Subject().find();
 
-const findById = (subjectId: string) => collegeDb.Subject.findById(subjectId);
+const findById = (subjectId: string) => collegeDb.Subject().findById(subjectId);
 
 const updateById = (subjectId: string, updatedData: UpdateQuery<I_Subject>) =>
-  collegeDb.Subject.findByIdAndUpdate(subjectId, updatedData, { new: true });
+  collegeDb.Subject().findByIdAndUpdate(subjectId, updatedData, { new: true });
 
 const deleteById = (subjectId: string) =>
-  collegeDb.Subject.findByIdAndDelete(subjectId);
+  collegeDb.Subject().findByIdAndDelete(subjectId);
 
 const findOne = (query: FilterQuery<I_Subject>) =>
-  collegeDb.Subject.findOne(query);
+  collegeDb.Subject().findOne(query);
 
 const isSubjectAlreadyCreated = (
   updatedName: string,

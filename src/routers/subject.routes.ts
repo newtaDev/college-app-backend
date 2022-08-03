@@ -14,6 +14,7 @@ import { authMiddleware } from '../middlewares/auth_middleware';
 import { validateSchemaMiddleware } from '../middlewares/validation_middleware';
 
 import I_BaseRouter from './routes';
+import { restrictUpdatingCollegeId } from '../shared/functions/update_validators';
 
 export class SubjectRouter implements I_BaseRouter {
   constructor() {
@@ -44,7 +45,10 @@ export class SubjectRouter implements I_BaseRouter {
       `${this.path}/:subjectId`,
       [
         authMiddleware(),
-        validateSchemaMiddleware({ params: validateSubjectByIdParam }),
+        validateSchemaMiddleware({
+          params: validateSubjectByIdParam,
+          body: restrictUpdatingCollegeId,
+        }),
       ],
       updateSubjectById
     );

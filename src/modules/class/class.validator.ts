@@ -9,6 +9,7 @@ export const validateClassByIdParam = joiObject({
 });
 
 export const validateCreateClass = joiObject<I_Class>({
+  _id: Validators.mongoIdValidator(),
   name: Joi.string().required(),
   classNumber: Joi.string().required(),
   collegeId: Validators.mongoIdValidator(),

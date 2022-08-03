@@ -26,7 +26,7 @@ export const validateSchemaMiddleware =
         new ApiException({
           message: `${schemaType ?? ''}Schema validation failed`,
           devMsg: error instanceof Error ? error.message : null,
-          statuscode: 404,
+          statuscode: 422,
           errorDetails: errorDetails,
         })
       );

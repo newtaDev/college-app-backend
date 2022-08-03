@@ -56,7 +56,5 @@ teacherSchema.pre('save', async function (next) {
   this.password = hashedPassword;
   next();
 });
-export const Teacher = db.user.model<I_Teacher, TeacherModel>(
-  'Teacher',
-  teacherSchema
-);
+export const Teacher = () =>
+  db.user.model<I_Teacher, TeacherModel>('Teacher', teacherSchema);

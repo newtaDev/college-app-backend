@@ -7,6 +7,8 @@ import {
   I_CreatedBy,
   I_LastModifiedBy,
 } from '../../shared/interfaces/interfaces';
+import { College } from '../college/college.model';
+import { Course } from '../course/course.model';
 
 export interface I_Class {
   name: string;
@@ -35,8 +37,8 @@ export const classSchema = new Schema<I_Class>(
   {
     name: { type: String, required: true },
     classNumber: { type: Number, required: true },
-    collegeId: { type: Schema.Types.ObjectId, required: true, ref: 'College' },
-    courseId: { type: Schema.Types.ObjectId, required: true, ref: 'Course' },
+    collegeId: { type: Schema.Types.ObjectId, required: true, ref: College() },
+    courseId: { type: Schema.Types.ObjectId, required: true, ref: Course() },
     batch: { type: Number, required: true },
     isCollegeCompleted: { type: Boolean, required: true, default: false },
     currentSem: { type: Number, required: true },
@@ -46,4 +48,4 @@ export const classSchema = new Schema<I_Class>(
   },
   { timestamps: true }
 );
-export const Class = db.college.model<I_Class>('Class', classSchema);
+export const Class = () => db.college.model<I_Class>('Class', classSchema);

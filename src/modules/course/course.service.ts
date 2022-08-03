@@ -4,20 +4,20 @@ import { collegeDb } from '../../config/database/college.db';
 import { I_Subject } from '../subject/subject.model';
 import { I_Course } from './course.model';
 
-const create = (params: I_Course) => collegeDb.Course.create(params);
+const create = (params: I_Course) => collegeDb.Course().create(params);
 
-const listAll = () => collegeDb.Course.find();
+const listAll = () => collegeDb.Course().find();
 
-const findById = (courseId: string) => collegeDb.Course.findById(courseId);
+const findById = (courseId: string) => collegeDb.Course().findById(courseId);
 
 const updateById = (courseId: string, updatedData: UpdateQuery<I_Course>) =>
-  collegeDb.Course.findByIdAndUpdate(courseId, updatedData, { new: true });
+  collegeDb.Course().findByIdAndUpdate(courseId, updatedData, { new: true });
 
 const deleteById = (courseId: string) =>
-  collegeDb.Course.findByIdAndDelete(courseId);
+  collegeDb.Course().findByIdAndDelete(courseId);
 
 const findOne = (query: FilterQuery<I_Course>) =>
-  collegeDb.Course.findOne(query);
+  collegeDb.Course().findOne(query);
 
 const isCourseAlreadyCreated = (updatedName?: string, collegeId?: string) => {
   if (!collegeId) throw Error('College_id (req.user.collegeId) is required');
@@ -33,7 +33,7 @@ const isCourseAlreadyCreated = (updatedName?: string, collegeId?: string) => {
 const insertSubjectIdToCourse = (
   subject: Document<unknown, unknown, I_Subject> & I_Subject
 ) =>
-  collegeDb.Course.findOneAndUpdate(
+  collegeDb.Course().findOneAndUpdate(
     {
       _id: subject.courseId,
       collegeId: subject.collegeId,
@@ -53,7 +53,7 @@ const removeAndInsertSubjectIdToCourse = async (
   _subject: Document<unknown, unknown, I_Subject> & I_Subject
 ) => {
   /// remove
-  await collegeDb.Course.updateMany(
+  await collegeDb.Course().updateMany(
     {
       _id: _subject.courseId,
       collegeId: _subject.collegeId,

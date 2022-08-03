@@ -6,6 +6,8 @@ import {
   I_CreatedBy,
   I_LastModifiedBy,
 } from '../../shared/interfaces/interfaces';
+import { College } from '../college/college.model';
+import { Course } from '../course/course.model';
 
 export interface I_Subject {
   name: string;
@@ -32,8 +34,8 @@ const _createdOrModifiedBy = {
 export const subjectSchema = new Schema<I_Subject>(
   {
     name: { type: String, required: true },
-    collegeId: { type: Schema.Types.ObjectId, required: true, ref: 'College' },
-    courseId: { type: Schema.Types.ObjectId, required: true, ref: 'Course' },
+    collegeId: { type: Schema.Types.ObjectId, required: true, ref: College() },
+    courseId: { type: Schema.Types.ObjectId, required: true, ref: Course() },
     isMainSubject: { type: Boolean, required: true, default: true },
     createdBy: _createdOrModifiedBy,
     lastModifiedBy: _createdOrModifiedBy,
@@ -41,4 +43,5 @@ export const subjectSchema = new Schema<I_Subject>(
   { timestamps: true }
 );
 
-export const Subject = db.college.model<I_Subject>('Subject', subjectSchema);
+export const Subject = () =>
+  db.college.model<I_Subject>('Subject', subjectSchema);

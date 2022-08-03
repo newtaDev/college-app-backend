@@ -3,7 +3,6 @@ import { JwtPayload } from 'jsonwebtoken';
 import { ApiException } from '../shared/exceptions/api_exceptions';
 import { verifyAccessToken } from '../shared/services/jwt/jwt_service';
 import logger from '../utils/logger';
-import {} from '../shared/types/global_types';
 
 export const authMiddleware =
   () => (req: Request, res: Response, next: NextFunction) => {

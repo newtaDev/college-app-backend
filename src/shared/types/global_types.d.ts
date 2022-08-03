@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { I_JwtUserPayload } from '../services/jwt/jwt_interfaces';
 
 declare global {

@@ -13,6 +13,7 @@ import {
 import { validateSchemaMiddleware } from '../middlewares/validation_middleware';
 import I_BaseRouter from './routes';
 import { authMiddleware } from '../middlewares/auth_middleware';
+import { restrictUpdatingCollegeId } from '../shared/functions/update_validators';
 
 export class ClassRouter implements I_BaseRouter {
   constructor() {
@@ -43,7 +44,10 @@ export class ClassRouter implements I_BaseRouter {
       `${this.path}/:classId`,
       [
         authMiddleware(),
-        validateSchemaMiddleware({ params: validateClassByIdParam }),
+        validateSchemaMiddleware({
+          params: validateClassByIdParam,
+          body: restrictUpdatingCollegeId,
+        }),
       ],
       updateClassById
     );
