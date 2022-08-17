@@ -74,13 +74,13 @@ class App {
       connects to [college_db_test] if [this.isTestingEnv] is true
       */
       const _db = await mongoose.connect(
-        `${mongoUri}/college_db4${this.isTestingEnv ? '_test' : ''}`
+        `${mongoUri}/college_db${this.isTestingEnv ? '_test' : ''}`
       );
       db.college = _db.connection;
       /* connects to [user_db] if [this.isTestingEnv] is false
        connects to [user_db_test] if [this.isTestingEnv] is true */
       db.user = mongoose.createConnection(
-        `${mongoUri}/user_db4${this.isTestingEnv ? '_test' : ''}`
+        `${mongoUri}/user_db${this.isTestingEnv ? '_test' : ''}`
       );
       logger.info('Connected to database');
       logger.info(`Total DB Connections: ${mongoose.connections.length}`);

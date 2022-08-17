@@ -1,9 +1,11 @@
 import { Router, Request, Response } from 'express';
 import App from '../app';
 import { AppKeys } from '../config/keys/app_keys';
+import { AttendanceRouter } from './attendance.routes';
 import { ClassRouter } from './class.routes';
 import { CollegeRouter } from './college.routes';
 import { CourseRouter } from './course.routes';
+import { SeederRouter } from './seeder.routes';
 import { SubjectRouter } from './subject.routes';
 import { ClassTimeTableRouter } from './time_table/class_time_table.routes';
 import { TokenRouter } from './token.routes';
@@ -53,10 +55,12 @@ export class InitialRouter implements I_BaseRouter {
 
 export const appRoutes = [
   new TokenRouter(),
+  new SeederRouter(),
   ...userRoutes,
   new CollegeRouter(),
   new ClassRouter(),
   new CourseRouter(),
   new SubjectRouter(),
   new ClassTimeTableRouter(),
+  new AttendanceRouter(),
 ];

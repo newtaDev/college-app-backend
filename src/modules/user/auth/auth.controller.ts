@@ -13,7 +13,6 @@ import { I_Admin } from '../admin.model';
 import { I_Student } from '../student.model';
 import { I_Teacher } from '../teacher.model';
 import { adminUsersList } from '../../../utils/roles';
-import collegeService from '../../college/college.service';
 import { isMongoIdExitsOrValid } from '../../../shared/functions/verify_mongo_ids';
 
 /// Login
@@ -69,8 +68,9 @@ export const registerAsTeacher = async (
   next: NextFunction
 ) => {
   try {
-    const _college = await collegeService.findById(req.body.collegeId);
-    if (!_college) throw Error("College id doesn't exists");
+    await isMongoIdExitsOrValid({
+      collegeId: req.body.collegeId,
+    });
     const _body = req.body as I_Teacher;
     const _user = await authService.registerAsTeacher(_body);
     //create access and refresh token
@@ -148,6 +148,9 @@ export const registerAsFaculty = async (
   next: NextFunction
 ) => {
   try {
+    await isMongoIdExitsOrValid({
+      collegeId: req.body.collegeId,
+    });
     const _body = req.body as I_Faculty;
     const _user = await authService.registerAsFaculty(_body);
     //create access and refresh token
@@ -184,6 +187,9 @@ export const registerAsAdmin = async (
   next: NextFunction
 ) => {
   try {
+    await isMongoIdExitsOrValid({
+      collegeId: req.body.collegeId,
+    });
     const _body = req.body as I_Admin;
     const _user = await authService.registerAsAdmin(_body);
     //create access and refresh token

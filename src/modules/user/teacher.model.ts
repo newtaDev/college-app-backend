@@ -46,8 +46,10 @@ export const teacherSchema = new Schema<
 teacherSchema.methods.isPasswordValid = async function (password: string) {
   return await bcrypt.compare(password, this.password);
 };
-
-teacherSchema.pre('save', async function (next) {
+/// replaced [save] hook with [validate]
+/// Runs on insertMany,save .....
+/// Not on update
+teacherSchema.pre('validate', async function (next) {
   if (!this.isModified('password')) {
     return next();
   }

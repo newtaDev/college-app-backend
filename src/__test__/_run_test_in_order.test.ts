@@ -6,10 +6,11 @@ describe('All test running in order', () => {
   });
 
   
-  it('⚡️ 🤍 Tested 🤍 ⚡️', () => {
+  it('⚡️ 🤍 Testing 🤍 ⚡️', () => {
     expect('OK').toEqual('OK');
   });
 });
 
+/// By importing files in orider will also run tests in order
 import './apis/_initial_.test';
 import './apis/college.test';

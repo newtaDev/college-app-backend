@@ -60,8 +60,10 @@ export const studentSchema = new Schema<
 studentSchema.methods.isPasswordValid = async function (password: string) {
   return await bcrypt.compare(password, this.password);
 };
-
-studentSchema.pre('save', async function (next) {
+/// replaced [save] hook with [validate]
+/// Runs on insertMany,save .....
+/// Not on update
+studentSchema.pre('validate', async function (next) {
   if (!this.isModified('password')) {
     return next();
   }

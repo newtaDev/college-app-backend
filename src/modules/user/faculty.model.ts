@@ -45,7 +45,20 @@ facultySchema.methods.isPasswordValid = async function (password: string) {
   return await bcrypt.compare(password, this.password);
 };
 
-facultySchema.pre('save', async function (next) {
+// facultySchema.pre('save', async function (next) {
+//   if (!this.isModified('password')) {
+//     return next();
+//   }
+//   // 10 is salt
+//   const hashedPassword = await bcrypt.hash(this.password, 10);
+//   this.password = hashedPassword;
+//   next();
+// });
+
+/// replaced [save] hook with [validate]
+/// Runs on insertMany,save .....
+/// Not on update
+facultySchema.pre('validate', async function (next) {
   if (!this.isModified('password')) {
     return next();
   }

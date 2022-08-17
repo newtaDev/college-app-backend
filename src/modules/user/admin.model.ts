@@ -36,8 +36,10 @@ export const adminSchema = new Schema<I_Admin, AdminModel, I_AdminMethods>(
 adminSchema.methods.isPasswordValid = async function (password: string) {
   return await bcrypt.compare(password, this.password);
 };
-
-adminSchema.pre('save', async function (next) {
+/// replaced [save] hook with [validate]
+/// Runs on insertMany,save .....
+/// Not on update
+adminSchema.pre('validate', async function (next) {
   if (!this.isModified('password')) {
     return next();
   }
