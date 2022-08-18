@@ -19,7 +19,6 @@ export const createAccessTokenFromRefreshToken = (
 ) => {
   try {
     const payload = verifyRefreshToken(req.body.refreshToken) as JwtPayload;
-    console.log(payload);
     const accessToken = createAccessToken(payload.data);
     const refreshToken = createRefreshToken(payload.data);
     const _response = successResponse({

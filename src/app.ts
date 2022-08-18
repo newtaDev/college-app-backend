@@ -7,6 +7,7 @@ import { errorMiddleware } from './middlewares/error_middleware';
 import { routeNotFoundMiddleware } from './middlewares/route_not_found_middleware';
 import BaseRouter, { InitialRouter } from './routers/routes';
 import logger from './utils/logger';
+import cors from 'cors'
 // import errorMiddleware from './middlewares/error_middleware';
 
 class App {
@@ -41,6 +42,7 @@ class App {
   }
 
   private initialiseMiddlewares() {
+    this.express.use(cors());
     this.express.use(express.json());
     this.express.use(morgan('dev'));
     this.express.use(express.urlencoded({ extended: false }));
