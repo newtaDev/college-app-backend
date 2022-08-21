@@ -60,7 +60,7 @@ export class AttendanceRouter implements I_BaseRouter {
       deleteAttendanceById
     );
     this.router.get(
-      `${this.path}/report/class`,
+      `${this.path}/report/subjects`,
       [
         authMiddleware(),
         validateSchemaMiddleware({
@@ -70,7 +70,7 @@ export class AttendanceRouter implements I_BaseRouter {
       getAttendancesReportOfSubjects
     );
     this.router.get(
-      `${this.path}/report/class/subjects`,
+      `${this.path}/report/subjects/students`,
       [
         authMiddleware(),
         validateSchemaMiddleware({
