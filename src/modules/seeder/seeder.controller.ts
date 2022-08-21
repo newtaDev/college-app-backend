@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import { collegeDb } from '../../config/database/college.db';
-import { userDb } from '../../config/database/user.db';
 import { ApiException } from '../../shared/exceptions/api_exceptions';
 import { importAttendanceData } from './data/attendance.data';
 import { importClassData } from './data/classes.data';
@@ -23,26 +22,26 @@ export const importInitialData = async (
 ) => {
   try {
     /// create SuperAdmin
-    await userDb.Admin().insertMany(importSuperAdminsData);
+    await collegeDb.Admin.insertMany(importSuperAdminsData);
     /// create Admin
-    await userDb.Admin().insertMany(importAdminsData);
+    await collegeDb.Admin.insertMany(importAdminsData);
     /// create colleges
-    await collegeDb.College().insertMany(importCollegeData);
+    await collegeDb.College.insertMany(importCollegeData);
     /// create Teacher
-    await userDb.Teacher().insertMany(importTeachersData);
+    await collegeDb.Teacher.insertMany(importTeachersData);
     /// create faculties
-    await userDb.Faculty().insertMany(importFacultyData);
+    await collegeDb.Faculty.insertMany(importFacultyData);
     /// create students
-    await userDb.Student().insertMany(importStudentsData);
+    await collegeDb.Student.insertMany(importStudentsData);
 
     /// create courses
-    await collegeDb.Course().insertMany(importCourseData);
+    await collegeDb.Course.insertMany(importCourseData);
     /// create classes
-    await collegeDb.Class().insertMany(importClassData);
+    await collegeDb.Class.insertMany(importClassData);
     /// create subjects
-    await collegeDb.Subject().insertMany(importSubjectData);
+    await collegeDb.Subject.insertMany(importSubjectData);
     /// create attendences
-    await collegeDb.Attendance().insertMany(importAttendanceData);
+    await collegeDb.Attendance.insertMany(importAttendanceData);
 
     res.send({ status: 'IMPORT SUCCESS' });
   } catch (error) {
@@ -61,26 +60,26 @@ export const deleteInitialData = async (
   next: NextFunction
 ) => {
   try {
-    await userDb.Admin().deleteMany({ _id: idsData.superAdminIds });
+    await collegeDb.Admin.deleteMany({ _id: idsData.superAdminIds });
     /// delete Admin
-    await userDb.Admin().deleteMany({ _id: idsData.adminIds });
+    await collegeDb.Admin.deleteMany({ _id: idsData.adminIds });
     /// delete colleges
-    await collegeDb.College().deleteMany({ _id: idsData.collegeIds });
+    await collegeDb.College.deleteMany({ _id: idsData.collegeIds });
     /// delete Teacher
-    await userDb.Teacher().deleteMany({ _id: idsData.teacherIds });
+    await collegeDb.Teacher.deleteMany({ _id: idsData.teacherIds });
     /// delete faculties
-    await userDb.Faculty().deleteMany({ _id: idsData.facultyIds });
+    await collegeDb.Faculty.deleteMany({ _id: idsData.facultyIds });
     /// delete students
-    await userDb.Student().deleteMany({ _id: idsData.studentIds });
+    await collegeDb.Student.deleteMany({ _id: idsData.studentIds });
 
     /// delete courses
-    await collegeDb.Course().deleteMany({ _id: idsData.coursesIds });
+    await collegeDb.Course.deleteMany({ _id: idsData.coursesIds });
     /// delete classes
-    await collegeDb.Class().deleteMany({ _id: idsData.classIds });
+    await collegeDb.Class.deleteMany({ _id: idsData.classIds });
     /// delete subjects
-    await collegeDb.Subject().deleteMany({ _id: idsData.subjectIds });
+    await collegeDb.Subject.deleteMany({ _id: idsData.subjectIds });
     /// delete attendences
-    await collegeDb.Attendance().deleteMany({ _id: idsData.attendanceIds });
+    await collegeDb.Attendance.deleteMany({ _id: idsData.attendanceIds });
     res.send({ status: 'DELETE SUCCESS' });
   } catch (error) {
     return next(
@@ -92,4 +91,3 @@ export const deleteInitialData = async (
     );
   }
 };
-

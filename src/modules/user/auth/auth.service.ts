@@ -1,5 +1,5 @@
 import { FilterQuery } from 'mongoose';
-import { userDb } from '../../../config/database/user.db';
+import { collegeDb } from '../../../config/database/college.db';
 import { UserType } from '../../../utils/enums';
 import { I_Admin } from '../admin.model';
 import { I_Faculty } from '../faculty.model';
@@ -7,39 +7,39 @@ import { I_Student } from '../student.model';
 import { I_Teacher } from '../teacher.model';
 
 const registerAsTeacher = (teacher: I_Teacher) =>
-  userDb.Teacher().create(teacher);
+  collegeDb.Teacher.create(teacher);
 const registerAsStudent = (student: I_Student) =>
-  userDb.Student().create(student);
+  collegeDb.Student.create(student);
 const registerAsFaculty = (faculty: I_Faculty) =>
-  userDb.Faculty().create(faculty);
-const registerAsAdmin = (admin: I_Admin) => userDb.Admin().create(admin);
+  collegeDb.Faculty.create(faculty);
+const registerAsAdmin = (admin: I_Admin) => collegeDb.Admin.create(admin);
 
 const getCountOfStudents = (collegeId?: string, classId?: string) =>
-  userDb.Student().find({ collegeId, classId }).count();
+  collegeDb.Student.find({ collegeId, classId }).count();
 
 const getStudentById = (studentId: string) =>
-  userDb.Student().findById(studentId).select(['-password', '-__v']);
+  collegeDb.Student.findById(studentId).select(['-password', '-__v']);
 
 const loginUser = (email: string, userType: UserType) => {
   /// Find using `userType` if multiple `userType` is present in same collection
   switch (userType) {
     case UserType.admin:
-      return userDb.Admin().findOne({ email: email, userType });
+      return collegeDb.Admin.findOne({ email: email, userType });
     case UserType.superAdmin:
-      return userDb.Admin().findOne({ email: email, userType });
+      return collegeDb.Admin.findOne({ email: email, userType });
     case UserType.staff:
-      return userDb.Faculty().findOne({ email: email, userType });
+      return collegeDb.Faculty.findOne({ email: email, userType });
     case UserType.principal:
-      return userDb.Faculty().findOne({ email: email, userType });
+      return collegeDb.Faculty.findOne({ email: email, userType });
     case UserType.student:
-      return userDb.Student().findOne({ email: email });
+      return collegeDb.Student.findOne({ email: email });
     case UserType.teacher:
-      return userDb.Teacher().findOne({ email: email });
+      return collegeDb.Teacher.findOne({ email: email });
   }
 };
 
 const findOneTeacher = (query: FilterQuery<I_Teacher>) =>
-  userDb.Teacher().findOne(query);
+  collegeDb.Teacher.findOne(query);
 
 export default {
   registerAsStudent,

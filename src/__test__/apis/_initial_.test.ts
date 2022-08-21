@@ -1,14 +1,13 @@
 import supertest from 'supertest';
 import { testApp } from '../config/test_server';
-import db from '../../config/database/db';
 import test_data from '../config/test_data';
+import mongoose from 'mongoose';
 
 let accessToken: string;
 describe('Initial Test', () => {
   beforeAll(async () => {
     if (process.env.NODE_ENV == 'test' && testApp.isTestingEnv) {
-      await db.college.dropDatabase();
-      await db.user.dropDatabase();
+      await mongoose.connection.dropDatabase();
     }
   });
 

@@ -1,5 +1,5 @@
+import mongoose from 'mongoose';
 import App from '../../app';
-import db from '../../config/database/db';
 import { appRoutes } from '../../routers/routes';
 
 export const testApp = new App({
@@ -11,8 +11,7 @@ export const testApp = new App({
   isTestingEnv: true,
 });
 export const disconnectAllTestingDb = async () => {
-  await db.college.close();
-  await db.user.close();
+  await mongoose.connection.close();
 };
 
 // run -->    yarn test / yarn test --detectOpenHandles

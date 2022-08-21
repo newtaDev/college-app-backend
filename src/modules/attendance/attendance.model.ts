@@ -1,15 +1,11 @@
 // Model and schema for College
 
-import { Schema, Types, ValidatorProps } from 'mongoose';
-import db from '../../config/database/db';
-import { College } from '../college/college.model';
-import { Subject } from '../subject/subject.model';
+import mongoose, { Schema, Types, ValidatorProps } from 'mongoose';
 
 import {
   I_CreatedBy,
   I_LastModifiedBy,
 } from '../../shared/interfaces/interfaces';
-import { Class } from '../class/class.model';
 import { Validators } from '../../utils/validators';
 
 export interface I_Attendance {
@@ -24,7 +20,7 @@ export interface I_Attendance {
   createdAt?: Date;
   lastModifiedBy?: I_LastModifiedBy;
 }
-const _createdOrModifiedBy = {  
+const _createdOrModifiedBy = {
   type: {
     name: {
       type: String,
@@ -40,9 +36,9 @@ const _createdOrModifiedBy = {
 
 export const attenadanceSchema = new Schema<I_Attendance>(
   {
-    collegeId: { type: Schema.Types.ObjectId, required: true, ref: College() },
-    classId: { type: Schema.Types.ObjectId, required: true, ref: Class() },
-    subjectId: { type: Schema.Types.ObjectId, required: true, ref: Subject() },
+    collegeId: { type: Schema.Types.ObjectId, required: true, ref: 'College' },
+    classId: { type: Schema.Types.ObjectId, required: true, ref: 'Class' },
+    subjectId: { type: Schema.Types.ObjectId, required: true, ref: 'Subject' },
     classStartTime: {
       type: String,
       required: true,
@@ -65,7 +61,7 @@ export const attenadanceSchema = new Schema<I_Attendance>(
       type: [Schema.Types.ObjectId],
       default: [],
       required: true,
-      ref: Subject(),
+      ref: 'Subject',
     },
     currentSem: {
       type: Number,
@@ -77,5 +73,7 @@ export const attenadanceSchema = new Schema<I_Attendance>(
   { timestamps: true }
 );
 
-export const Attendance = () =>
-  db.college.model<I_Attendance>('Attendance', attenadanceSchema);
+export const Attendance = mongoose.model<I_Attendance>(
+  'Attendance',
+  attenadanceSchema
+);

@@ -2,12 +2,11 @@ import express, { Application } from 'express';
 import { Server } from 'http';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
-import db from './config/database/db';
 import { errorMiddleware } from './middlewares/error_middleware';
 import { routeNotFoundMiddleware } from './middlewares/route_not_found_middleware';
 import BaseRouter, { InitialRouter } from './routers/routes';
 import logger from './utils/logger';
-import cors from 'cors'
+import cors from 'cors';
 // import errorMiddleware from './middlewares/error_middleware';
 
 class App {
@@ -75,35 +74,14 @@ class App {
       connects to [college_db] if [this.isTestingEnv] is false
       connects to [college_db_test] if [this.isTestingEnv] is true
       */
-      const _db = await mongoose.connect(
+      await mongoose.connect(
         `${mongoUri}/college_db${this.isTestingEnv ? '_test' : ''}`
-      );
-      db.college = _db.connection;
-      /* connects to [user_db] if [this.isTestingEnv] is false
-       connects to [user_db_test] if [this.isTestingEnv] is true */
-      db.user = mongoose.createConnection(
-        `${mongoUri}/user_db${this.isTestingEnv ? '_test' : ''}`
       );
       logger.info('Connected to database');
       logger.info(`Total DB Connections: ${mongoose.connections.length}`);
-      this.getDbNames();
     } catch (error) {
       logger.error('Error connecting to database: ', error);
     }
-  }
-
-  private getDbNames(): void {
-    let _connectionNames = 'DB Names: \n  [\n';
-    /// setting delay for 1 sec
-    /// becaz for some reason [db.user] is not updated asyncronsly
-    setTimeout(() => {
-      const _allConnections = [db.college, db.user];
-      _allConnections.forEach(conn => {
-        _connectionNames += `\t${conn.name},\n`;
-      });
-      logger.info(`${_connectionNames}  ]`);
-      ///
-    }, 1000);
   }
 
   public async listen(): Promise<Server> {

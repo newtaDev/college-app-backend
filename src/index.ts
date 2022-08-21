@@ -11,7 +11,7 @@ const app = new App({
 });
 app.listen();
 
-// collegeDb.ClassTimeTable.find().populate('collegeId').then(console.log);
+// collegeDb.Class.find().populate('assignedToId').then(console.log);
 // logger.info('asdas',{'asd':'asdss'})
 // logger.error('error log')
 // logger.debug('debug log')

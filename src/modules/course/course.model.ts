@@ -1,12 +1,10 @@
 // Model and schema for Course
 
-import { Types, Schema } from 'mongoose';
-import db from '../../config/database/db';
+import mongoose, { Types, Schema } from 'mongoose';
 import {
   I_CreatedBy,
   I_LastModifiedBy,
 } from '../../shared/interfaces/interfaces';
-import { College } from '../college/college.model';
 
 export interface I_Course {
   name: string;
@@ -35,7 +33,7 @@ export const courseSchema = new Schema<I_Course>(
     collegeId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: College(),
+      ref: 'College',
     },
     totalSem: { type: Number, required: true },
     createdBy: _createdOrModifiedBy,
@@ -44,4 +42,4 @@ export const courseSchema = new Schema<I_Course>(
   { timestamps: true }
 );
 
-export const Course = () => db.college.model<I_Course>('Course', courseSchema);
+export const Course = mongoose.model<I_Course>('Course', courseSchema);

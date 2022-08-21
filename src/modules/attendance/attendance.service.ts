@@ -1,28 +1,27 @@
 import { FilterQuery, Types, UpdateQuery } from 'mongoose';
 import { collegeDb } from '../../config/database/college.db';
-import { Student } from '../user/student.model';
 import { I_Attendance } from './attendance.model';
 
-const create = (params: I_Attendance) => collegeDb.Attendance().create(params);
+const create = (params: I_Attendance) => collegeDb.Attendance.create(params);
 
-const listAll = () => collegeDb.Attendance().find();
+const listAll = () => collegeDb.Attendance.find();
 
 const findById = (attendanceId: string) =>
-  collegeDb.Attendance().findById(attendanceId);
+  collegeDb.Attendance.findById(attendanceId);
 
 const updateById = (
   attendanceId: string,
   updatedData: UpdateQuery<I_Attendance>
 ) =>
-  collegeDb
-    .Attendance()
-    .findByIdAndUpdate(attendanceId, updatedData, { new: true });
+  collegeDb.Attendance.findByIdAndUpdate(attendanceId, updatedData, {
+    new: true,
+  });
 
 const findOne = (query: FilterQuery<I_Attendance>) =>
-  collegeDb.Attendance().findOne(query);
+  collegeDb.Attendance.findOne(query);
 
 const deleteById = (attendanceId: string) =>
-  collegeDb.Attendance().findByIdAndDelete(attendanceId);
+  collegeDb.Attendance.findByIdAndDelete(attendanceId);
 
 const getReportOfAllSubjectsInClass = (
   collegeId: string,
@@ -30,7 +29,7 @@ const getReportOfAllSubjectsInClass = (
   currentSem: number,
   totalStudentsInClass: number
 ) =>
-  collegeDb.Attendance().aggregate([
+  collegeDb.Attendance.aggregate([
     {
       $match: {
         collegeId: {
@@ -128,7 +127,7 @@ const getAbsentStudentsReportInEachSubject = (
   subjectId: string,
   currentSem: number
 ) =>
-  collegeDb.Attendance().aggregate([
+  collegeDb.Attendance.aggregate([
     {
       $match: {
         collegeId: {

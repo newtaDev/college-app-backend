@@ -1,8 +1,7 @@
-import { Model, Schema, Types } from 'mongoose';
+import mongoose, { Model, Schema, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
 import { adminUsersList, AdminUserTypes } from '../../utils/roles';
-import db from '../../config/database/db';
 import { College } from '../college/college.model';
 
 export interface I_Admin {
@@ -48,5 +47,4 @@ adminSchema.pre('validate', async function (next) {
   this.password = hashedPassword;
   next();
 });
-export const Admin = () =>
-  db.user.model<I_Admin, AdminModel>('Admin', adminSchema);
+export const Admin = mongoose.model<I_Admin, AdminModel>('Admin', adminSchema);

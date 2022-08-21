@@ -1,9 +1,8 @@
-import { Model, Schema, Types } from 'mongoose';
+import mongoose, { Model, Schema, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
 import { teacherUsersList, TeacherUserTypes } from '../../utils/roles';
 import { College } from '../college/college.model';
-import db from '../../config/database/db';
 
 export interface I_Teacher {
   name: string;
@@ -58,5 +57,7 @@ teacherSchema.pre('validate', async function (next) {
   this.password = hashedPassword;
   next();
 });
-export const Teacher = () =>
-  db.user.model<I_Teacher, TeacherModel>('Teacher', teacherSchema);
+export const Teacher = mongoose.model<I_Teacher, TeacherModel>(
+  'Teacher',
+  teacherSchema
+);

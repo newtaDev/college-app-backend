@@ -1,11 +1,8 @@
-import { Model, Schema, Types } from 'mongoose';
+import mongoose, { Model, Schema, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
 import { studentUsersList, StudentUserTypes } from '../../utils/roles';
-import db from '../../config/database/db';
-import { College } from '../college/college.model';
 import { Class } from '../class/class.model';
-import { Subject } from '../subject/subject.model';
 
 export interface I_Student {
   name: string;
@@ -34,12 +31,12 @@ export const studentSchema = new Schema<
     collegeId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: College(),
+      ref: 'College',
     },
     classId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: Class(),
+      ref: Class,
     },
     userType: {
       type: String,
@@ -51,7 +48,7 @@ export const studentSchema = new Schema<
       type: [Schema.Types.ObjectId],
       default: [],
       required: true,
-      ref: Subject(),
+      ref: 'Subject',
     },
   },
   { timestamps: true }
@@ -73,5 +70,7 @@ studentSchema.pre('validate', async function (next) {
   next();
 });
 
-export const Student = () =>
-  db.user.model<I_Student, StudentModel>('Student', studentSchema);
+export const Student = mongoose.model<I_Student, StudentModel>(
+  'Student',
+  studentSchema
+);

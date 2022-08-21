@@ -1,9 +1,7 @@
-import { Model, Schema, Types } from 'mongoose';
+import mongoose, { Model, Schema, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
 import { facultyUsersList, FacultyUserTypes } from '../../utils/roles';
-import db from '../../config/database/db';
-import { College } from '../college/college.model';
 
 export interface I_Faculty {
   name: string;
@@ -29,7 +27,7 @@ export const facultySchema = new Schema<
     collegeId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: College(),
+      ref: 'College',
     },
     userType: {
       type: String,
@@ -67,5 +65,5 @@ facultySchema.pre('validate', async function (next) {
   this.password = hashedPassword;
   next();
 });
-export const Faculty = () =>
-  db.user.model<I_Faculty, FacultyModel>('Faculty', facultySchema);
+export const Faculty = 
+  mongoose.model<I_Faculty, FacultyModel>('Faculty', facultySchema);
