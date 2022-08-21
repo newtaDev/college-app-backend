@@ -167,6 +167,28 @@ const getAbsentStudentsReportInEachSubject = (
     {
       $unset: '_id',
     },
+    /// populating [studentId] from `subjects` collection
+    {
+      $lookup: {
+        from: 'students', /// collection name
+        localField: 'studentId',
+        foreignField: '_id',
+        as: 'student',
+      },
+    },
+    {
+      /// subject array will be overwritten
+      $addFields: {
+        // $mergeObjects: [
+        //   {
+        //     $arrayElemAt: ['$subject', 0],
+        //   },
+        // ],
+        student: {
+          $arrayElemAt: ['$student', 0],
+        },
+      },
+    },
   ]);
 export default {
   create,

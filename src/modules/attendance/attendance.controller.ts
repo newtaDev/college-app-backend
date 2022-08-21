@@ -112,11 +112,6 @@ export const getAbsentStudentsReportInEachSubject = async (
     const subjectId = req.query.subjectId?.toString() as string;
     const currentSem = Number(req.query.currentSem);
 
-    type AbsentStudents = {
-      student: unknown;
-      absent_classes: number;
-    };
-
     /// get Absent studets of perticular subject
     /// we only get [studentId] and [absent_classes] count in res
     const classAbsentStudentsReport =
@@ -127,18 +122,18 @@ export const getAbsentStudentsReportInEachSubject = async (
         currentSem
       );
 
-    /// iterate on studentId's to get student details
-    const classAbsentStudents: AbsentStudents[] = [];
-    for (let i = 0; i < classAbsentStudentsReport.length; i++) {
-      classAbsentStudents.push({
-        student: await authService.getStudentById(
-          classAbsentStudentsReport[i].studentId
-        ),
-        absent_classes: classAbsentStudentsReport[i].absent_classes,
-      });
-    }
+    // /// iterate on studentId's to get student details
+    // const classAbsentStudents: AbsentStudents[] = [];
+    // for (let i = 0; i < classAbsentStudentsReport.length; i++) {
+    //   classAbsentStudents.push({
+    //     student: await authService.getStudentById(
+    //       classAbsentStudentsReport[i].studentId
+    //     ),
+    //     absent_classes: classAbsentStudentsReport[i].absent_classes,
+    //   });
+    // }
 
-    res.send(successResponse(classAbsentStudents));
+    res.send(successResponse(classAbsentStudentsReport));
   } catch (error) {
     return next(
       new ApiException({
