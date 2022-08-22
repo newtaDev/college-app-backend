@@ -6,6 +6,9 @@ import { I_Class } from './class.model';
 export const validateClassByIdParam = joiObject({
   classId: Validators.mongoIdValidator().required(),
 });
+export const validateClassDetailsQuery = joiObject({
+  showDetails: Joi.bool(),
+});
 
 export const validateCreateClass = joiObject<I_Class>({
   _id: Validators.mongoIdValidator(),

@@ -24,7 +24,7 @@ export const importClassData: (I_Class & {
     assignedToId: idsData.teacherIds[1],
     batch: 2019,
     classNumber: 149,
-    currentSem: 1,
+    currentSem: 2,
     isCollegeCompleted: false,
   },
 ];

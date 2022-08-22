@@ -8,6 +8,7 @@ import {
 } from '../modules/class/class.controller';
 import {
   validateClassByIdParam,
+  validateClassDetailsQuery,
   validateCreateClass,
 } from '../modules/class/class.validator';
 import { validateSchemaMiddleware } from '../middlewares/validation_middleware';
@@ -23,7 +24,14 @@ export class ClassRouter implements I_BaseRouter {
   path = '/classes';
   router: Router;
   private initRoutes(): void {
-    this.router.get(this.path, authMiddleware(), getAllClasses);
+    this.router.get(
+      this.path,
+      [
+        authMiddleware(),
+        validateSchemaMiddleware({ query: validateClassDetailsQuery }),
+      ],
+      getAllClasses
+    );
     this.router.post(
       this.path,
       [

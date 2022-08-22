@@ -15,6 +15,6 @@ export const importCourseData: (I_Course & {
     _id: idsData.coursesIds[1],
     name: 'BA',
     collegeId: idsData.collegeIds[1],
-    totalSem: 6,
+    totalSem: 3,
   },
 ];

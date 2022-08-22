@@ -5,6 +5,8 @@ import { I_Class } from './class.model';
 const create = (params: I_Class) => collegeDb.Class.create(params);
 
 const listAll = () => collegeDb.Class.find();
+const listAllWithDetails = () =>
+  collegeDb.Class.find().populate(['collegeId', 'courseId', 'assignedToId']);
 
 const findById = (classId: string) => collegeDb.Class.findById(classId);
 
@@ -26,6 +28,7 @@ const isClassAlreadyCreated = (updatedName?: string, collegeId?: string) => {
 export default {
   create,
   listAll,
+  listAllWithDetails,
   findById,
   findOne,
   updateById,

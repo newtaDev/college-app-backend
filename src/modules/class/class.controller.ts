@@ -80,7 +80,12 @@ export const getAllClasses = async (
   next: NextFunction
 ) => {
   try {
-    const _class = await classService.listAll();
+    let _class;
+    if (req.query.showDetails === 'true') {
+      _class = await classService.listAllWithDetails();
+    } else {
+      _class = await classService.listAll();
+    }
     res.send(successResponse(_class));
   } catch (error) {
     return next(
