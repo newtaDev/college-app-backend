@@ -13,7 +13,7 @@ import {
 import {
   validateAbsentStudentsReportInEachSubject,
   validateAttendanceByIdParam,
-  validateAttendancesReportOfSubjects,
+  validateAttendancesWithAllSubjects,
   validateCreateAttendance,
 } from '../modules/attendance/attendance.validator';
 import I_BaseRouter from './routes';
@@ -26,7 +26,16 @@ export class AttendanceRouter implements I_BaseRouter {
   path = '/attendance';
   router: Router;
   private initRoutes(): void {
-    this.router.get(this.path, authMiddleware(), getAllAttendances);
+    this.router.get(
+      this.path,
+      [
+        authMiddleware(),
+        validateSchemaMiddleware({
+          query: validateAttendancesWithAllSubjects,
+        }),
+      ],
+      getAllAttendances
+    );
     this.router.post(
       this.path,
       [
@@ -64,7 +73,7 @@ export class AttendanceRouter implements I_BaseRouter {
       [
         authMiddleware(),
         validateSchemaMiddleware({
-          query: validateAttendancesReportOfSubjects,
+          query: validateAttendancesWithAllSubjects,
         }),
       ],
       getAttendancesReportOfSubjects

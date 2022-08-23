@@ -13,7 +13,7 @@ export const importAttendanceData: (I_Attendance & { _id: Types.ObjectId })[] =
       classEndTime: '10:30',
       currentSem: 1,
       absentStudents: [idsData.studentIds[0]],
-      createdAt: new Date('08-16-2022 09:30'),
+      attendanceTakenOn: new Date('08-16-2022 09:30'),
     },
     {
       _id: idsData.attendanceIds[1],
@@ -23,7 +23,7 @@ export const importAttendanceData: (I_Attendance & { _id: Types.ObjectId })[] =
       classStartTime: '10:30',
       classEndTime: '11:30',
       currentSem: 1,
-      createdAt: new Date('08-16-2022 10:30'),
+      attendanceTakenOn: new Date('08-16-2022 10:30'),
       absentStudents: [idsData.studentIds[0], idsData.studentIds[1]],
     },
     {
@@ -34,7 +34,7 @@ export const importAttendanceData: (I_Attendance & { _id: Types.ObjectId })[] =
       classStartTime: '11:30',
       classEndTime: '12:30',
       currentSem: 1,
-      createdAt: new Date('08-16-2022 11:30'),
+      attendanceTakenOn: new Date('08-16-2022 11:30'),
       absentStudents: [
         idsData.studentIds[0],
         idsData.studentIds[1],
@@ -49,7 +49,7 @@ export const importAttendanceData: (I_Attendance & { _id: Types.ObjectId })[] =
       classStartTime: '09:30',
       classEndTime: '10:30',
       currentSem: 1,
-      createdAt: new Date('08-14-2022 09:30'),
+      attendanceTakenOn: new Date('08-14-2022 09:30'),
       absentStudents: [],
     },
     {
@@ -60,7 +60,7 @@ export const importAttendanceData: (I_Attendance & { _id: Types.ObjectId })[] =
       classStartTime: '10:30',
       classEndTime: '11:30',
       currentSem: 2,
-      createdAt: new Date('08-14-2022 10:30'),
+      attendanceTakenOn: new Date('08-14-2022 10:30'),
       absentStudents: [idsData.studentIds[0], idsData.studentIds[1]],
     },
     {
@@ -70,7 +70,7 @@ export const importAttendanceData: (I_Attendance & { _id: Types.ObjectId })[] =
       subjectId: idsData.subjectIds[1],
       classStartTime: '11:30',
       classEndTime: '12:30',
-      createdAt: new Date('08-14-2022 11:30'),
+      attendanceTakenOn: new Date('08-14-2022 11:30'),
       currentSem: 2,
       absentStudents: [
         idsData.studentIds[0],
@@ -87,7 +87,7 @@ export const importAttendanceData: (I_Attendance & { _id: Types.ObjectId })[] =
       classEndTime: '10:30',
       currentSem: 1,
       absentStudents: [idsData.studentIds[0]],
-      createdAt: new Date('08-16-2022 09:30'),
+      attendanceTakenOn: new Date('08-16-2022 09:30'),
     },
     {
       _id: idsData.attendanceIds[7],
@@ -97,7 +97,7 @@ export const importAttendanceData: (I_Attendance & { _id: Types.ObjectId })[] =
       classStartTime: '10:30',
       classEndTime: '11:30',
       currentSem: 1,
-      createdAt: new Date('08-16-2022 10:30'),
+      attendanceTakenOn: new Date('08-16-2022 10:30'),
       absentStudents: [idsData.studentIds[0], idsData.studentIds[1]],
     },
     {
@@ -108,7 +108,7 @@ export const importAttendanceData: (I_Attendance & { _id: Types.ObjectId })[] =
       classStartTime: '11:30',
       classEndTime: '12:30',
       currentSem: 1,
-      createdAt: new Date('08-16-2022 11:30'),
+      attendanceTakenOn: new Date('08-16-2022 11:30'),
       absentStudents: [
       ],
     },
@@ -120,7 +120,7 @@ export const importAttendanceData: (I_Attendance & { _id: Types.ObjectId })[] =
       classStartTime: '11:30',
       classEndTime: '12:30',
       currentSem: 1,
-      createdAt: new Date('08-16-2022 11:30'),
+      attendanceTakenOn: new Date('08-16-2022 11:30'),
       absentStudents: [
       ],
     },
@@ -132,7 +132,7 @@ export const importAttendanceData: (I_Attendance & { _id: Types.ObjectId })[] =
       classStartTime: '09:30',
       classEndTime: '10:30',
       currentSem: 1,
-      createdAt: new Date('08-15-2022 09:30'),
+      attendanceTakenOn: new Date('08-15-2022 09:30'),
       absentStudents: [],
     },
     {
@@ -143,7 +143,7 @@ export const importAttendanceData: (I_Attendance & { _id: Types.ObjectId })[] =
       classStartTime: '10:30',
       classEndTime: '11:30',
       currentSem: 2,
-      createdAt: new Date('08-14-2022 10:30'),
+      attendanceTakenOn: new Date('08-14-2022 10:30'),
       absentStudents: [idsData.studentIds[0], idsData.studentIds[1]],
     },
     {
@@ -153,7 +153,7 @@ export const importAttendanceData: (I_Attendance & { _id: Types.ObjectId })[] =
       subjectId: idsData.subjectIds[4],
       classStartTime: '11:30',
       classEndTime: '12:30',
-      createdAt: new Date('08-15-2022 11:30'),
+      attendanceTakenOn: new Date('08-15-2022 11:30'),
       currentSem: 2,
       absentStudents: [
         idsData.studentIds[0],

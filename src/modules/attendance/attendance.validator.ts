@@ -22,12 +22,12 @@ export const validateCreateAttendance = joiObject<I_Attendance>({
     .required(),
   absentStudents: Joi.array().items(Validators.mongoIdValidator()).required(),
   ///ex:  07 22 2022
-  createdAt: Joi.date(),
+  attendanceTakenOn: Joi.date().required(),
 });
 
-export const validateAttendancesReportOfSubjects = joiObject({
-  classId: Validators.mongoIdValidator().required(),
-  currentSem: Joi.number().required(),
+export const validateAttendancesWithAllSubjects = joiObject({
+  classId: Validators.mongoIdValidator(),
+  currentSem: Joi.number(),
   collegeId: Validators.mongoIdValidator(),
 });
 

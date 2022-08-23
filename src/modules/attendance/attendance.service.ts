@@ -23,6 +23,48 @@ const findOne = (query: FilterQuery<I_Attendance>) =>
 const deleteById = (attendanceId: string) =>
   collegeDb.Attendance.findByIdAndDelete(attendanceId);
 
+const getAttendanceWithCountOfAbsentAndPresntStudents = (
+  collegeId: string,
+  classId: string,
+  currentSem: number,
+  totalStudentsInClass: number
+) =>
+  collegeDb.Attendance.aggregate([
+    {
+      $match: {
+        collegeId: {
+          $eq: new Types.ObjectId(collegeId),
+        },
+        /// on runtime checks if [classId] is not null  if exists and then peerform this query
+        ...(classId && {
+          classId: {
+            $eq: new Types.ObjectId(classId),
+          },
+        }),
+        /// on runtime checks if [currentSem] is not null and then peerform this query
+        ...(currentSem && {
+          currentSem: {
+            $eq: currentSem,
+          },
+        }),
+      },
+    },
+    {
+      $addFields: {
+        absentStudentCount: {
+          $size: '$absentStudents',
+        },
+      },
+    },
+    {
+      $addFields: {
+        presentStudentCount: {
+          $subtract: [totalStudentsInClass, '$absentStudentCount'],
+        },
+      },
+    },
+  ]);
+
 const getReportOfAllSubjectsInClass = (
   collegeId: string,
   classId: string,
@@ -199,4 +241,5 @@ export default {
   deleteById,
   getAbsentStudentsReportInEachSubject,
   getReportOfAllSubjectsInClass,
+  getAttendanceWithCountOfAbsentAndPresntStudents,
 };

@@ -17,7 +17,7 @@ export interface I_Attendance {
   classEndTime: string;
   currentSem: number;
   createdBy?: I_CreatedBy;
-  createdAt?: Date;
+  attendanceTakenOn?: Date;
   lastModifiedBy?: I_LastModifiedBy;
 }
 const _createdOrModifiedBy = {
@@ -63,9 +63,10 @@ export const attenadanceSchema = new Schema<I_Attendance>(
       required: true,
       ref: 'Subject',
     },
+    attendanceTakenOn: { type: Date, required: true, default: Date.now() },
     currentSem: {
       type: Number,
-      rewuired: true,
+      required: true,
     },
     createdBy: _createdOrModifiedBy,
     lastModifiedBy: _createdOrModifiedBy,

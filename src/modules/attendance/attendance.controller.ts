@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
+import _ from 'lodash';
 import { ApiException } from '../../shared/exceptions/api_exceptions';
 import { successResponse } from '../../shared/interfaces/req_res_interfaces';
+import { I_JwtUserPayload } from '../../shared/services/jwt/jwt_interfaces';
 import authService from '../user/auth/auth.service';
 import attendanceService from './attendance.service';
 
@@ -52,6 +54,13 @@ export const getAllAttendances = async (
   next: NextFunction
 ) => {
   try {
+    if (!_.isEmpty(req.query)) {
+      const _attendanceQuery = await _getAllAttendancesWithQueries(
+        req.query,
+        req.user
+      );
+      return res.send(successResponse(_attendanceQuery));
+    }
     const _attendance = await attendanceService.listAll();
     res.send(successResponse(_attendance));
   } catch (error) {
@@ -62,6 +71,35 @@ export const getAllAttendances = async (
         statuscode: 400,
       })
     );
+  }
+};
+
+const _getAllAttendancesWithQueries = async (
+  query: Record<string, any>,
+  user: I_JwtUserPayload
+) => {
+  try {
+    const collegeId = (query.collegeId ?? user.collegeId)?.toString() as string;
+    const classId = query.classId?.toString() as string;
+    const currentSem = Number(query.currentSem);
+    const totalStudentsInClass = await authService.getCountOfStudents(
+      collegeId,
+      classId
+    );
+    const classSubjectsReport =
+      await attendanceService.getAttendanceWithCountOfAbsentAndPresntStudents(
+        collegeId,
+        classId,
+        currentSem,
+        totalStudentsInClass
+      );
+    return classSubjectsReport;
+  } catch (error) {
+    throw new ApiException({
+      message: 'Attendance Query failed',
+      devMsg: error instanceof Error ? error.message : null,
+      statuscode: 400,
+    });
   }
 };
 
