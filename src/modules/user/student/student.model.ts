@@ -1,8 +1,9 @@
-import mongoose, { Model, Schema, Types } from 'mongoose';
+import mongoose, { Model, Query, Schema, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
-import { UserType } from '../../utils/enums';
-import { studentUsersList, StudentUserTypes } from '../../utils/roles';
-import { Class } from '../class/class.model';
+import { UserType } from '../../../utils/enums';
+import { studentUsersList, StudentUserTypes } from '../../../utils/roles';
+import logger from '../../../utils/logger';
+import { docHooks, queryHooks } from '../../../utils/mongoose';
 
 export interface I_Student {
   name: string;
@@ -18,6 +19,7 @@ interface I_StudentMethods {
   isPasswordValid(password: string): Promise<boolean>;
 }
 export type StudentModel = Model<I_Student, unknown, I_StudentMethods>;
+export type StudentQuery = Query<I_Student, unknown, I_StudentMethods>;
 
 export const studentSchema = new Schema<
   I_Student,
@@ -36,7 +38,7 @@ export const studentSchema = new Schema<
     classId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: Class,
+      ref: 'Class',
     },
     userType: {
       type: String,
@@ -57,17 +59,27 @@ export const studentSchema = new Schema<
 studentSchema.methods.isPasswordValid = async function (password: string) {
   return await bcrypt.compare(password, this.password);
 };
-/// replaced [save] hook with [validate]
-/// Runs on insertMany,save .....
-/// Not on update
-studentSchema.pre('validate', async function (next) {
+
+studentSchema.pre(queryHooks, async function (next) {
+  const _password = this.get('password');
+  if (!_password) return next();
+  logger.debug('--- Query: Password encrypted -- ');
+
+  // 10 is salt
+  const hashedPassword = await bcrypt.hash(_password, 10);
+  this.update({}, { password: hashedPassword });
+  return next();
+});
+
+studentSchema.pre(docHooks, async function (next) {
   if (!this.isModified('password')) {
-    return next();
+    return;
   }
+  logger.debug(`--- Doc(${this.$op}): Password encrypted -- `);
   // 10 is salt
   const hashedPassword = await bcrypt.hash(this.password, 10);
   this.password = hashedPassword;
-  next();
+  return;
 });
 
 export const Student = mongoose.model<I_Student, StudentModel>(

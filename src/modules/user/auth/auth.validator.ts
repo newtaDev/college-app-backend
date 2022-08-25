@@ -4,7 +4,7 @@ import { joiObject } from '../../../utils/helpers';
 import { Validators } from '../../../utils/validators';
 import { I_Admin } from '../admin.model';
 import { I_Faculty } from '../faculty.model';
-import { I_Student } from '../student.model';
+import { I_Student } from '../student/student.model';
 import { I_Teacher } from '../teacher.model';
 
 export const validateTeacherRegistration = joiObject<I_Teacher>({

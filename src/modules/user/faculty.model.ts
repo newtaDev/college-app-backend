@@ -2,6 +2,8 @@ import mongoose, { Model, Schema, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
 import { facultyUsersList, FacultyUserTypes } from '../../utils/roles';
+import { docHooks, queryHooks } from '../../utils/mongoose';
+import logger from '../../utils/logger';
 
 export interface I_Faculty {
   name: string;
@@ -43,27 +45,28 @@ facultySchema.methods.isPasswordValid = async function (password: string) {
   return await bcrypt.compare(password, this.password);
 };
 
-// facultySchema.pre('save', async function (next) {
-//   if (!this.isModified('password')) {
-//     return next();
-//   }
-//   // 10 is salt
-//   const hashedPassword = await bcrypt.hash(this.password, 10);
-//   this.password = hashedPassword;
-//   next();
-// });
+facultySchema.pre(queryHooks, async function (next) {
+  const _password = this.get('password');
+  if (!_password) return next();
+  logger.debug('--- Query: Password encrypted -- ');
 
-/// replaced [save] hook with [validate]
-/// Runs on insertMany,save .....
-/// Not on update
-facultySchema.pre('validate', async function (next) {
+  // 10 is salt
+  const hashedPassword = await bcrypt.hash(_password, 10);
+  this.update({}, { password: hashedPassword });
+  return next();
+});
+
+facultySchema.pre(docHooks, async function (next) {
   if (!this.isModified('password')) {
-    return next();
+    return;
   }
+  logger.debug(`--- Doc(${this.$op}): Password encrypted -- `);
   // 10 is salt
   const hashedPassword = await bcrypt.hash(this.password, 10);
   this.password = hashedPassword;
-  next();
+  return;
 });
-export const Faculty = 
-  mongoose.model<I_Faculty, FacultyModel>('Faculty', facultySchema);
+export const Faculty = mongoose.model<I_Faculty, FacultyModel>(
+  'Faculty',
+  facultySchema
+);

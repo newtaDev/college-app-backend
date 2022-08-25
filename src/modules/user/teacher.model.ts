@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
 import { teacherUsersList, TeacherUserTypes } from '../../utils/roles';
 import { College } from '../college/college.model';
+import { docHooks, queryHooks } from '../../utils/mongoose';
+import logger from '../../utils/logger';
 
 export interface I_Teacher {
   name: string;
@@ -45,17 +47,27 @@ export const teacherSchema = new Schema<
 teacherSchema.methods.isPasswordValid = async function (password: string) {
   return await bcrypt.compare(password, this.password);
 };
-/// replaced [save] hook with [validate]
-/// Runs on insertMany,save .....
-/// Not on update
-teacherSchema.pre('validate', async function (next) {
+
+teacherSchema.pre(queryHooks, async function (next) {
+  const _password = this.get('password');
+  if (!_password) return next();
+  logger.debug('--- Query: Password encrypted -- ');
+
+  // 10 is salt
+  const hashedPassword = await bcrypt.hash(_password, 10);
+  this.update({}, { password: hashedPassword });
+  return next();
+});
+
+teacherSchema.pre(docHooks, async function (next) {
   if (!this.isModified('password')) {
-    return next();
+    return;
   }
+  logger.debug(`--- Doc(${this.$op}): Password encrypted -- `);
   // 10 is salt
   const hashedPassword = await bcrypt.hash(this.password, 10);
   this.password = hashedPassword;
-  next();
+  return;
 });
 export const Teacher = mongoose.model<I_Teacher, TeacherModel>(
   'Teacher',

@@ -3,7 +3,7 @@ import { collegeDb } from '../../../config/database/college.db';
 import { UserType } from '../../../utils/enums';
 import { I_Admin } from '../admin.model';
 import { I_Faculty } from '../faculty.model';
-import { I_Student } from '../student.model';
+import { I_Student } from '../student/student.model';
 import { I_Teacher } from '../teacher.model';
 
 const registerAsTeacher = (teacher: I_Teacher) =>

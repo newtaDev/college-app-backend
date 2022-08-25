@@ -6,7 +6,7 @@ import { Subject } from '../../modules/subject/subject.model';
 import { ClassTimeTable } from '../../modules/time_table/class_time_table/class_time_table.model';
 import { Admin } from '../../modules/user/admin.model';
 import { Faculty } from '../../modules/user/faculty.model';
-import { Student } from '../../modules/user/student.model';
+import { Student } from '../../modules/user/student/student.model';
 import { Teacher } from '../../modules/user/teacher.model';
 
 /// This will be the default db

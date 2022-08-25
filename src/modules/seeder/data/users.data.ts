@@ -2,7 +2,7 @@ import { Types } from 'mongoose';
 import { UserType } from '../../../utils/enums';
 import { I_Admin } from '../../user/admin.model';
 import { I_Faculty } from '../../user/faculty.model';
-import { I_Student } from '../../user/student.model';
+import { I_Student } from '../../user/student/student.model';
 import { I_Teacher } from '../../user/teacher.model';
 import ids from './ids.data';
 
