@@ -75,6 +75,7 @@ export const getAllAttendances = async (
 };
 
 const _getAllAttendancesWithQueries = async (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   query: Record<string, any>,
   user: I_JwtUserPayload
 ) => {

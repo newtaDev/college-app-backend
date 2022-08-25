@@ -63,6 +63,29 @@ const getAttendanceWithCountOfAbsentAndPresntStudents = (
         },
       },
     },
+    /// populating [subjectId] from `subjects` collection
+    {
+      $lookup: {
+        from: 'subjects', /// collection name
+        localField: 'subjectId',
+        foreignField: '_id',
+        as: 'subject',
+      },
+    },
+    {
+      /// subject array will be overwritten
+      $addFields: {
+        // $mergeObjects: [
+        //   {
+        //     $arrayElemAt: ['$subject', 0],
+        //   },
+        // ],
+        subject: {
+          $arrayElemAt: ['$subject', 0],
+        },
+      },
+    },
+    {$sort: {'attendanceTakenOn': -1} }
   ]);
 
 const getReportOfAllSubjectsInClass = (
