@@ -1,6 +1,8 @@
 import { Router } from 'express';
+import { authMiddleware } from '../../middlewares/auth_middleware';
 import { validateSchemaMiddleware } from '../../middlewares/validation_middleware';
 import {
+  getUserDetailsFromToken,
   loginUser,
   registerAsAdmin,
   registerAsFaculty,
@@ -29,6 +31,13 @@ export class AuthRouter implements I_BaseRouter {
       `${this.path}/login`,
       validateSchemaMiddleware({ body: validateUserLogin }),
       loginUser
+    );
+
+    /// Loged in User details from token
+    this.router.get(
+      `${this.path}/details`,
+      authMiddleware(),
+      getUserDetailsFromToken
     );
 
     /// registration routes

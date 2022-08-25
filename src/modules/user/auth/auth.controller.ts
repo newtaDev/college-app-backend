@@ -60,6 +60,29 @@ export const loginUser = async (
     );
   }
 };
+export const getUserDetailsFromToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    if (!req.user) throw Error('No Token Payload found');
+    const _id = req.user.id;
+    const _userType = req.user.userType;
+    const _user = await authService.getUserDetailsById(_id, _userType);
+    if (!_user) throw Error(`${_userType} not found`);
+    // snd response
+    res.send(successResponse(_user));
+  } catch (error) {
+    return next(
+      new ApiException({
+        message: 'Login failed',
+        devMsg: error instanceof Error ? error.message : null,
+        statuscode: 400,
+      })
+    );
+  }
+};
 
 /// Registration
 export const registerAsTeacher = async (

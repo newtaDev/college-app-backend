@@ -5,8 +5,8 @@ import { successResponse } from '../../shared/interfaces/req_res_interfaces';
 import {
   createAccessToken,
   createRefreshToken,
-  verifyAccessToken,
-  verifyRefreshToken,
+  verifyAndDecodeAccessToken,
+  verifyAndDecodeRefreshToken,
 } from '../../shared/services/jwt/jwt_service';
 
 /**
@@ -18,7 +18,7 @@ export const createAccessTokenFromRefreshToken = (
   next: NextFunction
 ) => {
   try {
-    const payload = verifyRefreshToken(req.body.refreshToken) as JwtPayload;
+    const payload = verifyAndDecodeRefreshToken(req.body.refreshToken) as JwtPayload;
     const accessToken = createAccessToken(payload.data);
     const refreshToken = createRefreshToken(payload.data);
     const _response = successResponse({
@@ -47,10 +47,10 @@ export const decodeDataFromToken = (
 ) => {
   try {
     try {
-      const payload = verifyRefreshToken(req.body.token) as JwtPayload;
+      const payload = verifyAndDecodeRefreshToken(req.body.token) as JwtPayload;
       res.send(successResponse(payload));
     } catch (error) {
-      const payload = verifyAccessToken(req.body.token) as JwtPayload;
+      const payload = verifyAndDecodeAccessToken(req.body.token) as JwtPayload;
       res.send(successResponse(payload));
     }
   } catch (error) {
