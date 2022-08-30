@@ -6,6 +6,10 @@ import { I_Subject } from './subject.model';
 export const validateSubjectByIdParam = joiObject({
   subjectId: Validators.mongoIdValidator().required(),
 });
+
+export const validateSubjectQuery = joiObject({
+  courseId: Validators.mongoIdValidator(),
+});
 export const validateCreateSubject = joiObject<I_Subject>({
   _id: Validators.mongoIdValidator(),
   name: Joi.string().required(),

@@ -122,7 +122,7 @@ export const importStudentsData: (I_Student & {
     password: 'Newta1234',
     collegeId: ids.collegeIds[0],
     userType: UserType.student,
-    classId: ids.classIds[0],
+    classId: ids.classIds[1],
     mySubjectIds: [],
   },
   /// Other college

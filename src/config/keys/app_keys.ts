@@ -2,7 +2,8 @@ import { _Secrets } from './secrets';
 
 export class AppKeys {
   static jwt_access_key = `pre_encoder_access_token${_Secrets.JWT_ACCESS_KEY}`;
-  static jwt_refresh_key = `pre_encoder_refresh_token${_Secrets.JWT_ACCESS_KEY}`;
+  static jwt_qr_key = `pre_encoder_qr_token${_Secrets.JWT_QR_KEY}`;
+  static jwt_refresh_key = `pre_encoder_refresh_token${_Secrets.JWT_REFRESH_KEY}`;
   static port = process.env.PORT;
   static env = process.env.NODE_ENV;
   static app_version = 'v1';

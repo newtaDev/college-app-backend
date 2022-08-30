@@ -9,17 +9,27 @@ import {
   findStudentById,
   updateStudentById,
 } from '../../modules/user/student/student.controller';
-import { validateStudentByIdParam } from '../../modules/user/student/student.validator';
+import {
+  validateAllStudentsinClassQuery,
+  validateStudentByIdParam,
+} from '../../modules/user/student/student.validator';
 
 export class StudentRouter implements I_BaseRouter {
   constructor() {
     this.router = Router();
     this.initRoutes();
   }
-  path = '/user/student';
+  path = '/user/students';
   router: Router;
   private initRoutes(): void {
-    this.router.get(this.path, authMiddleware(), getAllStudents);
+    this.router.get(
+      this.path,
+      [
+        authMiddleware(),
+        validateSchemaMiddleware({ query: validateAllStudentsinClassQuery }),
+      ],
+      getAllStudents
+    );
     this.router.get(
       `${this.path}/:studentId`,
       [

@@ -4,7 +4,8 @@ import { I_Subject } from './subject.model';
 
 const create = (params: I_Subject) => collegeDb.Subject.create(params);
 
-const listAll = () => collegeDb.Subject.find();
+const listAll = (query?: FilterQuery<I_Subject>) =>
+  collegeDb.Subject.find(query || {});
 
 const findById = (subjectId: string) => collegeDb.Subject.findById(subjectId);
 

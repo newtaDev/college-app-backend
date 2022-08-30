@@ -17,6 +17,19 @@ const createAccessToken = (payload: object) => {
     throw error;
   }
 };
+
+const createQrToken = (payload: object) => {
+  try {
+    const _token = jwt.sign(
+      { data: payload },
+      AppKeys.jwt_qr_key as jwt.Secret
+    );
+    return _token;
+  } catch (error) {
+    logger.debug(`---Create Qr Token Failed---`);
+    throw error;
+  }
+};
 const createRefreshToken = (payload: object) => {
   try {
     const _token = jwt.sign(
@@ -43,6 +56,7 @@ const verifyAndDecodeAccessToken = (token: string): string | JwtPayload => {
     throw error;
   }
 };
+
 const verifyAndDecodeRefreshToken = (token: string): string | JwtPayload => {
   try {
     const payload = jwt.verify(token, AppKeys.jwt_refresh_key as jwt.Secret);
@@ -57,6 +71,7 @@ const verifyAndDecodeRefreshToken = (token: string): string | JwtPayload => {
 export {
   createAccessToken,
   createRefreshToken,
+  createQrToken,
   verifyAndDecodeAccessToken,
   verifyAndDecodeRefreshToken,
 };

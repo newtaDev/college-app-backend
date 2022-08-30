@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
+import _ from 'lodash';
 import { ApiException } from '../../shared/exceptions/api_exceptions';
 import { isMongoIdExitsOrValid } from '../../shared/functions/verify_mongo_ids';
 import { successResponse } from '../../shared/interfaces/req_res_interfaces';
+import { I_JwtUserPayload } from '../../shared/services/jwt/jwt_interfaces';
 import subjectService from './subject.service';
 
 export const createSubject = async (
@@ -11,7 +13,8 @@ export const createSubject = async (
 ) => {
   try {
     const collegeId = req.body.collegeId ?? req.user.collegeId;
-    if (!collegeId) throw Error('[body.collegeId]/[user.collegeId] is required');
+    if (!collegeId)
+      throw Error('[body.collegeId]/[user.collegeId] is required');
     const body = {
       ...req.body,
       collegeId,
@@ -75,6 +78,10 @@ export const getAllSubjects = async (
   next: NextFunction
 ) => {
   try {
+    if (!_.isEmpty(req.query)) {
+      const _subjectQuery = await subjectService.listAll(req.query).populate('courseId');
+      return res.send(successResponse(_subjectQuery));
+    }
     const _subject = await subjectService.listAll();
     res.send(successResponse(_subject));
   } catch (error) {
@@ -87,6 +94,22 @@ export const getAllSubjects = async (
     );
   }
 };
+
+// const _getAllSubjectsInCourse = async (
+//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//   query: Record<string, any>
+// ) => {
+//   try {
+//     const _resQuery = await subjectService.listAllWithQuery(query);
+//     return _resQuery;
+//   } catch (error) {
+//     throw new ApiException({
+//       message: 'Subject Query failed',
+//       devMsg: error instanceof Error ? error.message : null,
+//       statuscode: 400,
+//     });
+//   }
+// };
 export const findSubjectById = async (
   req: Request,
   res: Response,

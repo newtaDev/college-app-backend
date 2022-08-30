@@ -9,6 +9,7 @@ import {
 import {
   validateCreateSubject,
   validateSubjectByIdParam,
+  validateSubjectQuery,
 } from '../modules/subject/subject.validator';
 import { authMiddleware } from '../middlewares/auth_middleware';
 import { validateSchemaMiddleware } from '../middlewares/validation_middleware';
@@ -24,7 +25,14 @@ export class SubjectRouter implements I_BaseRouter {
   path = '/subjects';
   router: Router;
   private initRoutes(): void {
-    this.router.get(this.path, authMiddleware(), getAllSubjects);
+    this.router.get(
+      this.path,
+      [
+        authMiddleware(),
+        validateSchemaMiddleware({ query: validateSubjectQuery }),
+      ],
+      getAllSubjects
+    );
     this.router.post(
       this.path,
       [
