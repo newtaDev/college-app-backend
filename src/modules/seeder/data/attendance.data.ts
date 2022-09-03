@@ -38,7 +38,6 @@ export const importAttendanceData: (I_Attendance & { _id: Types.ObjectId })[] =
       absentStudents: [
         idsData.studentIds[0],
         idsData.studentIds[1],
-        idsData.studentIds[3],
       ],
     },
     {

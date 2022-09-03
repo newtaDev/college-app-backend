@@ -7,7 +7,7 @@ export const importClassData: (I_Class & {
 })[] = [
   {
     _id: idsData.classIds[0],
-    name: 'BCA 1st year',
+    name: 'BCA',
     collegeId: idsData.collegeIds[0],
     courseId: idsData.coursesIds[0],
     assignedToId: idsData.teacherIds[0],
@@ -18,7 +18,7 @@ export const importClassData: (I_Class & {
   },
   {
     _id: idsData.classIds[1],
-    name: 'BA final year',
+    name: 'BA',
     collegeId: idsData.collegeIds[0],
     courseId: idsData.coursesIds[1],
     assignedToId: idsData.teacherIds[1],
