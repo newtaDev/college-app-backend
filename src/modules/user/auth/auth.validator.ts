@@ -9,12 +9,21 @@ import { I_Teacher } from '../teacher/teacher.model';
 
 export const validateTeacherRegistration = joiObject<I_Teacher>({
   _id: Validators.mongoIdValidator(),
-  email: Joi.string().email().required(),
   name: Joi.string().max(30).required(),
   password: Joi.string().required(),
   collegeId: Validators.mongoIdValidator().required(),
   userType: Joi.string().valid(...Object.values(UserType)),
+  assignedClasses: Joi.array().items(Validators.mongoIdValidator()).required(),
+  email: Joi.string().email(),
+  username: Validators.validateUsername(),
+  isProfileCompleted: Joi.bool(),
+  profile: {
+    phoneNumber: Joi.number(),
+    currentAddress: Joi.string(),
+    dob: Joi.date(),
+  },
 });
+
 export const validateFacultyRegistration = joiObject<I_Faculty>({
   _id: Validators.mongoIdValidator(),
   email: Joi.string().email().required(),
@@ -23,6 +32,7 @@ export const validateFacultyRegistration = joiObject<I_Faculty>({
   collegeId: Validators.mongoIdValidator().required(),
   userType: Joi.string().valid(...Object.values(UserType)),
 });
+
 export const validateStudentRegistration = joiObject<I_Student>({
   name: Joi.string().max(30).required(),
   password: Joi.string().required(),
@@ -31,6 +41,7 @@ export const validateStudentRegistration = joiObject<I_Student>({
   userType: Joi.string().valid(...Object.values(UserType)),
   _id: Validators.mongoIdValidator(),
   email: Joi.string().email(),
+  username: Validators.validateUsername(),
   isProfileCompleted: Joi.bool(),
   profile: {
     phoneNumber: Joi.number(),

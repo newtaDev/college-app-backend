@@ -68,6 +68,7 @@ export const studentSchema = new Schema<
       ref: 'Subject',
     },
     profile: _profileSchema,
+    username: { type: String },
     isProfileCompleted: { type: Boolean, default: false },
   },
   { timestamps: true }
@@ -75,11 +76,19 @@ export const studentSchema = new Schema<
 /// If email/username is not empty then checks for duplicate value
 /// If email/username is null then doest check for duplicate and creates a new document
 studentSchema.index(
-  { email: 1, username: 1 },
+  { email: 1 },
   {
     unique: true,
     partialFilterExpression: {
       email: { $exists: true },
+    },
+  }
+);
+studentSchema.index(
+  { username: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
       username: { $exists: true },
     },
   }

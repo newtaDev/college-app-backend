@@ -1,4 +1,3 @@
-import { FilterQuery } from 'mongoose';
 import { collegeDb } from '../../../config/database/college.db';
 import { UserType } from '../../../utils/enums';
 import { I_Admin } from '../admin.model';

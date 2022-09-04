@@ -33,4 +33,24 @@ export class Validators {
       })
       .message('Updating {{#label}} is restricted');
   }
+  static validateUsername() {
+   return  Joi.string()
+    .min(4)
+    .max(20)
+    .pattern(new RegExp('^(?![0-9_])(?=[a-zA-Z0-9._]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$'))
+  /*
+    ^(?=.{4,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$
+   └─────┬────┘└───┬──┘└─────┬─────┘└─────┬─────┘ └───┬───┘
+         │         │         │            │           no _ or . at the end
+         │         │         │            │
+         │         │         │            allowed characters
+         │         │         │
+         │         │         no __ or _. or ._ or .. inside
+         │         │
+         │         no _ or . at the beginning
+         │
+         username is 4-20 characters long
+  
+    */
+  }
 }

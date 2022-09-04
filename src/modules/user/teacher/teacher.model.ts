@@ -37,7 +37,7 @@ export const teacherSchema = new Schema<
 >(
   {
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+    email: { type: String },
     password: { type: String, required: true },
     collegeId: {
       type: Schema.Types.ObjectId,
@@ -57,10 +57,31 @@ export const teacherSchema = new Schema<
       ref: 'Class',
     },
     profile: _profileSchema,
+    username: { type: String },
     isProfileCompleted: { type: Boolean, default: false },
   },
   {
     timestamps: true,
+  }
+);
+/// If email/username is not empty then checks for duplicate value
+/// If email/username is null then doest check for duplicate and creates a new document
+teacherSchema.index(
+  { email: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      email: { $exists: true },
+    },
+  }
+);
+teacherSchema.index(
+  { username: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      username: { $exists: true },
+    },
   }
 );
 
