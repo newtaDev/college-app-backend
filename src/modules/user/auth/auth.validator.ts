@@ -25,7 +25,7 @@ export const validateFacultyRegistration = joiObject<I_Faculty>({
 });
 export const validateStudentRegistration = joiObject<I_Student>({
   _id: Validators.mongoIdValidator(),
-  email: Joi.string().email().required(),
+  email: Joi.string().email(),
   name: Joi.string().max(30).required(),
   password: Joi.string().required(),
   classId: Validators.mongoIdValidator().required(),

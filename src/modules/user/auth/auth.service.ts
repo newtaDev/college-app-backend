@@ -14,12 +14,6 @@ const registerAsFaculty = (faculty: I_Faculty) =>
   collegeDb.Faculty.create(faculty);
 const registerAsAdmin = (admin: I_Admin) => collegeDb.Admin.create(admin);
 
-const getCountOfStudents = (collegeId?: string, classId?: string) =>
-  collegeDb.Student.find({ collegeId, classId }).count();
-
-const getStudentById = (studentId: string) =>
-  collegeDb.Student.findById(studentId).select(['-password', '-__v']);
-
 const loginUser = (email: string, userType: UserType) => {
   /// Find using `userType` if multiple `userType` is present in same collection
   switch (userType) {
@@ -66,7 +60,5 @@ export default {
   registerAsAdmin,
   findOneTeacher,
   loginUser,
-  getCountOfStudents,
-  getStudentById,
   getUserDetailsById,
 };

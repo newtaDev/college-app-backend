@@ -3,7 +3,6 @@ import _ from 'lodash';
 import { ApiException } from '../../shared/exceptions/api_exceptions';
 import { isMongoIdExitsOrValid } from '../../shared/functions/verify_mongo_ids';
 import { successResponse } from '../../shared/interfaces/req_res_interfaces';
-import { I_JwtUserPayload } from '../../shared/services/jwt/jwt_interfaces';
 import subjectService from './subject.service';
 
 export const createSubject = async (

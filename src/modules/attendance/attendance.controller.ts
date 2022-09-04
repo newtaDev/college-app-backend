@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { ApiException } from '../../shared/exceptions/api_exceptions';
 import { successResponse } from '../../shared/interfaces/req_res_interfaces';
 import { I_JwtUserPayload } from '../../shared/services/jwt/jwt_interfaces';
-import authService from '../user/auth/auth.service';
+import studentService from '../user/student/student.service';
 import attendanceService from './attendance.service';
 
 export const createAttendance = async (
@@ -83,7 +83,7 @@ const _getAllAttendancesWithQueries = async (
     const collegeId = (query.collegeId ?? user.collegeId)?.toString() as string;
     const classId = query.classId?.toString() as string;
     const currentSem = Number(query.currentSem);
-    const totalStudentsInClass = await authService.getCountOfStudents(
+    const totalStudentsInClass = await studentService.getCountOfStudents(
       collegeId,
       classId
     );
@@ -115,7 +115,7 @@ export const getAttendancesReportOfSubjects = async (
     )?.toString() as string;
     const classId = req.query.classId?.toString() as string;
     const currentSem = Number(req.query.currentSem);
-    const totalStudentsInClass = await authService.getCountOfStudents(
+    const totalStudentsInClass = await studentService.getCountOfStudents(
       collegeId,
       classId
     );

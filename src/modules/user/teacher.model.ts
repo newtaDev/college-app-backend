@@ -2,7 +2,6 @@ import mongoose, { Model, Schema, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
 import { teacherUsersList, TeacherUserTypes } from '../../utils/roles';
-import { College } from '../college/college.model';
 import { docHooks, queryHooks } from '../../utils/mongoose';
 import logger from '../../utils/logger';
 
@@ -29,7 +28,7 @@ export const teacherSchema = new Schema<
     password: { type: String, required: true },
     collegeId: {
       type: Schema.Types.ObjectId,
-      ref: College,
+      ref: 'College',
       required: true,
     },
     userType: {

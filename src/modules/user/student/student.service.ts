@@ -20,6 +20,11 @@ const findOne = (query: FilterQuery<I_Student>) =>
 
 const deleteById = (studentId: string) =>
   collegeDb.Student.findByIdAndDelete(studentId).select(['-__v', '-password']);
+
+const getCountOfStudents = (collegeId?: string, classId?: string) =>
+collegeDb.Student.find({ collegeId, classId }).count();
+
+
 export default {
   create,
   listAll,
@@ -27,4 +32,5 @@ export default {
   findOne,
   updateById,
   deleteById,
+  getCountOfStudents,
 };
