@@ -9,3 +9,4 @@ export const validateAllStudentsinClassQuery = joiObject({
   classId: Validators.mongoIdValidator(),
   collegeId: Validators.mongoIdValidator(),
 });
+

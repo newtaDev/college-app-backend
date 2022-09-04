@@ -3,7 +3,7 @@ import { UserType } from '../../../utils/enums';
 import { I_Admin } from '../../user/admin.model';
 import { I_Faculty } from '../../user/faculty.model';
 import { I_Student } from '../../user/student/student.model';
-import { I_Teacher } from '../../user/teacher.model';
+import { I_Teacher } from '../../user/teacher/teacher.model';
 import ids from './ids.data';
 
 export const importSuperAdminsData: (I_Admin & {
@@ -52,6 +52,7 @@ export const importTeachersData: (I_Teacher & {
     password: 'Newta1234',
     collegeId: ids.collegeIds[0],
     userType: UserType.teacher,
+    assignedClasses: [ids.classIds[0], ids.classIds[1]],
   },
   {
     _id: ids.teacherIds[1],
@@ -59,6 +60,7 @@ export const importTeachersData: (I_Teacher & {
     email: 'newta.teacher1@gmail.com',
     password: 'Newta1234',
     collegeId: ids.collegeIds[1],
+    assignedClasses: [ids.classIds[1]],
     userType: UserType.teacher,
   },
 ];
@@ -68,7 +70,7 @@ export const importFacultyData: (I_Faculty & {
   {
     _id: ids.facultyIds[0],
     name: 'Newta',
-    email: 'newta.faculty@gmail.com',
+    email: 'newta.principal0@gmail.com',
     password: 'Newta1234',
     collegeId: ids.collegeIds[0],
     userType: UserType.principal,
@@ -76,7 +78,7 @@ export const importFacultyData: (I_Faculty & {
   {
     _id: ids.facultyIds[1],
     name: 'Newta',
-    email: 'newta.faculty1@gmail.com',
+    email: 'newta.staff0@gmail.com',
     password: 'Newta1234',
     collegeId: ids.collegeIds[1],
     userType: UserType.staff,
@@ -93,7 +95,7 @@ export const importStudentsData: (I_Student & {
     collegeId: ids.collegeIds[0],
     userType: UserType.student,
     classId: ids.classIds[0],
-    mySubjectIds: [],
+    myOptionalSubjects: [],
   },
   {
     _id: ids.studentIds[1],
@@ -103,7 +105,7 @@ export const importStudentsData: (I_Student & {
     collegeId: ids.collegeIds[0],
     userType: UserType.student,
     classId: ids.classIds[0],
-    mySubjectIds: [],
+    myOptionalSubjects: [],
   },
   {
     _id: ids.studentIds[2],
@@ -113,7 +115,7 @@ export const importStudentsData: (I_Student & {
     collegeId: ids.collegeIds[0],
     userType: UserType.student,
     classId: ids.classIds[0],
-    mySubjectIds: [],
+    myOptionalSubjects: [],
   },
   {
     _id: ids.studentIds[3],
@@ -123,7 +125,7 @@ export const importStudentsData: (I_Student & {
     collegeId: ids.collegeIds[0],
     userType: UserType.student,
     classId: ids.classIds[1],
-    mySubjectIds: [],
+    myOptionalSubjects: [],
   },
   /// Other college
   {
@@ -134,6 +136,6 @@ export const importStudentsData: (I_Student & {
     collegeId: ids.collegeIds[1],
     userType: UserType.student,
     classId: ids.classIds[1],
-    mySubjectIds: [],
+    myOptionalSubjects: [],
   },
 ];

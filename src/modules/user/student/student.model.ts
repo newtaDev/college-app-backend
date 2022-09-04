@@ -5,14 +5,23 @@ import { studentUsersList, StudentUserTypes } from '../../../utils/roles';
 import logger from '../../../utils/logger';
 import { docHooks, queryHooks } from '../../../utils/mongoose';
 
+export interface I_StudentProfile {
+  phoneNumber?: number;
+  parentsNumber?: number;
+  currentAddress?: number;
+  dob?: Date;
+}
 export interface I_Student {
   name: string;
-  email: string;
+  username?: string;
+  email?: string;
   password: string;
   userType: StudentUserTypes;
   collegeId: Types.ObjectId;
   classId: Types.ObjectId;
-  mySubjectIds: Types.ObjectId[];
+  myOptionalSubjects: Types.ObjectId[];
+  profile?: I_StudentProfile;
+  isProfileCompleted?: boolean;
 }
 
 interface I_StudentMethods {
@@ -21,6 +30,12 @@ interface I_StudentMethods {
 export type StudentModel = Model<I_Student, unknown, I_StudentMethods>;
 export type StudentQuery = Query<I_Student, unknown, I_StudentMethods>;
 
+const _profileSchema = new Schema<I_StudentProfile>({
+  phoneNumber: Number,
+  currentAddress: String,
+  dob: Date,
+  parentsNumber: Number,
+});
 export const studentSchema = new Schema<
   I_Student,
   StudentModel,
@@ -28,7 +43,7 @@ export const studentSchema = new Schema<
 >(
   {
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+    email: { type: String },
     password: { type: String, required: true },
     collegeId: {
       type: Schema.Types.ObjectId,
@@ -46,14 +61,28 @@ export const studentSchema = new Schema<
       default: UserType.student,
       required: true,
     },
-    mySubjectIds: {
+    myOptionalSubjects: {
       type: [Schema.Types.ObjectId],
       default: [],
       required: true,
       ref: 'Subject',
     },
+    profile: _profileSchema,
+    isProfileCompleted: { type: Boolean, default: false },
   },
   { timestamps: true }
+);
+/// If email/username is not empty then checks for duplicate value
+/// If email/username is null then doest check for duplicate and creates a new document
+studentSchema.index(
+  { email: 1, username: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      email: { $exists: true },
+      username: { $exists: true },
+    },
+  }
 );
 
 studentSchema.methods.isPasswordValid = async function (password: string) {

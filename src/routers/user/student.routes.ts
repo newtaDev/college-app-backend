@@ -42,7 +42,9 @@ export class StudentRouter implements I_BaseRouter {
       `${this.path}/:studentId`,
       [
         authMiddleware(),
-        validateSchemaMiddleware({ params: validateStudentByIdParam }),
+        validateSchemaMiddleware({
+          params: validateStudentByIdParam,
+        }),
       ],
       updateStudentById
     );

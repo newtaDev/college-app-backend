@@ -2,7 +2,7 @@ import classService from '../../modules/class/class.service';
 import collegeService from '../../modules/college/college.service';
 import courseService from '../../modules/course/course.service';
 import subjectService from '../../modules/subject/subject.service';
-import authService from '../../modules/user/auth/auth.service';
+import teacherService from '../../modules/user/teacher/teacher.service';
 
 interface I_MongoModelIds {
   collegeId?: string;
@@ -49,7 +49,7 @@ export const isMongoIdExitsOrValid = async (params: I_MongoModelIds) => {
       );
   }
   if (params.teacherId) {
-    const teacher = await authService.findOneTeacher({
+    const teacher = await teacherService.findOne({
       _id: params.teacherId,
       ...(collegeId && { collegeId }),
     });

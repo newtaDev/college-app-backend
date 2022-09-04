@@ -11,7 +11,7 @@ import { omit } from 'lodash';
 import { I_Faculty } from '../faculty.model';
 import { I_Admin } from '../admin.model';
 import { I_Student } from '../student/student.model';
-import { I_Teacher } from '../teacher.model';
+import { I_Teacher } from '../teacher/teacher.model';
 import { adminUsersList } from '../../../utils/roles';
 import { isMongoIdExitsOrValid } from '../../../shared/functions/verify_mongo_ids';
 

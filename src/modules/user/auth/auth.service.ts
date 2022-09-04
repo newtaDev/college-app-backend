@@ -4,7 +4,7 @@ import { UserType } from '../../../utils/enums';
 import { I_Admin } from '../admin.model';
 import { I_Faculty } from '../faculty.model';
 import { I_Student } from '../student/student.model';
-import { I_Teacher } from '../teacher.model';
+import { I_Teacher } from '../teacher/teacher.model';
 
 const registerAsTeacher = (teacher: I_Teacher) =>
   collegeDb.Teacher.create(teacher);
@@ -50,15 +50,12 @@ const getUserDetailsById = (id: string, userType: UserType) => {
   }
 };
 
-const findOneTeacher = (query: FilterQuery<I_Teacher>) =>
-  collegeDb.Teacher.findOne(query);
 
 export default {
   registerAsStudent,
   registerAsTeacher,
   registerAsFaculty,
   registerAsAdmin,
-  findOneTeacher,
   loginUser,
   getUserDetailsById,
 };
