@@ -12,12 +12,10 @@ export const validateCreateAttendance = joiObject<I_Attendance>({
   collegeId: Validators.mongoIdValidator().required(),
   subjectId: Validators.mongoIdValidator().required(),
   currentSem: Joi.number().required(),
-  classStartTime: Joi.string()
-    .custom(Validators.is24HoursTime)
+  classStartTime: Validators.validate24HoursTime()
     .message('Invalid Time! ex: 07:20 or ex: 18:10')
     .required(),
-  classEndTime: Joi.string()
-    .custom(Validators.is24HoursTime)
+  classEndTime: Validators.validate24HoursTime()
     .message('Invalid Time! ex: 07:20 or ex: 18:10')
     .required(),
   absentStudents: Joi.array().items(Validators.mongoIdValidator()).required(),

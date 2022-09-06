@@ -33,24 +33,35 @@ export class Validators {
       })
       .message('Updating {{#label}} is restricted');
   }
-  static validateUsername() {
-   return  Joi.string()
-    .min(4)
-    .max(20)
-    .pattern(new RegExp('^(?![0-9_])(?=[a-zA-Z0-9._]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$'))
-  /*
-    ^(?=.{4,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$
-   └─────┬────┘└───┬──┘└─────┬─────┘└─────┬─────┘ └───┬───┘
-         │         │         │            │           no _ or . at the end
-         │         │         │            │
-         │         │         │            allowed characters
-         │         │         │
-         │         │         no __ or _. or ._ or .. inside
-         │         │
-         │         no _ or . at the beginning
-         │
-         username is 4-20 characters long
+
+  static isValidUsername(value: string): boolean {
+    const regx = new RegExp('^((?![.])(?!.*[.]{2})[a-z0-9_.]{3,20})[a-z0-9_]$');
+    return regx.test(value);
+    /*
+   ^((?![.])(?!.*[.]{2})[a-z0-9_.]{3,20})[a-z0-9_]$'
+   └───┬───┘ └───┬-----┘└──┬────┘ └─┬──┘ └───┬──┘
+       │         │         │        │         Should not end with . or special chars
+       │         │         │        │
+       │         │         │        Min 3 chars Max 20 Chars
+       │         │         │
+       │         │         Can contains lowercase letters,numbers and . 
+       │         │
+       │         should not contain mutliple . inside
+       │
+       should not start with . 
   
     */
+  }
+  static validateUsername() {
+    return Joi.string().custom(val => {
+      if (!this.isValidUsername(val)) throw new Error('Invalid username');
+      return val;
+    });
+  }
+  static validate24HoursTime() {
+    return Joi.string().custom(val => {
+      if (!this.is24HoursTime(val)) throw new Error('Invalid Time');
+      return val;
+    });
   }
 }

@@ -11,7 +11,6 @@ const app = new App({
 });
 app.listen();
 
-
 console.log(createQrToken({ Name: 'as' }));
 
 // collegeDb.Class.find().populate('assignedToId').then(console.log);

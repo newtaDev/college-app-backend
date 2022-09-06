@@ -6,7 +6,6 @@ import { I_Admin } from '../admin.model';
 import { I_Faculty } from '../faculty.model';
 import { I_Student } from '../student/student.model';
 import { I_Teacher } from '../teacher/teacher.model';
-
 export const validateTeacherRegistration = joiObject<I_Teacher>({
   _id: Validators.mongoIdValidator(),
   name: Joi.string().max(30).required(),
@@ -15,7 +14,7 @@ export const validateTeacherRegistration = joiObject<I_Teacher>({
   userType: Joi.string().valid(...Object.values(UserType)),
   assignedClasses: Joi.array().items(Validators.mongoIdValidator()).required(),
   email: Joi.string().email(),
-  username: Validators.validateUsername(),
+  username: Validators.validateUsername().message('Invalid username'),
   isProfileCompleted: Joi.bool(),
   profile: {
     phoneNumber: Joi.number(),
@@ -41,7 +40,7 @@ export const validateStudentRegistration = joiObject<I_Student>({
   userType: Joi.string().valid(...Object.values(UserType)),
   _id: Validators.mongoIdValidator(),
   email: Joi.string().email(),
-  username: Validators.validateUsername(),
+  username: Validators.validateUsername().message('Invalid username'),
   isProfileCompleted: Joi.bool(),
   profile: {
     phoneNumber: Joi.number(),

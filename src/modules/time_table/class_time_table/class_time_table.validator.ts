@@ -14,12 +14,10 @@ export const validateCreateClassTimeTable = joiObject<I_ClassTimeTable>({
   classId: Validators.mongoIdValidator().required(),
   subjectId: Validators.mongoIdValidator().required(),
   teacherId: Validators.mongoIdValidator().required(),
-  startingTime: Joi.string()
-    .custom(Validators.is24HoursTime)
+  startingTime: Validators.validate24HoursTime()
     .message('Invalid Time! ex: 07:20 or ex: 18:10')
     .required(),
-  endingTime: Joi.string()
-    .custom(Validators.is24HoursTime)
+  endingTime: Validators.validate24HoursTime()
     .message('Invalid Time! ex: 07:20 or ex: 18:10')
     .required(),
   week: Joi.string()
