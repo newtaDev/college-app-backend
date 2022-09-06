@@ -1,9 +1,10 @@
-import mongoose, { Model, Schema, Types } from 'mongoose';
+import mongoose, { Model, Schema, Types, ValidatorProps } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../../utils/enums';
 import { teacherUsersList, TeacherUserTypes } from '../../../utils/roles';
 import { docHooks, queryHooks } from '../../../utils/mongoose';
 import logger from '../../../utils/logger';
+import { Validators } from '../../../utils/validators';
 
 export interface I_TeacherProfile {
   phoneNumber?: number;
@@ -57,7 +58,14 @@ export const teacherSchema = new Schema<
       ref: 'Class',
     },
     profile: _profileSchema,
-    username: { type: String },
+    username: {
+      type: String,
+      validate: {
+        validator: Validators.isValidUsername,
+        message: (props: ValidatorProps) =>
+          `${props.value} is not valid username`,
+      },
+    },
     isProfileCompleted: { type: Boolean, default: false },
   },
   {

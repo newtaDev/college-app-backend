@@ -1,9 +1,16 @@
-import mongoose, { Model, Query, Schema, Types } from 'mongoose';
+import mongoose, {
+  Model,
+  Query,
+  Schema,
+  Types,
+  ValidatorProps,
+} from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../../utils/enums';
 import { studentUsersList, StudentUserTypes } from '../../../utils/roles';
 import logger from '../../../utils/logger';
 import { docHooks, queryHooks } from '../../../utils/mongoose';
+import { Validators } from '../../../utils/validators';
 
 export interface I_StudentProfile {
   phoneNumber?: number;
@@ -68,7 +75,14 @@ export const studentSchema = new Schema<
       ref: 'Subject',
     },
     profile: _profileSchema,
-    username: { type: String },
+    username: {
+      type: String,
+      validate: {
+        validator: Validators.isValidUsername,
+        message: (props: ValidatorProps) =>
+          `${props.value} is not valid username`,
+      },
+    },
     isProfileCompleted: { type: Boolean, default: false },
   },
   { timestamps: true }
