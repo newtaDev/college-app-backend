@@ -35,10 +35,7 @@ export const importAttendanceData: (I_Attendance & { _id: Types.ObjectId })[] =
       classEndTime: '12:30',
       currentSem: 1,
       attendanceTakenOn: new Date('08-16-2022 11:30'),
-      absentStudents: [
-        idsData.studentIds[0],
-        idsData.studentIds[1],
-      ],
+      absentStudents: [idsData.studentIds[0], idsData.studentIds[1]],
     },
     {
       _id: idsData.attendanceIds[3],
@@ -71,9 +68,7 @@ export const importAttendanceData: (I_Attendance & { _id: Types.ObjectId })[] =
       classEndTime: '12:30',
       attendanceTakenOn: new Date('08-14-2022 11:30'),
       currentSem: 2,
-      absentStudents: [
-        idsData.studentIds[3],
-      ],
+      absentStudents: [idsData.studentIds[3]],
     },
     {
       _id: idsData.attendanceIds[6],
@@ -106,8 +101,7 @@ export const importAttendanceData: (I_Attendance & { _id: Types.ObjectId })[] =
       classEndTime: '12:30',
       currentSem: 1,
       attendanceTakenOn: new Date('08-16-2022 11:30'),
-      absentStudents: [
-      ],
+      absentStudents: [],
     },
     {
       _id: idsData.attendanceIds[9],
@@ -118,8 +112,7 @@ export const importAttendanceData: (I_Attendance & { _id: Types.ObjectId })[] =
       classEndTime: '12:30',
       currentSem: 1,
       attendanceTakenOn: new Date('08-16-2022 11:30'),
-      absentStudents: [
-      ],
+      absentStudents: [],
     },
     {
       _id: idsData.attendanceIds[10],

@@ -16,11 +16,9 @@ export const validateTeacherRegistration = joiObject<I_Teacher>({
   email: Joi.string().email(),
   username: Validators.validateUsername().message('Invalid username'),
   isProfileCompleted: Joi.bool(),
-  profile: {
-    phoneNumber: Joi.number(),
-    currentAddress: Joi.string(),
-    dob: Joi.date(),
-  },
+  phoneNumber: Joi.number(),
+  currentAddress: Joi.string(),
+  dob: Joi.date().required(),
 });
 
 export const validateFacultyRegistration = joiObject<I_Faculty>({
@@ -42,12 +40,10 @@ export const validateStudentRegistration = joiObject<I_Student>({
   email: Joi.string().email(),
   username: Validators.validateUsername().message('Invalid username'),
   isProfileCompleted: Joi.bool(),
-  profile: {
-    phoneNumber: Joi.number(),
-    parentsNumber: Joi.number(),
-    currentAddress: Joi.string(),
-    dob: Joi.date(),
-  },
+  phoneNumber: Joi.number(),
+  parentsNumber: Joi.number(),
+  currentAddress: Joi.string(),
+  dob: Joi.date().required(),
   myOptionalSubjects: Joi.array().items(Validators.mongoIdValidator()), //"mySubjectIds":["62d629dec8fa5623574e387a"]
 });
 

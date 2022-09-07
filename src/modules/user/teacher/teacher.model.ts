@@ -6,11 +6,6 @@ import { docHooks, queryHooks } from '../../../utils/mongoose';
 import logger from '../../../utils/logger';
 import { Validators } from '../../../utils/validators';
 
-export interface I_TeacherProfile {
-  phoneNumber?: number;
-  currentAddress?: number;
-  dob?: Date;
-}
 export interface I_Teacher {
   name: string;
   username?: string;
@@ -19,18 +14,15 @@ export interface I_Teacher {
   collegeId: Types.ObjectId;
   assignedClasses: Types.ObjectId[];
   userType: TeacherUserTypes;
-  profile?: I_TeacherProfile;
+  phoneNumber?: number;
+  currentAddress?: number;
+  dob: Date;
   isProfileCompleted?: boolean;
 }
 interface I_TeacherMethods {
   isPasswordValid(password: string): Promise<boolean>;
 }
 export type TeacherModel = Model<I_Teacher, unknown, I_TeacherMethods>;
-const _profileSchema = new Schema<I_TeacherProfile>({
-  phoneNumber: Number,
-  currentAddress: String,
-  dob: Date,
-});
 export const teacherSchema = new Schema<
   I_Teacher,
   TeacherModel,
@@ -57,7 +49,9 @@ export const teacherSchema = new Schema<
       required: true,
       ref: 'Class',
     },
-    profile: _profileSchema,
+    phoneNumber: Number,
+    currentAddress: String,
+    dob: { type: Date, required: true },
     username: {
       type: String,
       validate: {

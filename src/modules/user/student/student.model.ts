@@ -12,12 +12,6 @@ import logger from '../../../utils/logger';
 import { docHooks, queryHooks } from '../../../utils/mongoose';
 import { Validators } from '../../../utils/validators';
 
-export interface I_StudentProfile {
-  phoneNumber?: number;
-  parentsNumber?: number;
-  currentAddress?: number;
-  dob?: Date;
-}
 export interface I_Student {
   name: string;
   username?: string;
@@ -26,8 +20,11 @@ export interface I_Student {
   userType: StudentUserTypes;
   collegeId: Types.ObjectId;
   classId: Types.ObjectId;
+  phoneNumber?: number;
+  parentsNumber?: number;
+  currentAddress?: number;
+  dob: Date;
   myOptionalSubjects: Types.ObjectId[];
-  profile?: I_StudentProfile;
   isProfileCompleted?: boolean;
 }
 
@@ -37,12 +34,6 @@ interface I_StudentMethods {
 export type StudentModel = Model<I_Student, unknown, I_StudentMethods>;
 export type StudentQuery = Query<I_Student, unknown, I_StudentMethods>;
 
-const _profileSchema = new Schema<I_StudentProfile>({
-  phoneNumber: Number,
-  currentAddress: String,
-  dob: Date,
-  parentsNumber: Number,
-});
 export const studentSchema = new Schema<
   I_Student,
   StudentModel,
@@ -74,7 +65,10 @@ export const studentSchema = new Schema<
       required: true,
       ref: 'Subject',
     },
-    profile: _profileSchema,
+    phoneNumber: Number,
+    currentAddress: String,
+    dob: { type: Date, required: true },
+    parentsNumber: Number,
     username: {
       type: String,
       validate: {

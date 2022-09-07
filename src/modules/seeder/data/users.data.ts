@@ -53,6 +53,7 @@ export const importTeachersData: (I_Teacher & {
     collegeId: ids.collegeIds[0],
     userType: UserType.teacher,
     assignedClasses: [ids.classIds[0], ids.classIds[1]],
+    dob: new Date('03-13-1988'),
   },
   {
     _id: ids.teacherIds[1],
@@ -62,6 +63,7 @@ export const importTeachersData: (I_Teacher & {
     collegeId: ids.collegeIds[1],
     assignedClasses: [ids.classIds[1]],
     userType: UserType.teacher,
+    dob: new Date('08-16-1978'),
   },
 ];
 export const importFacultyData: (I_Faculty & {
@@ -96,6 +98,7 @@ export const importStudentsData: (I_Student & {
     userType: UserType.student,
     classId: ids.classIds[0],
     myOptionalSubjects: [],
+    dob: new Date('08-16-2000'),
   },
   {
     _id: ids.studentIds[1],
@@ -105,6 +108,7 @@ export const importStudentsData: (I_Student & {
     collegeId: ids.collegeIds[0],
     userType: UserType.student,
     classId: ids.classIds[0],
+    dob: new Date('08-02-2002'),
     myOptionalSubjects: [],
   },
   {
@@ -115,6 +119,7 @@ export const importStudentsData: (I_Student & {
     collegeId: ids.collegeIds[0],
     userType: UserType.student,
     classId: ids.classIds[0],
+    dob: new Date('08-16-1968'),
     myOptionalSubjects: [],
   },
   {
@@ -125,6 +130,7 @@ export const importStudentsData: (I_Student & {
     collegeId: ids.collegeIds[0],
     userType: UserType.student,
     classId: ids.classIds[1],
+    dob: new Date('02-04-1968'),
     myOptionalSubjects: [],
   },
   /// Other college
@@ -136,6 +142,7 @@ export const importStudentsData: (I_Student & {
     collegeId: ids.collegeIds[1],
     userType: UserType.student,
     classId: ids.classIds[1],
+    dob: new Date('05-03-1968'),
     myOptionalSubjects: [],
   },
 ];
