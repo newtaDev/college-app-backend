@@ -1,3 +1,4 @@
+import { FilterQuery } from 'mongoose';
 import { collegeDb } from '../../../config/database/college.db';
 import { UserType } from '../../../utils/enums';
 import { I_Admin } from '../admin.model';
@@ -12,6 +13,32 @@ const registerAsStudent = (student: I_Student) =>
 const registerAsFaculty = (faculty: I_Faculty) =>
   collegeDb.Faculty.create(faculty);
 const registerAsAdmin = (admin: I_Admin) => collegeDb.Admin.create(admin);
+
+const getUserWithQuery = async (
+  query?: FilterQuery<I_Student | I_Admin | I_Faculty | I_Teacher>
+) => {
+  const student = await collegeDb.Student.findOne(query).select([
+    '-__v',
+    '-password',
+  ]);
+  if (student) return student;
+  const teacher = await collegeDb.Teacher.findOne(query).select([
+    '-__v',
+    '-password',
+  ]);
+  if (teacher) return teacher;
+  const faculty = await collegeDb.Faculty.findOne(query).select([
+    '-__v',
+    '-password',
+  ]);
+  if (faculty) return faculty;
+  const admin = await collegeDb.Admin.findOne(query).select([
+    '-__v',
+    '-password',
+  ]);
+  if (admin) return admin;
+  return null;
+};
 
 const loginUser = (email: string, userType: UserType) => {
   /// Find using `userType` if multiple `userType` is present in same collection
@@ -49,7 +76,6 @@ const getUserDetailsById = (id: string, userType: UserType) => {
   }
 };
 
-
 export default {
   registerAsStudent,
   registerAsTeacher,
@@ -57,4 +83,5 @@ export default {
   registerAsAdmin,
   loginUser,
   getUserDetailsById,
+  getUserWithQuery,
 };

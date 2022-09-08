@@ -7,7 +7,6 @@ import {
 // Base Exception classs for displaying errors in api's
 export class ApiException extends Error {
   public status: ApiResStatus;
-  public msg: string;
   public devMsg: string;
   public statuscode: number;
   public errorDetails?: unknown;
@@ -16,10 +15,9 @@ export class ApiException extends Error {
   constructor(params: I_ApiExceptionsParams) {
     super(params.message);
     this.status = 'ERROR';
-    this.msg = params.message;
     this.devMsg = params.devMsg ?? this.message;
     this.statuscode = params.statuscode ?? 500;
-    this.errorDetails = params.errorDetails
+    this.errorDetails = params.errorDetails;
     this.errorStack = ApiException.getStackTrace(this);
   }
 

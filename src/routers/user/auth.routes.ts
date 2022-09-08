@@ -8,6 +8,7 @@ import {
   registerAsFaculty,
   registerAsStudent,
   registerAsTeacher,
+  checkUserExists,
 } from '../../modules/user/auth/auth.controller';
 import {
   validateAdminRegistration,
@@ -15,6 +16,7 @@ import {
   validateStudentRegistration,
   validateTeacherRegistration,
   validateUserLogin,
+  checkUserExistsValidationQuery,
 } from '../../modules/user/auth/auth.validator';
 import I_BaseRouter from '../routes';
 
@@ -62,8 +64,12 @@ export class AuthRouter implements I_BaseRouter {
       registerAsAdmin
     );
 
-    ///
-    this.router.post(`${this.path}/generate/otp`);
+    /// Validation
+    this.router.get(
+      `${this.path}/validate/`,
+      validateSchemaMiddleware({ query: checkUserExistsValidationQuery }),
+      checkUserExists
+    );
     this.router.get(`${this.path}/verify/otp`);
     this.router.get(`${this.path}/verify/email`);
   }

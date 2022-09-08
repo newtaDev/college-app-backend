@@ -1,13 +1,15 @@
-import mongoose, { Model, Schema, Types } from 'mongoose';
+import mongoose, { Model, Schema, Types, ValidatorProps } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
 import { facultyUsersList, FacultyUserTypes } from '../../utils/roles';
 import { docHooks, queryHooks } from '../../utils/mongoose';
 import logger from '../../utils/logger';
+import { Validators } from '../../utils/validators';
 
 export interface I_Faculty {
   name: string;
   email: string;
+  username: string;
   password: string;
   collegeId: Types.ObjectId;
   userType: FacultyUserTypes;
@@ -25,6 +27,15 @@ export const facultySchema = new Schema<
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
+    username: {
+      type: String,
+      unique: true,
+      validate: {
+        validator: Validators.isValidUsername,
+        message: (props: ValidatorProps) =>
+          `${props.value} is not valid username`,
+      },
+    },
     password: { type: String, required: true },
     collegeId: {
       type: Schema.Types.ObjectId,

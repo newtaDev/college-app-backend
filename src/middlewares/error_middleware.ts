@@ -21,7 +21,7 @@ export const errorMiddleware =
     let _error: I_ApiErrorRes | I_RouteNotFound = {
       status: error.status ?? 'ERROR',
       statuscode: error.statuscode ?? 500,
-      message: error.msg ?? 'Internal server error',
+      message: error.message,
       devMsg: error.devMsg ?? error.message,
       errorDetails: error.errorDetails,
       // if `error` is instaceOf `Error` class, then only add '_stackTrace'  to `_error` object

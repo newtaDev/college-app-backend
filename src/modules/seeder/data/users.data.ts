@@ -12,6 +12,7 @@ export const importSuperAdminsData: (I_Admin & {
   {
     _id: ids.superAdminIds[0],
     name: 'Newta',
+    username: 'super_admin_1',
     email: 'newta.super.admin0@gmail.com',
     password: 'Newta1234',
     userType: UserType.superAdmin,
@@ -19,6 +20,7 @@ export const importSuperAdminsData: (I_Admin & {
   {
     _id: ids.superAdminIds[1],
     name: 'Newta',
+    username: 'super_admin_2',
     email: 'newta.super.admin1@gmail.com',
     password: 'Newta1234',
     userType: UserType.superAdmin,
@@ -30,6 +32,7 @@ export const importAdminsData: (I_Admin & {
   {
     _id: ids.adminIds[0],
     name: 'Newta',
+    username: 'admin_1',
     email: 'newta.admin0@gmail.com',
     password: 'Newta1234',
     userType: UserType.admin,
@@ -37,6 +40,7 @@ export const importAdminsData: (I_Admin & {
   {
     _id: ids.adminIds[1],
     name: 'Newta',
+    username: 'admin_2',
     email: 'newta.admin1@gmail.com',
     password: 'Newta1234',
     userType: UserType.admin,
@@ -72,6 +76,7 @@ export const importFacultyData: (I_Faculty & {
   {
     _id: ids.facultyIds[0],
     name: 'Newta',
+    username: 'faculty_1',
     email: 'newta.principal0@gmail.com',
     password: 'Newta1234',
     collegeId: ids.collegeIds[0],
@@ -80,6 +85,7 @@ export const importFacultyData: (I_Faculty & {
   {
     _id: ids.facultyIds[1],
     name: 'Newta',
+    username: 'faculty_2',
     email: 'newta.staff0@gmail.com',
     password: 'Newta1234',
     collegeId: ids.collegeIds[1],

@@ -243,3 +243,29 @@ export const registerAsAdmin = async (
     );
   }
 };
+export const checkUserExists = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const _user = await authService.getUserWithQuery(req.query);
+
+    if (_user)
+      return next(
+        new ApiException({
+          message: 'Already exits',
+          statuscode: 409,
+        })
+      );
+    return res.status(200).send(successResponse());
+  } catch (error) {
+    return next(
+      new ApiException({
+        message: 'Username validation failed',
+        devMsg: error instanceof Error ? error.message : null,
+        statuscode: 400,
+      })
+    );
+  }
+};

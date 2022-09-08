@@ -12,7 +12,7 @@ const app = new App({
 app.listen();
 
 console.log(createQrToken({ Name: 'as' }));
-
+//  authService.getUserWithQuery({}).then(console.log)
 // collegeDb.Class.find().populate('assignedToId').then(console.log);
 // logger.info('asdas',{'asd':'asdss'})
 // logger.error('error log')

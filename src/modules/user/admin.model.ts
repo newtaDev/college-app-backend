@@ -1,14 +1,16 @@
-import mongoose, { Model, Schema, Types } from 'mongoose';
+import mongoose, { Model, Schema, Types, ValidatorProps } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserType } from '../../utils/enums';
 import { adminUsersList, AdminUserTypes } from '../../utils/roles';
 import { College } from '../college/college.model';
 import { docHooks, queryHooks } from '../../utils/mongoose';
 import logger from '../../utils/logger';
+import { Validators } from '../../utils/validators';
 
 export interface I_Admin {
   name: string;
   email: string;
+  username: string;
   userType: AdminUserTypes;
   collegeId?: Types.ObjectId;
   password: string;
@@ -22,6 +24,15 @@ export const adminSchema = new Schema<I_Admin, AdminModel, I_AdminMethods>(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
+    username: {
+      type: String,
+      unique: true,
+      validate: {
+        validator: Validators.isValidUsername,
+        message: (props: ValidatorProps) =>
+          `${props.value} is not valid username`,
+      },
+    },
     password: { type: String, required: true },
     collegeId: { type: Schema.Types.ObjectId, ref: College },
     userType: {

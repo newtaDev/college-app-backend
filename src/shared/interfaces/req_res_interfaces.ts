@@ -14,12 +14,12 @@ export interface I_ResSuccess {
 // }
 
 export function successResponse(
-  res: object | null,
+  responseData?: object | null,
   beforeRes?: object
 ): I_ResSuccess {
   return {
     status: 'OK',
     ...beforeRes,
-    responseData: res,
+    responseData,
   };
 }
