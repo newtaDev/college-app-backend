@@ -10,12 +10,12 @@ export const updateTeacherById = async (
   next: NextFunction
 ) => {
   try {
-    const _student = await teacherService.updateById(
+    const _teacher = await teacherService.updateById(
       req.params.teacherId,
       req.body
     );
-    if (!_student) throw Error('Teacher not found');
-    res.send(successResponse(_student));
+    if (!_teacher) throw Error('Teacher not found');
+    res.send(successResponse(_teacher));
   } catch (error) {
     return next(
       new ApiException({
@@ -43,8 +43,8 @@ export const getAllTeachers = async (
       });
       return res.send(successResponse(_teachersWithQurey));
     }
-    const _student = await teacherService.listAll();
-    res.send(successResponse(_student));
+    const _teacher = await teacherService.listAll();
+    res.send(successResponse(_teacher));
   } catch (error) {
     return next(
       new ApiException({
@@ -62,13 +62,33 @@ export const findTeacherById = async (
   next: NextFunction
 ) => {
   try {
-    const _student = await teacherService.findById(req.params.teacherId);
-    if (!_student) throw Error('Teacher not found');
-    res.send(successResponse(_student));
+    const _teacher = await teacherService.findById(req.params.teacherId);
+    if (!_teacher) throw Error('Teacher not found');
+    res.send(successResponse(_teacher));
   } catch (error) {
     return next(
       new ApiException({
         message: 'Error in finding Teacher',
+        devMsg: error instanceof Error ? error.message : null,
+        statuscode: 400,
+      })
+    );
+  }
+};
+
+export const getAssignedClasses = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const _teacher = await teacherService.getAssignedClasses(req.user.id);
+    if (!_teacher) throw Error('Teacher not found');
+    res.send(successResponse(_teacher));
+  } catch (error) {
+    return next(
+      new ApiException({
+        message: 'Error in finding assigned classes in Teacher',
         devMsg: error instanceof Error ? error.message : null,
         statuscode: 400,
       })
@@ -81,9 +101,9 @@ export const deleteTeacherById = async (
   next: NextFunction
 ) => {
   try {
-    const _student = await teacherService.deleteById(req.params.teacherId);
-    if (!_student) throw Error('Teacher not found');
-    res.send(successResponse(_student));
+    const _teacher = await teacherService.deleteById(req.params.teacherId);
+    if (!_teacher) throw Error('Teacher not found');
+    res.send(successResponse(_teacher));
   } catch (error) {
     return next(
       new ApiException({
