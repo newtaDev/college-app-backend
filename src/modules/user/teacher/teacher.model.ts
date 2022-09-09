@@ -11,6 +11,8 @@ export interface I_Teacher {
   username?: string;
   email?: string;
   password: string;
+  emoji?: string;
+  bio?: string;
   collegeId: Types.ObjectId;
   assignedClasses: Types.ObjectId[];
   userType: TeacherUserTypes;
@@ -30,8 +32,16 @@ export const teacherSchema = new Schema<
 >(
   {
     name: { type: String, required: true },
-    email: { type: String },
+    email: {
+      type: String,
+      validate: {
+        validator: Validators.isValidEmail,
+        message: (props: ValidatorProps) => `${props.value} is not valid email`,
+      },
+    },
     password: { type: String, required: true },
+    emoji: { type: String },
+    bio: { type: String },
     collegeId: {
       type: Schema.Types.ObjectId,
       ref: 'College',

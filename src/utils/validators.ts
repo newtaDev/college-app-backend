@@ -34,6 +34,12 @@ export class Validators {
       .message('Updating {{#label}} is restricted');
   }
 
+  static isValidEmail(value: string): boolean {
+    //eslint-disable-next-line
+    return /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(
+      value
+    );
+  }
   static isValidUsername(value: string): boolean {
     const regx = new RegExp('^((?![.])(?!.*[.]{2})[a-z0-9_.]{3,20})[a-z0-9_]$');
     return regx.test(value);

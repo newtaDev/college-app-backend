@@ -23,7 +23,16 @@ export type AdminModel = Model<I_Admin, unknown, I_AdminMethods>;
 export const adminSchema = new Schema<I_Admin, AdminModel, I_AdminMethods>(
   {
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      validate: {
+        validator: Validators.isValidEmail,
+        message: (props: ValidatorProps) => `${props.value} is not valid email`,
+      },
+    },
     username: {
       type: String,
       unique: true,

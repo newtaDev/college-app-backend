@@ -19,6 +19,8 @@ export const validateTeacherRegistration = joiObject<I_Teacher>({
   phoneNumber: Joi.number(),
   currentAddress: Joi.string(),
   dob: Joi.date().required(),
+  bio: Joi.string().max(150),
+  emoji: Joi.string(),
 });
 
 export const validateFacultyRegistration = joiObject<I_Faculty>({
@@ -48,6 +50,8 @@ export const validateStudentRegistration = joiObject<I_Student>({
   currentAddress: Joi.string(),
   dob: Joi.date().required(),
   myOptionalSubjects: Joi.array().items(Validators.mongoIdValidator()), //"mySubjectIds":["62d629dec8fa5623574e387a"]
+  bio: Joi.string().max(150),
+  emoji: Joi.string(),
 });
 
 export const validateAdminRegistration = joiObject<I_Admin>({

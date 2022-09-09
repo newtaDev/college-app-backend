@@ -14,6 +14,8 @@ import { Validators } from '../../../utils/validators';
 
 export interface I_Student {
   name: string;
+  emoji?: string;
+  bio?: string;
   username?: string;
   email?: string;
   password: string;
@@ -41,8 +43,16 @@ export const studentSchema = new Schema<
 >(
   {
     name: { type: String, required: true },
-    email: { type: String },
-    password: { type: String, required: true },
+    email: {
+      type: String,
+      validate: {
+        validator: Validators.isValidEmail,
+        message: (props: ValidatorProps) => `${props.value} is not valid email`,
+      },
+    },
+    password: { type: String },
+    emoji: { type: String },
+    bio: { type: String },
     collegeId: {
       type: Schema.Types.ObjectId,
       required: true,

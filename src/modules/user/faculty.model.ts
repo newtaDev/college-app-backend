@@ -26,7 +26,15 @@ export const facultySchema = new Schema<
 >(
   {
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      validate: {
+        validator: Validators.isValidEmail,
+        message: (props: ValidatorProps) => `${props.value} is not valid email`,
+      },
+    },
     username: {
       type: String,
       unique: true,
