@@ -9,8 +9,11 @@ import {
   updateAttendanceById,
   getAttendancesReportOfSubjects,
   getAbsentStudentsReportInEachSubject,
+  getAbsentClassesReportOfStudents,
 } from '../modules/attendance/attendance.controller';
 import {
+  validateAbsentClassesOfStudentParamReq,
+  validateAbsentClassesOfStudentQueryReq as validateAbsentClassesReportOfStudentReq,
   validateAbsentStudentsReportInEachSubject,
   validateAttendanceByIdParam,
   validateAttendancesWithAllSubjects,
@@ -87,6 +90,17 @@ export class AttendanceRouter implements I_BaseRouter {
         }),
       ],
       getAbsentStudentsReportInEachSubject
+    );
+    this.router.get(
+      `${this.path}/report/subjects/students/:studentId`,
+      [
+        authMiddleware(),
+        validateSchemaMiddleware({
+          params: validateAbsentClassesOfStudentParamReq,
+          query: validateAbsentClassesReportOfStudentReq,
+        }),
+      ],
+      getAbsentClassesReportOfStudents
     );
   }
 }
