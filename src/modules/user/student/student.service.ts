@@ -2,28 +2,45 @@ import { FilterQuery, UpdateQuery } from 'mongoose';
 import { collegeDb } from '../../../config/database/college.db';
 import { I_Student } from './student.model';
 
+const _populateClass = [
+  {
+    path: 'classId',
+    populate: {
+      path: 'courseId',
+    },
+  },
+];
 const create = (params: I_Student) => collegeDb.Student.create(params);
 
 const listAll = (query?: FilterQuery<I_Student>) =>
-  collegeDb.Student.find(query || {}).select(['-__v', '-password']);
+  collegeDb.Student.find(query || {})
+    .select(['-__v', '-password'])
+    .populate(_populateClass);
 
 const findById = (studentId: string) =>
-  collegeDb.Student.findById(studentId).select(['-__v', '-password']);
+  collegeDb.Student.findById(studentId)
+    .select(['-__v', '-password'])
+    .populate(_populateClass);
 
 const updateById = (studentId: string, updatedData: UpdateQuery<I_Student>) =>
   collegeDb.Student.findOneAndUpdate({ _id: studentId }, updatedData, {
     new: true,
-  }).select(['-__v', '-password']);
+  })
+    .select(['-__v', '-password'])
+    .populate(_populateClass);
 
 const findOne = (query: FilterQuery<I_Student>) =>
-  collegeDb.Student.findOne(query).select(['-__v', '-password']);
+  collegeDb.Student.findOne(query)
+    .select(['-__v', '-password'])
+    .populate(_populateClass);
 
 const deleteById = (studentId: string) =>
-  collegeDb.Student.findByIdAndDelete(studentId).select(['-__v', '-password']);
+  collegeDb.Student.findByIdAndDelete(studentId)
+    .select(['-__v', '-password'])
+    .populate(_populateClass);
 
 const getCountOfStudents = (collegeId?: string, classId?: string) =>
-collegeDb.Student.find({ collegeId, classId }).count();
-
+  collegeDb.Student.find({ collegeId, classId }).count();
 
 export default {
   create,

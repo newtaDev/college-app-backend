@@ -13,7 +13,16 @@ const getProfileDetailsById = (id: string, userType: UserType) => {
     case UserType.principal:
       return collegeDb.Faculty.findById(id).select(['-__v', '-password']);
     case UserType.student:
-      return collegeDb.Student.findById(id).select(['-__v', '-password']);
+      return collegeDb.Student.findById(id)
+        .select(['-__v', '-password'])
+        .populate([
+          {
+            path: 'classId',
+            populate: {
+              path: 'courseId',
+            },
+          },
+        ]);
     case UserType.teacher:
       return collegeDb.Teacher.findById(id).select(['-__v', '-password']);
   }
