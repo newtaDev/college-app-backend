@@ -35,3 +35,11 @@ export const validateAbsentStudentsReportInEachSubject = joiObject({
   currentSem: Joi.number().required(),
   collegeId: Validators.mongoIdValidator(),
 });
+export const validateAbsentClassesOfStudentParamReq = joiObject({
+  studentId: Validators.mongoIdValidator().required(),
+});
+export const validateAbsentClassesOfStudentQueryReq = joiObject({
+  classId: Validators.mongoIdValidator().required(),
+  currentSem: Joi.number().required(),
+  collegeId: Validators.mongoIdValidator(),
+});

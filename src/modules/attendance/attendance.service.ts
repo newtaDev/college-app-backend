@@ -85,7 +85,7 @@ const getAttendanceWithCountOfAbsentAndPresntStudents = (
         },
       },
     },
-    {$sort: {'attendanceTakenOn': -1} }
+    { $sort: { attendanceTakenOn: -1 } },
   ]);
 
 const getReportOfAllSubjectsInClass = (
@@ -186,6 +186,67 @@ const getReportOfAllSubjectsInClass = (
       },
     },
   ]);
+
+/*
+Reponse:
+subject: object,
+total_attendance_taken: number
+ */
+const getTotalAttendanceTakenInEachSubjectsOfClass = (params: {
+  collegeId: string;
+  classId: string;
+  currentSem: number;
+}) =>
+  collegeDb.Attendance.aggregate([
+    {
+      $match: {
+        collegeId: {
+          $eq: new Types.ObjectId(params.collegeId),
+        },
+        classId: {
+          $eq: new Types.ObjectId(params.classId),
+        },
+        currentSem: {
+          $eq: params.currentSem,
+        },
+      },
+    },
+    {
+      $group: {
+        _id: '$subjectId',
+        total_attendance_taken: {
+          $sum: 1,
+        },
+      },
+    },
+    /// Adding new field [studentId] and assignning the value of [_id]
+    {
+      $addFields: {
+        subject: '$_id',
+      },
+    },
+    /// removing [_id] filed
+    {
+      $unset: '_id',
+    },
+    /// populating [studentId] from `subjects` collection
+    {
+      $lookup: {
+        from: 'subjects', /// collection name
+        localField: 'subject',
+        foreignField: '_id',
+        as: 'subject',
+      },
+    },
+    {
+      /// subject array will be overwritten
+      $addFields: {
+        subject: {
+          $arrayElemAt: ['$subject', 0],
+        },
+      },
+    },
+  ]);
 const getAbsentStudentsReportInEachSubject = (
   collegeId: string,
   classId: string,
@@ -254,6 +315,67 @@ const getAbsentStudentsReportInEachSubject = (
         },
       },
     },
+     /// removing [_id] filed
+     {
+      $unset: 'student.password',
+    },
+  ]);
+
+/*
+Returns:
+
+_id : ObjectId
+absent_class_count: number
+subject : Object
+*/
+const getAbsentClassesCountOfStudent = (params: {
+  collegeId: string;
+  classId: string;
+  currentSem: number;
+  studentId: string;
+}) =>
+  collegeDb.Attendance.aggregate([
+    {
+      $match: {
+        collegeId: {
+          $eq: new Types.ObjectId(params.collegeId),
+        },
+        classId: {
+          $eq: new Types.ObjectId(params.classId),
+        },
+        currentSem: {
+          $eq: params.currentSem,
+        },
+        absentStudents: {
+          $elemMatch: {
+            $eq: new Types.ObjectId(params.studentId),
+          },
+        },
+      },
+    },
+    {
+      $group: {
+        _id: '$subjectId',
+        absent_class_count: {
+          $sum: 1,
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: 'subjects',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'subject',
+      },
+    },
+    {
+      $addFields: {
+        subject: {
+          $arrayElemAt: ['$subject', 0],
+        },
+      },
+    },
   ]);
 export default {
   create,
@@ -265,4 +387,6 @@ export default {
   getAbsentStudentsReportInEachSubject,
   getReportOfAllSubjectsInClass,
   getAttendanceWithCountOfAbsentAndPresntStudents,
+  getTotalAttendanceTakenInEachSubjectsOfClass,
+  getAbsentClassesCountOfStudent,
 };

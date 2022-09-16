@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { ApiException } from '../../shared/exceptions/api_exceptions';
 import { successResponse } from '../../shared/interfaces/req_res_interfaces';
 import { I_JwtUserPayload } from '../../shared/services/jwt/jwt_interfaces';
+import classService from '../class/class.service';
 import studentService from '../user/student/student.service';
 import attendanceService from './attendance.service';
 
@@ -129,6 +130,7 @@ export const getAttendancesReportOfSubjects = async (
 
     res.send(successResponse(classSubjectsReport));
   } catch (error) {
+    console.error(error)
     return next(
       new ApiException({
         message: 'Attendance Report of Subject failed',
@@ -177,6 +179,83 @@ export const getAbsentStudentsReportInEachSubject = async (
     return next(
       new ApiException({
         message: 'Absent Student Reporting failed',
+        devMsg: error instanceof Error ? error.message : null,
+        statuscode: 400,
+      })
+    );
+  }
+};
+
+export const getAbsentClassesReportOfStudents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const collegeId = (
+      req.query.collegeId ?? req.user.collegeId
+    )?.toString() as string;
+    const classId = req.query.classId?.toString() as string;
+    const studentId = req.params.studentId?.toString() as string;
+    const currentSem = Number(req.query.currentSem);
+    const userClass = await classService.findById(classId);
+    const subjectsInClass =
+      await attendanceService.getTotalAttendanceTakenInEachSubjectsOfClass({
+        classId,
+        collegeId,
+        currentSem,
+      });
+    const absentClasses =
+      await attendanceService.getAbsentClassesCountOfStudent({
+        classId,
+        collegeId,
+        currentSem,
+        studentId,
+      });
+    type ReportOfClass = {
+      absent_class_count: number;
+      total_attendance_taken: number;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      subject: any;
+    };
+    const reportOfClass: ReportOfClass[] = [];
+    absentClasses.forEach(subject => {
+      subjectsInClass.forEach(allSubject => {
+        if (allSubject.subject._id.toString() === subject._id.toString()) {
+          reportOfClass.push({
+            absent_class_count: subject.absent_class_count,
+            total_attendance_taken: allSubject.total_attendance_taken,
+            subject: subject.subject,
+          });
+        }
+      });
+    });
+
+    subjectsInClass.forEach(allSubject => {
+      if (
+        !reportOfClass.some(
+          ele => ele.subject._id.toString() == allSubject.subject._id.toString()
+        )
+      ) {
+        {
+          reportOfClass.push({
+            absent_class_count: 0,
+            total_attendance_taken: allSubject.total_attendance_taken,
+            subject: allSubject.subject,
+          });
+        }
+      }
+    });
+    return res.send(
+      successResponse({
+        class: userClass,
+        report: reportOfClass,
+      })
+    );
+  } catch (error) {
+    return next(
+      new ApiException({
+        message: 'Absent class report of Student failed',
         devMsg: error instanceof Error ? error.message : null,
         statuscode: 400,
       })
