@@ -30,7 +30,9 @@ const getUserWithQuery = async (
     .select(_hidePassword)
     .populate(_populateStudent);
   if (student) return student;
-  const teacher = await collegeDb.Teacher.findOne(query).select(_hidePassword);
+  const teacher = await collegeDb.Teacher.findOne(query)
+    .select(_hidePassword)
+    .populate('assignedClasses');
   if (teacher) return teacher;
   const faculty = await collegeDb.Faculty.findOne(query).select(_hidePassword);
   if (faculty) return faculty;
@@ -55,7 +57,9 @@ const loginUser = (email: string, userType: UserType) => {
         _populateStudent
       );
     case UserType.teacher:
-      return collegeDb.Teacher.findOne({ email: email });
+      return collegeDb.Teacher.findOne({ email: email }).populate(
+        'assignedClasses'
+      );
   }
 };
 
@@ -75,7 +79,9 @@ const getUserDetailsById = (id: string, userType: UserType) => {
         .select(_hidePassword)
         .populate(_populateStudent);
     case UserType.teacher:
-      return collegeDb.Teacher.findById(id).select(_hidePassword);
+      return collegeDb.Teacher.findById(id)
+        .select(_hidePassword)
+        .populate('assignedClasses');
   }
 };
 

@@ -17,6 +17,8 @@ export const updateTeacherById = async (
     if (!_teacher) throw Error('Teacher not found');
     res.send(successResponse(_teacher));
   } catch (error) {
+    console.log(error);
+    
     return next(
       new ApiException({
         message: 'Teacher Updation failed',

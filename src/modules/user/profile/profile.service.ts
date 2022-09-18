@@ -24,7 +24,9 @@ const getProfileDetailsById = (id: string, userType: UserType) => {
           },
         ]);
     case UserType.teacher:
-      return collegeDb.Teacher.findById(id).select(['-__v', '-password']);
+      return collegeDb.Teacher.findById(id)
+        .select(['-__v', '-password'])
+        .populate('assignedClasses');
   }
 };
 
