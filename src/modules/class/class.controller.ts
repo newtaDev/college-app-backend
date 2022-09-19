@@ -61,7 +61,11 @@ export const updateClassById = async (
       courseId: req.body.courseId,
     });
     await _canClassModified(req);
-    const _class = await classService.updateById(req.params.classId, req.body);
+    const _class = await classService.updateById(
+      req.params.classId,
+      req.user.collegeId as string,
+      req.body
+    );
     res.send(successResponse(_class));
   } catch (error) {
     return next(
@@ -82,9 +86,11 @@ export const getAllClasses = async (
   try {
     let _class;
     if (req.query.showDetails === 'true') {
-      _class = await classService.listAllWithDetails();
+      _class = await classService.listAllWithDetails(
+        req.user.collegeId as string
+      );
     } else {
-      _class = await classService.listAll();
+      _class = await classService.listAll(req.user.collegeId as string);
     }
     res.send(successResponse(_class));
   } catch (error) {
@@ -103,7 +109,10 @@ export const findClassById = async (
   next: NextFunction
 ) => {
   try {
-    const _class = await classService.findById(req.params.classId);
+    const _class = await classService.findById(
+      req.params.classId,
+      req.user.collegeId as string
+    );
     if (!_class) throw Error('Class not found');
     res.send(successResponse(_class));
   } catch (error) {
@@ -123,7 +132,10 @@ export const deleteClassById = async (
 ) => {
   try {
     await _isClassBelogsToMyCollege(req);
-    const _class = await classService.deleteById(req.params.classId);
+    const _class = await classService.deleteById(
+      req.params.classId,
+      req.user.collegeId as string
+    );
     res.send(successResponse(_class));
   } catch (error) {
     return next(
@@ -149,7 +161,10 @@ const _canClassModified = async (req: Request) => {
   }
 };
 const _isClassBelogsToMyCollege = async (req: Request) => {
-  const _findClass = await classService.findById(req.params.classId);
+  const _findClass = await classService.findById(
+    req.params.classId,
+    req.user.collegeId as string
+  );
   if (!_findClass) throw Error('Class not found');
   if (_findClass?.collegeId.toString() != req.user.collegeId)
     throw Error("You can't modify/delete Class of other college");
