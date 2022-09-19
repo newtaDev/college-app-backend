@@ -21,10 +21,16 @@ export const isMongoIdExitsOrValid = async (params: I_MongoModelIds) => {
     if (!_college) throw Error("College id doesn't exists");
   }
   if (params.classId) {
-    const _class = await classService.findOne({
-      _id: params.classId,
-      ...(collegeId && { collegeId }),
-    });
+    if (!collegeId) throw Error('req.user.collegeId required');
+
+    const _class = await classService.findOne(
+      {
+        _id: params.classId,
+        ...(collegeId && { collegeId }),
+      },
+      collegeId
+    );
+
     if (!_class)
       throw Error("Class id doesn't exists / Access Denied for Your collegeId");
   }

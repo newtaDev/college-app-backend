@@ -5,7 +5,12 @@ import { Validators } from '../../../utils/validators';
 import { I_ClassTimeTable } from './class_time_table.model';
 
 export const validateClassTimeTableByIdParam = joiObject({
-  classTTid: Validators.mongoIdValidator().required(),
+  id: Validators.mongoIdValidator().required(),
+});
+export const validateClassTimeTableQuery = joiObject({
+  teacherId: Validators.mongoIdValidator(),
+  classId: Validators.mongoIdValidator(),
+  week: Joi.string().valid(...Object.values(Week)),
 });
 
 export const validateCreateClassTimeTable = joiObject<I_ClassTimeTable>({

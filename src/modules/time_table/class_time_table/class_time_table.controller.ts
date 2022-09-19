@@ -12,7 +12,8 @@ export const createClassTimeTable = async (
 ) => {
   try {
     const collegeId = req.body.collegeId ?? req.user.collegeId;
-    if (!collegeId) throw Error('[body.collegeId]/[user.collegeId] is required');
+    if (!collegeId)
+      throw Error('[body.collegeId]/[user.collegeId] is required');
     const body = {
       ...req.body,
       collegeId,
@@ -48,7 +49,7 @@ export const updateClassTimeTableById = async (
       teacherId: req.body.teacherId,
     });
     const _classTT = await class_time_tableService.updateById(
-      req.params.classTTid,
+      req.params.id,
       req.body
     );
     if (!_classTT) throw Error('ClassTimeTable not found');
@@ -70,7 +71,7 @@ export const getAllClassTimeTables = async (
   next: NextFunction
 ) => {
   try {
-    const _classTT = await class_time_tableService.listAll();
+    const _classTT = await class_time_tableService.listAll(req.query);
     res.send(successResponse(_classTT));
   } catch (error) {
     return next(
@@ -88,9 +89,7 @@ export const findClassTimeTableById = async (
   next: NextFunction
 ) => {
   try {
-    const _classTT = await class_time_tableService.findById(
-      req.params.classTTid
-    );
+    const _classTT = await class_time_tableService.findById(req.params.id);
     if (!_classTT) throw Error('ClassTimeTable not found');
     res.send(successResponse(_classTT));
   } catch (error) {
@@ -109,9 +108,7 @@ export const deleteClassTimeTableById = async (
   next: NextFunction
 ) => {
   try {
-    const _classTT = await class_time_tableService.deleteById(
-      req.params.classTTid
-    );
+    const _classTT = await class_time_tableService.deleteById(req.params.id);
     if (!_classTT) throw Error('ClassTimeTable not found');
     res.send(successResponse(_classTT));
   } catch (error) {

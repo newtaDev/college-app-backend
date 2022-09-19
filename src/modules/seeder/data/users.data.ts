@@ -65,7 +65,7 @@ export const importTeachersData: (I_Teacher & {
     email: 'newta.teacher1@gmail.com',
     password: 'Newta1234',
     collegeId: ids.collegeIds[1],
-    assignedClasses: [ids.classIds[1]],
+    assignedClasses: [ids.classIds[2]],
     userType: UserType.teacher,
     dob: new Date('08-16-1978'),
   },

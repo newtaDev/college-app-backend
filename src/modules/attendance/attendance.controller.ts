@@ -130,7 +130,6 @@ export const getAttendancesReportOfSubjects = async (
 
     res.send(successResponse(classSubjectsReport));
   } catch (error) {
-    console.error(error)
     return next(
       new ApiException({
         message: 'Attendance Report of Subject failed',
@@ -198,7 +197,10 @@ export const getAbsentClassesReportOfStudents = async (
     const classId = req.query.classId?.toString() as string;
     const studentId = req.params.studentId?.toString() as string;
     const currentSem = Number(req.query.currentSem);
-    const userClass = await classService.findById(classId);
+    const userClass = await classService.findById(
+      classId,
+      req.user.collegeId as string
+    );
     const subjectsInClass =
       await attendanceService.getTotalAttendanceTakenInEachSubjectsOfClass({
         classId,

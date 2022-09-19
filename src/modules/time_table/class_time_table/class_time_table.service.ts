@@ -1,11 +1,18 @@
-import { UpdateQuery } from 'mongoose';
+import { FilterQuery, UpdateQuery } from 'mongoose';
 import { collegeDb } from '../../../config/database/college.db';
 import { I_ClassTimeTable } from './class_time_table.model';
 
 const create = (params: I_ClassTimeTable) =>
   collegeDb.ClassTimeTable.create(params);
 
-const listAll = () => collegeDb.ClassTimeTable.find();
+const listAll = (query?: FilterQuery<I_ClassTimeTable>) =>
+  collegeDb.ClassTimeTable.find(query ?? {})
+    .sort({ startingTime: 1 })
+    .populate([
+      'subjectId',
+      'teacherId',
+      { path: 'classId', populate: ['courseId'] },
+    ]);
 
 const findById = (classTimeTableId: string) =>
   collegeDb.ClassTimeTable.findById(classTimeTableId);

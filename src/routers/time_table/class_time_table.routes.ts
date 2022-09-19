@@ -20,7 +20,7 @@ export class ClassTimeTableRouter implements I_BaseRouter {
     this.router = Router();
     this.initRoutes();
   }
-  path = '/time_table/class';
+  path = '/time_table/classes';
   router: Router;
   private initRoutes(): void {
     this.router.get(this.path, authMiddleware(), getAllClassTimeTables);
@@ -33,7 +33,7 @@ export class ClassTimeTableRouter implements I_BaseRouter {
       createClassTimeTable
     );
     this.router.get(
-      `${this.path}/:classTTidid`,
+      `${this.path}/:id`,
       [
         authMiddleware(),
         validateSchemaMiddleware({ params: validateClassTimeTableByIdParam }),
@@ -41,7 +41,7 @@ export class ClassTimeTableRouter implements I_BaseRouter {
       findClassTimeTableById
     );
     this.router.put(
-      `${this.path}/:classTTid`,
+      `${this.path}/:id`,
       [
         authMiddleware(),
         validateSchemaMiddleware({
@@ -52,7 +52,7 @@ export class ClassTimeTableRouter implements I_BaseRouter {
       updateClassTimeTableById
     );
     this.router.delete(
-      `${this.path}/:classTTid`,
+      `${this.path}/:id`,
       [
         authMiddleware(),
         validateSchemaMiddleware({ params: validateClassTimeTableByIdParam }),

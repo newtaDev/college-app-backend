@@ -4,7 +4,7 @@ import { I_Attendance } from './attendance.model';
 
 const create = (params: I_Attendance) => collegeDb.Attendance.create(params);
 
-const listAll = () => collegeDb.Attendance.find();
+const listAll = () => collegeDb.Attendance.find().sort({ updatedAt: 1 });
 
 const findById = (attendanceId: string) =>
   collegeDb.Attendance.findById(attendanceId);
@@ -85,7 +85,7 @@ const getAttendanceWithCountOfAbsentAndPresntStudents = (
         },
       },
     },
-    { $sort: { attendanceTakenOn: -1 } },
+    { $sort: { updatedAt: -1 } },
   ]);
 
 const getReportOfAllSubjectsInClass = (
