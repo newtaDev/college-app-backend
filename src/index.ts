@@ -1,7 +1,6 @@
 import App from './app';
 import { AppKeys } from './config/keys/app_keys';
 import { appRoutes } from './routers/routes';
-import { generateQr } from './shared/services/qr_service';
 const app = new App({
   appRouters: appRoutes,
   // mongoUri: AppKeys.db_conn_str('college_app'),
@@ -11,12 +10,12 @@ const app = new App({
 });
 app.listen();
 
-generateQr(
-  JSON.stringify({
-    id: 'sdsdsd73487436483',
-    navigateTo: 'profile_screen',
-  })
-).then(console.log);
+// generateQr(
+//   JSON.stringify({
+//     id: 'sdsdsd73487436483',
+//     navigateTo: 'profile_screen',
+//   })
+// ).then(console.log);
 
 //  authService.getUserWithQuery({}).then(console.log)
 // collegeDb.Class.find().populate('assignedToId').then(console.log);

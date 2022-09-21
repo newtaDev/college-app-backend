@@ -1,19 +1,53 @@
 import { Request, Response, NextFunction } from 'express';
 import { collegeDb } from '../../config/database/college.db';
 import { ApiException } from '../../shared/exceptions/api_exceptions';
-import { importAttendanceData } from './data/attendance.data';
-import { importClassData } from './data/classes.data';
-import { importCollegeData } from './data/colleges.data';
-import { importCourseData } from './data/courses.data';
-import idsData from './data/ids.data';
-import { importSubjectData } from './data/subjects.data';
-import {
-  importAdminsData,
-  importSuperAdminsData,
-  importTeachersData,
-  importFacultyData,
-  importStudentsData,
-} from './data/users.data';
+import { importData } from './data/data';
+import { adminIds, superAdminIds } from './data/ids';
+import { importAdminsData, importSuperAdminsData } from './data/admins.data';
+
+const importCollegeData = importData.map(college => college.data);
+const importTeacherData = importData.map(college => college.teachers).flat();
+const importFactultyData = importData.map(college => college.faculties).flat();
+const importStudentData = importData
+  .map(college =>
+    college.courseData
+      .map(course => course.classData.map(classes => classes.students).flat())
+      .flat()
+  )
+  .flat();
+
+const importCourseData = importData
+  .map(college => college.courseData.map(course => course.data))
+  .flat();
+
+const importClassData = importData
+  .map(college =>
+    college.courseData
+      .map(course => course.classData.map(classes => classes.data))
+      .flat()
+  )
+  .flat();
+
+const importSubjectData = importData
+  .map(college => college.courseData.map(course => course.subjects).flat())
+  .flat();
+
+const importAttendanceData = importData
+  .map(college =>
+    college.courseData
+      .map(course => course.classData.map(classes => classes.attendance).flat())
+      .flat()
+  )
+  .flat();
+const importClassTimeTableData = importData
+  .map(college =>
+    college.courseData
+      .map(course =>
+        course.classData.map(classes => classes.classTimeTable).flat()
+      )
+      .flat()
+  )
+  .flat();
 
 export const importInitialData = async (
   req: Request,
@@ -28,11 +62,11 @@ export const importInitialData = async (
     /// create colleges
     await collegeDb.College.insertMany(importCollegeData);
     /// create Teacher
-    await collegeDb.Teacher.insertMany(importTeachersData);
+    await collegeDb.Teacher.insertMany(importTeacherData);
     /// create faculties
-    await collegeDb.Faculty.insertMany(importFacultyData);
+    await collegeDb.Faculty.insertMany(importFactultyData);
     /// create students
-    await collegeDb.Student.insertMany(importStudentsData);
+    await collegeDb.Student.insertMany(importStudentData);
 
     /// create courses
     await collegeDb.Course.insertMany(importCourseData);
@@ -42,6 +76,8 @@ export const importInitialData = async (
     await collegeDb.Subject.insertMany(importSubjectData);
     /// create attendences
     await collegeDb.Attendance.insertMany(importAttendanceData);
+    /// create Class time table
+    await collegeDb.ClassTimeTable.insertMany(importClassTimeTableData);
 
     res.send({ status: 'IMPORT SUCCESS' });
   } catch (error) {
@@ -60,26 +96,43 @@ export const deleteInitialData = async (
   next: NextFunction
 ) => {
   try {
-    await collegeDb.Admin.deleteMany({ _id: idsData.superAdminIds });
+    /// TODO: Remove generated data using isTestData field
+    await collegeDb.Admin.deleteMany({ _id: superAdminIds });
     /// delete Admin
-    await collegeDb.Admin.deleteMany({ _id: idsData.adminIds });
+    await collegeDb.Admin.deleteMany({ _id: adminIds });
     /// delete colleges
-    await collegeDb.College.deleteMany({ _id: idsData.collegeIds });
+    await collegeDb.College.deleteMany({
+      _id: importCollegeData.map(item => item._id),
+    });
     /// delete Teacher
-    await collegeDb.Teacher.deleteMany({ _id: idsData.teacherIds });
+    await collegeDb.Teacher.deleteMany({
+      _id: importTeacherData.map(item => item._id),
+    });
     /// delete faculties
-    await collegeDb.Faculty.deleteMany({ _id: idsData.facultyIds });
+    await collegeDb.Faculty.deleteMany({
+      _id: importFactultyData.map(item => item._id),
+    });
     /// delete students
-    await collegeDb.Student.deleteMany({ _id: idsData.studentIds });
+    await collegeDb.Student.deleteMany({
+      _id: importStudentData.map(item => item._id),
+    });
 
     /// delete courses
-    await collegeDb.Course.deleteMany({ _id: idsData.coursesIds });
+    await collegeDb.Course.deleteMany({
+      _id: importCourseData.map(item => item._id),
+    });
     /// delete classes
-    await collegeDb.Class.deleteMany({ _id: idsData.classIds });
+    await collegeDb.Class.deleteMany({
+      _id: importClassData.map(item => item._id),
+    });
     /// delete subjects
-    await collegeDb.Subject.deleteMany({ _id: idsData.subjectIds });
+    await collegeDb.Subject.deleteMany({
+      _id: importSubjectData.map(item => item._id),
+    });
     /// delete attendences
-    await collegeDb.Attendance.deleteMany({ _id: idsData.attendanceIds });
+    await collegeDb.Attendance.deleteMany({
+      _id: importAttendanceData.map(item => item._id),
+    });
     res.send({ status: 'DELETE SUCCESS' });
   } catch (error) {
     return next(
