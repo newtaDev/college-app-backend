@@ -13,6 +13,7 @@ export interface I_Subject {
   isMainSubject: boolean;
   createdBy?: I_CreatedBy;
   lastModifiedBy?: I_LastModifiedBy;
+  isTestData?: boolean;
 }
 const _createdOrModifiedBy = {
   type: {
@@ -36,6 +37,7 @@ export const subjectSchema = new Schema<I_Subject>(
     isMainSubject: { type: Boolean, required: true, default: true },
     createdBy: _createdOrModifiedBy,
     lastModifiedBy: _createdOrModifiedBy,
+    isTestData: { type: Boolean, select: false, default: false },
   },
   { timestamps: true }
 );

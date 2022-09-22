@@ -14,6 +14,7 @@ export interface I_Admin {
   userType: AdminUserTypes;
   collegeId?: Types.ObjectId;
   password: string;
+  isTestData?: boolean;
 }
 interface I_AdminMethods {
   isPasswordValid(password: string): Promise<boolean>;
@@ -50,6 +51,7 @@ export const adminSchema = new Schema<I_Admin, AdminModel, I_AdminMethods>(
       default: UserType.admin,
       required: true,
     },
+    isTestData: { type: Boolean, select: false, default: false },
   },
   { timestamps: true }
 );

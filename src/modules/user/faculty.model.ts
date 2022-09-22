@@ -13,6 +13,7 @@ export interface I_Faculty {
   password: string;
   collegeId: Types.ObjectId;
   userType: FacultyUserTypes;
+  isTestData?: boolean;
 }
 interface I_FacultyMethods {
   isPasswordValid(password: string): Promise<boolean>;
@@ -56,6 +57,7 @@ export const facultySchema = new Schema<
       default: UserType.staff,
       required: true,
     },
+    isTestData: { type: Boolean, select: false, default: false },
   },
   { timestamps: true }
 );

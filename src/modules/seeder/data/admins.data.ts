@@ -13,6 +13,7 @@ export const importSuperAdminsData: (I_Admin & {
     email: 'newta.super.admin0@gmail.com',
     password: 'Newta1234',
     userType: UserType.superAdmin,
+    isTestData: true,
   },
   {
     _id: superAdminIds[1],
@@ -21,6 +22,7 @@ export const importSuperAdminsData: (I_Admin & {
     email: 'newta.super.admin1@gmail.com',
     password: 'Newta1234',
     userType: UserType.superAdmin,
+    isTestData: true,
   },
 ];
 export const importAdminsData: (I_Admin & {
@@ -33,6 +35,7 @@ export const importAdminsData: (I_Admin & {
     email: 'newta.admin0@gmail.com',
     password: 'Newta1234',
     userType: UserType.admin,
+    isTestData: true,
   },
   {
     _id: adminIds[1],
@@ -41,5 +44,6 @@ export const importAdminsData: (I_Admin & {
     email: 'newta.admin1@gmail.com',
     password: 'Newta1234',
     userType: UserType.admin,
+    isTestData: true,
   },
 ];

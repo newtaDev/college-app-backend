@@ -97,42 +97,28 @@ export const deleteInitialData = async (
 ) => {
   try {
     /// TODO: Remove generated data using isTestData field
-    await collegeDb.Admin.deleteMany({ _id: superAdminIds });
+    await collegeDb.Admin.deleteMany({ isTestData: true });
     /// delete Admin
-    await collegeDb.Admin.deleteMany({ _id: adminIds });
+    await collegeDb.Admin.deleteMany({ isTestData: true });
     /// delete colleges
-    await collegeDb.College.deleteMany({
-      _id: importCollegeData.map(item => item._id),
-    });
+    await collegeDb.College.deleteMany({ isTestData: true });
     /// delete Teacher
-    await collegeDb.Teacher.deleteMany({
-      _id: importTeacherData.map(item => item._id),
-    });
+    await collegeDb.Teacher.deleteMany({ isTestData: true });
     /// delete faculties
-    await collegeDb.Faculty.deleteMany({
-      _id: importFactultyData.map(item => item._id),
-    });
+    await collegeDb.Faculty.deleteMany({ isTestData: true });
     /// delete students
-    await collegeDb.Student.deleteMany({
-      _id: importStudentData.map(item => item._id),
-    });
+    await collegeDb.Student.deleteMany({ isTestData: true });
 
     /// delete courses
-    await collegeDb.Course.deleteMany({
-      _id: importCourseData.map(item => item._id),
-    });
+    await collegeDb.Course.deleteMany({ isTestData: true });
     /// delete classes
-    await collegeDb.Class.deleteMany({
-      _id: importClassData.map(item => item._id),
-    });
+    await collegeDb.Class.deleteMany({ isTestData: true });
     /// delete subjects
-    await collegeDb.Subject.deleteMany({
-      _id: importSubjectData.map(item => item._id),
-    });
+    await collegeDb.Subject.deleteMany({ isTestData: true });
     /// delete attendences
-    await collegeDb.Attendance.deleteMany({
-      _id: importAttendanceData.map(item => item._id),
-    });
+    await collegeDb.Attendance.deleteMany({ isTestData: true });
+    
+    await collegeDb.ClassTimeTable.deleteMany({ isTestData: true });
     res.send({ status: 'DELETE SUCCESS' });
   } catch (error) {
     return next(

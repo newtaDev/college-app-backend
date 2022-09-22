@@ -12,6 +12,7 @@ export interface I_Course {
   totalSem: number;
   createdBy?: I_CreatedBy;
   lastModifiedBy?: I_LastModifiedBy;
+  isTestData?: boolean;
 }
 const _createdOrModifiedBy = {
   type: {
@@ -38,6 +39,7 @@ export const courseSchema = new Schema<I_Course>(
     totalSem: { type: Number, required: true },
     createdBy: _createdOrModifiedBy,
     lastModifiedBy: _createdOrModifiedBy,
+    isTestData: { type: Boolean, select: false, default: false },
   },
   { timestamps: true }
 );

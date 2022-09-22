@@ -20,6 +20,7 @@ export interface I_Teacher {
   currentAddress?: number;
   dob: Date;
   isProfileCompleted?: boolean;
+  isTestData?: boolean;
 }
 interface I_TeacherMethods {
   isPasswordValid(password: string): Promise<boolean>;
@@ -71,6 +72,7 @@ export const teacherSchema = new Schema<
       },
     },
     isProfileCompleted: { type: Boolean, default: false },
+    isTestData: { type: Boolean, select: false, default: false },
   },
   {
     timestamps: true,

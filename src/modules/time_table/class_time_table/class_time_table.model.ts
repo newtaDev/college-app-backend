@@ -11,6 +11,7 @@ export interface I_ClassTimeTable {
   endingTime: string;
   week: Week;
   createdBy?: I_CreatedBy;
+  isTestData?: boolean;
 }
 
 const _createdBy = {
@@ -77,6 +78,7 @@ export const classTimeTableSchema = new Schema<I_ClassTimeTable>(
       required: true,
     },
     createdBy: _createdBy,
+    isTestData: { type: Boolean, select: false, default: false },
   },
   { timestamps: true }
 );

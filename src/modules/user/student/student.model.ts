@@ -28,6 +28,7 @@ export interface I_Student {
   dob: Date;
   myOptionalSubjects: Types.ObjectId[];
   isProfileCompleted?: boolean;
+  isTestData?: boolean;
 }
 
 interface I_StudentMethods {
@@ -88,6 +89,7 @@ export const studentSchema = new Schema<
       },
     },
     isProfileCompleted: { type: Boolean, default: false },
+    isTestData: { type: Boolean, select: false, default: false },
   },
   { timestamps: true }
 );

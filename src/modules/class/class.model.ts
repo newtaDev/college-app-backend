@@ -17,6 +17,7 @@ export interface I_Class {
   assignedToId: Types.ObjectId; // should be teacherId
   createdBy?: I_CreatedBy;
   lastModifiedBy?: I_LastModifiedBy;
+  isTestData?: boolean;
 }
 const _createdOrModifiedBy = {
   name: {
@@ -45,6 +46,7 @@ export const classSchema = new Schema<I_Class>(
     },
     createdBy: { type: _createdOrModifiedBy, required: false },
     lastModifiedBy: { type: _createdOrModifiedBy, required: false },
+    isTestData: { type: Boolean, select: false, default: false },
   },
   { timestamps: true }
 );

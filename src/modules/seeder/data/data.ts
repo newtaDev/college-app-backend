@@ -23,6 +23,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
       website: `www.college${collegeIndex}.com`,
       address: `Addres of the college ${collegeIndex} will be here`,
       description: `description of the college ${collegeIndex} wwill be here`,
+      isTestData: true,
     } as I_College & { _id: Types.ObjectId },
     courseData: college.courses.map((course, courseIndex) => ({
       data: {
@@ -30,6 +31,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
         name: `Course name ${courseIndex}`,
         collegeId: college._id,
         totalSem: 4 + courseIndex,
+        isTestData: true,
       } as I_Course & { _id: Types.ObjectId },
       subjects: course.subjects.map((subjectId, subjectIndex) => ({
         _id: subjectId,
@@ -37,6 +39,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
         courseId: course._id,
         isMainSubject: subjectIndex % 3 == 0 ? false : true,
         name: `Subject Name ${subjectIndex}`,
+        isTestData: true,
       })) as (I_Subject & { _id: Types.ObjectId })[],
       classData: course.classes.map((classes, classIndex) => ({
         data: {
@@ -49,6 +52,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
           classNumber: 120 + classIndex,
           currentSem: 1,
           isCollegeCompleted: false,
+          isTestData: true,
         } as I_Class & { _id: Types.ObjectId },
         students: classes.students.map((studentId, studentIndex) => ({
           _id: studentId,
@@ -60,6 +64,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
           classId: classes._id,
           dob: new Date(`08-02-2${String(studentIndex).padStart(3, '0')}`),
           myOptionalSubjects: [],
+          isTestData: true,
         })) as (I_Student & { _id: Types.ObjectId })[],
         attendance: classes.attendances.map(
           (attendanceId, attendanceIndex) => ({
@@ -76,6 +81,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
             absentStudents: classes.students
               .sort(() => 0.5 - Math.random())
               .slice(0, Math.random() * classes.students.length),
+            isTestData: true,
           })
         ) as (I_Attendance & { _id: Types.ObjectId })[],
         classTimeTable: classes.classTimeTables.map(
@@ -88,6 +94,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
             startingTime: `${String(tableIndex).padStart(2, '0')}:00`,
             endingTime: `${String(tableIndex).padStart(2, '0')}:45`,
             week: tableIndex % 2 == 0 ? Week.monday : Week.wednesday,
+            isTestData: true,
           })
         ) as (I_ClassTimeTable & { _id: Types.ObjectId })[],
       })),
@@ -115,6 +122,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
         userType: UserType.teacher,
         assignedClasses: randomAssignedClasses,
         dob: new Date('03-13-1988'),
+        isTestData: true,
       };
     }) as (I_Teacher & { _id: Types.ObjectId })[],
     faculties: college.faculty.map((facultyId, facultyIndex) => ({
@@ -125,6 +133,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
       password: 'Newta1234',
       collegeId: college._id,
       userType: UserType.staff,
+      isTestData: true,
     })) as (I_Faculty & { _id: Types.ObjectId })[],
   };
 });

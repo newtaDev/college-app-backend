@@ -16,6 +16,7 @@ export interface I_College {
   description: string;
   createdBy?: I_CreatedBy;
   lastModifiedBy?: I_LastModifiedBy;
+  isTestData?: boolean;
 }
 const _createdOrModifiedBy = {
   type: {
@@ -40,6 +41,7 @@ export const collegeSchema = new Schema<I_College>(
     website: { type: String, required: true },
     address: { type: String, required: true },
     description: { type: String, required: true },
+    isTestData: { type: Boolean, select: false, default: false },
     createdBy: _createdOrModifiedBy,
     lastModifiedBy: _createdOrModifiedBy,
   },
