@@ -13,7 +13,6 @@
     "test:inOrder": "jest src/__test__/_run_test_in_order.test.ts"
   },
   "dependencies": {
-    "@types/morgan": "^1.9.3",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.2",
@@ -28,6 +27,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
+    "@types/morgan": "^1.9.3",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/jest": "^29.0.0",

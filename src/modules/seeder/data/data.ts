@@ -1,4 +1,14 @@
+import { Types } from 'mongoose';
 import { UserType, Week } from '../../../utils/enums';
+import { I_Attendance } from '../../attendance/attendance.model';
+import { I_Class } from '../../class/class.model';
+import { I_College } from '../../college/college.model';
+import { I_Course } from '../../course/course.model';
+import { I_Subject } from '../../subject/subject.model';
+import { I_ClassTimeTable } from '../../time_table/class_time_table/class_time_table.model';
+import { I_Faculty } from '../../user/faculty.model';
+import { I_Student } from '../../user/student/student.model';
+import { I_Teacher } from '../../user/teacher/teacher.model';
 import { collegeIds } from './ids';
 
 export const importData = collegeIds.map((college, collegeIndex) => {
@@ -13,21 +23,21 @@ export const importData = collegeIds.map((college, collegeIndex) => {
       website: `www.college${collegeIndex}.com`,
       address: `Addres of the college ${collegeIndex} will be here`,
       description: `description of the college ${collegeIndex} wwill be here`,
-    },
+    } as I_College & { _id: Types.ObjectId },
     courseData: college.courses.map((course, courseIndex) => ({
       data: {
         _id: course._id,
         name: `Course name ${courseIndex}`,
         collegeId: college._id,
         totalSem: 4 + courseIndex,
-      },
+      } as I_Course & { _id: Types.ObjectId },
       subjects: course.subjects.map((subjectId, subjectIndex) => ({
         _id: subjectId,
         collegeId: college._id,
         courseId: course._id,
         isMainSubject: subjectIndex % 3 == 0 ? false : true,
         name: `Subject Name ${subjectIndex}`,
-      })),
+      })) as (I_Subject & { _id: Types.ObjectId })[],
       classData: course.classes.map((classes, classIndex) => ({
         data: {
           _id: classes._id,
@@ -39,7 +49,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
           classNumber: 120 + classIndex,
           currentSem: 1,
           isCollegeCompleted: false,
-        },
+        } as I_Class & { _id: Types.ObjectId },
         students: classes.students.map((studentId, studentIndex) => ({
           _id: studentId,
           name: `Stundet ${studentIndex}`,
@@ -50,7 +60,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
           classId: classes._id,
           dob: new Date(`08-02-2${String(studentIndex).padStart(3, '0')}`),
           myOptionalSubjects: [],
-        })),
+        })) as (I_Student & { _id: Types.ObjectId })[],
         attendance: classes.attendances.map(
           (attendanceId, attendanceIndex) => ({
             _id: attendanceId,
@@ -67,7 +77,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
               .sort(() => 0.5 - Math.random())
               .slice(0, Math.random() * classes.students.length),
           })
-        ),
+        ) as (I_Attendance & { _id: Types.ObjectId })[],
         classTimeTable: classes.classTimeTables.map(
           (timeTableId, tableIndex) => ({
             _id: timeTableId,
@@ -79,7 +89,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
             endingTime: `${String(tableIndex).padStart(2, '0')}:45`,
             week: tableIndex % 2 == 0 ? Week.monday : Week.wednesday,
           })
-        ),
+        ) as (I_ClassTimeTable & { _id: Types.ObjectId })[],
       })),
     })),
 
@@ -106,7 +116,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
         assignedClasses: randomAssignedClasses,
         dob: new Date('03-13-1988'),
       };
-    }),
+    }) as (I_Teacher & { _id: Types.ObjectId })[],
     faculties: college.faculty.map((facultyId, facultyIndex) => ({
       _id: facultyId,
       name: `Faculty ${facultyIndex}`,
@@ -115,6 +125,6 @@ export const importData = collegeIds.map((college, collegeIndex) => {
       password: 'Newta1234',
       collegeId: college._id,
       userType: UserType.staff,
-    })),
+    })) as (I_Faculty & { _id: Types.ObjectId })[],
   };
 });
