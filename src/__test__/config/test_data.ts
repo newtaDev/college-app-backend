@@ -1,3 +1,4 @@
+import { UserType } from '../../utils/enums';
 import test_ids from './test_ids';
 
 const createCollege1Payload = {
@@ -21,6 +22,7 @@ const createCollege2Payload = {
 
 const createAdmin1 = {
   name: 'Newta',
+  username: 'admin_1',
   email: 'newta.admin@gmail.com',
   password: 'Newta1234',
 };
@@ -30,6 +32,9 @@ const createTeacher1 = {
   email: 'newta.teacher@gmail.com',
   password: 'Newta1234',
   collegeId: test_ids.collgeId1,
+  userType: UserType.teacher,
+  assignedClasses: [],
+  dob: new Date('03-13-1988'),
 };
 export default {
   createCollege1Payload,
