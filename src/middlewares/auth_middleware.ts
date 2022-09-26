@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 import { ApiException } from '../shared/exceptions/api_exceptions';
-import { verifyAndDecodeAccessToken } from '../shared/services/jwt/jwt_service';
+import { verifyAndDecodeAccessToken } from '../shared/services/jwt/jwt_services';
 import logger from '../utils/logger';
 
 export const authMiddleware =

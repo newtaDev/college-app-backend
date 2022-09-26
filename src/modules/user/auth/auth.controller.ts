@@ -5,7 +5,7 @@ import { I_JwtUserPayload } from '../../../shared/services/jwt/jwt_interfaces';
 import {
   createAccessToken,
   createRefreshToken,
-} from '../../../shared/services/jwt/jwt_service';
+} from '../../../shared/services/jwt/jwt_services';
 import authService from './auth.service';
 import { omit } from 'lodash';
 import { I_Faculty } from '../faculty.model';

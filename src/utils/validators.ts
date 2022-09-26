@@ -1,5 +1,6 @@
 import { isValidMongoId } from '../shared/functions/mongo_id_validator';
 import Joi from 'joi';
+import { joiObject } from './helpers';
 
 // contains basic validations
 export class Validators {
@@ -69,5 +70,11 @@ export class Validators {
       if (!this.is24HoursTime(val)) throw new Error('Invalid Time');
       return val;
     });
+  }
+  static validImage() {
+    const imageFormats = ['image/jpeg'];
+    return joiObject({
+      mimetype: Joi.string().valid(...Object.values(imageFormats)),
+    }).unknown();
   }
 }

@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import App from '../app';
 import { AppKeys } from '../config/keys/app_keys';
+import { AnouncementRouter } from './anouncement.routes';
 import { AttendanceRouter } from './attendance.routes';
 import { ClassRouter } from './class.routes';
 import { CollegeRouter } from './college.routes';
@@ -63,4 +64,5 @@ export const appRoutes = [
   new SubjectRouter(),
   new ClassTimeTableRouter(),
   new AttendanceRouter(),
+  new AnouncementRouter(),
 ];

@@ -6,6 +6,10 @@ export class AppKeys {
   static jwt_refresh_key = `pre_encoder_refresh_token${_Secrets.JWT_REFRESH_KEY}`;
   static port = process.env.PORT;
   static env = process.env.NODE_ENV;
+  static aws_bucket_name = _Secrets.AWS_BUCKET_NAME;
+  static aws_bucket_region = _Secrets.AWS_BUCKET_REGION;
+  static aws_user_access_key = _Secrets.AWS_USER_ACCESS_KEY;
+  static aws_user_secret_access_key = _Secrets.AWS_USER_SECRET_ACCESS_KEY;
   static app_version = 'v1';
   static default_db = 'college_db';
   static app_name = 'College App Backend';

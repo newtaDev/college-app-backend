@@ -7,7 +7,7 @@ import {
   createRefreshToken,
   verifyAndDecodeAccessToken,
   verifyAndDecodeRefreshToken,
-} from '../../shared/services/jwt/jwt_service';
+} from '../../shared/services/jwt/jwt_services';
 
 /**
  * First trys to verify token from `refresh token` and then creates new `access and refresh token` form it

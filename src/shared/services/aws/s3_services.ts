@@ -26,7 +26,7 @@ interface I_UploadToS3Params {
     | Buffer
     | undefined;
   fileName: string;
-  contentType?: string;
+  contentType: string;
 }
 export const uploadFileToS3 = (params: I_UploadToS3Params) =>
   s3Client.send(
