@@ -38,8 +38,10 @@ export const validateAbsentStudentsReportInEachSubject = joiObject({
 export const validateAbsentClassesOfStudentParamReq = joiObject({
   studentId: Validators.mongoIdValidator().required(),
 });
-export const validateAbsentClassesOfStudentQueryReq = joiObject({
+export const validateAbsentClassesReportOfStudentReq = joiObject({
   classId: Validators.mongoIdValidator().required(),
   currentSem: Joi.number().required(),
   collegeId: Validators.mongoIdValidator(),
 });
+
+export * as attendanceValidator from './attendance.validator'

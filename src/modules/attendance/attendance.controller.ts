@@ -7,7 +7,7 @@ import classService from '../class/class.service';
 import studentService from '../user/student/student.service';
 import attendanceService from './attendance.service';
 
-export const createAttendance = async (
+export const create = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -26,7 +26,7 @@ export const createAttendance = async (
   }
 };
 
-export const updateAttendanceById = async (
+export const updateById = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -49,7 +49,7 @@ export const updateAttendanceById = async (
   }
 };
 
-export const getAllAttendances = async (
+export const getAll = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -265,7 +265,7 @@ export const getAbsentClassesReportOfStudents = async (
   }
 };
 
-export const findAttendanceById = async (
+export const findById = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -287,7 +287,7 @@ export const findAttendanceById = async (
   }
 };
 
-export const deleteAttendanceById = async (
+export const deleteById = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -308,3 +308,5 @@ export const deleteAttendanceById = async (
     );
   }
 };
+
+export * as attendanceController from './attendance.controller';

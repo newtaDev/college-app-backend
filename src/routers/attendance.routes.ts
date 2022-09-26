@@ -1,24 +1,8 @@
 import { Router } from 'express';
 import { validateSchemaMiddleware } from '../middlewares/validation_middleware';
 import { authMiddleware } from '../middlewares/auth_middleware';
-import {
-  getAllAttendances,
-  findAttendanceById,
-  deleteAttendanceById,
-  createAttendance,
-  updateAttendanceById,
-  getAttendancesReportOfSubjects,
-  getAbsentStudentsReportInEachSubject,
-  getAbsentClassesReportOfStudents,
-} from '../modules/attendance/attendance.controller';
-import {
-  validateAbsentClassesOfStudentParamReq,
-  validateAbsentClassesOfStudentQueryReq as validateAbsentClassesReportOfStudentReq,
-  validateAbsentStudentsReportInEachSubject,
-  validateAttendanceByIdParam,
-  validateAttendancesWithAllSubjects,
-  validateCreateAttendance,
-} from '../modules/attendance/attendance.validator';
+import { attendanceController } from '../modules/attendance/attendance.controller';
+import { attendanceValidator } from '../modules/attendance/attendance.validator';
 import I_BaseRouter from './routes';
 
 export class AttendanceRouter implements I_BaseRouter {
@@ -34,73 +18,81 @@ export class AttendanceRouter implements I_BaseRouter {
       [
         authMiddleware(),
         validateSchemaMiddleware({
-          query: validateAttendancesWithAllSubjects,
+          query: attendanceValidator.validateAttendancesWithAllSubjects,
         }),
       ],
-      getAllAttendances
+      attendanceController.getAll
     );
     this.router.post(
       this.path,
       [
         authMiddleware(),
-        validateSchemaMiddleware({ body: validateCreateAttendance }),
+        validateSchemaMiddleware({
+          body: attendanceValidator.validateCreateAttendance,
+        }),
       ],
-      createAttendance
+      attendanceController.create
     );
     this.router.get(
       `${this.path}/:attendanceId`,
       [
         authMiddleware(),
-        validateSchemaMiddleware({ params: validateAttendanceByIdParam }),
+        validateSchemaMiddleware({
+          params: attendanceValidator.validateAttendanceByIdParam,
+        }),
       ],
-      findAttendanceById
+      attendanceController.findById
     );
     this.router.put(
       `${this.path}/:attendanceId`,
       [
         authMiddleware(),
-        validateSchemaMiddleware({ params: validateAttendanceByIdParam }),
+        validateSchemaMiddleware({
+          params: attendanceValidator.validateAttendanceByIdParam,
+        }),
       ],
-      updateAttendanceById
+      attendanceController.updateById
     );
     this.router.delete(
       `${this.path}/:attendanceId`,
       [
         authMiddleware(),
-        validateSchemaMiddleware({ params: validateAttendanceByIdParam }),
+        validateSchemaMiddleware({
+          params: attendanceValidator.validateAttendanceByIdParam,
+        }),
       ],
-      deleteAttendanceById
+      attendanceController.deleteById
     );
     this.router.get(
       `${this.path}/report/subjects`,
       [
         authMiddleware(),
         validateSchemaMiddleware({
-          query: validateAttendancesWithAllSubjects,
+          query: attendanceValidator.validateAttendancesWithAllSubjects,
         }),
       ],
-      getAttendancesReportOfSubjects
+      attendanceController.getAttendancesReportOfSubjects
     );
     this.router.get(
       `${this.path}/report/subjects/students`,
       [
         authMiddleware(),
         validateSchemaMiddleware({
-          query: validateAbsentStudentsReportInEachSubject,
+          query: attendanceValidator.validateAbsentStudentsReportInEachSubject,
         }),
       ],
-      getAbsentStudentsReportInEachSubject
+      attendanceController.getAbsentStudentsReportInEachSubject
     );
     this.router.get(
       `${this.path}/report/subjects/students/:studentId`,
       [
         authMiddleware(),
         validateSchemaMiddleware({
-          params: validateAbsentClassesOfStudentParamReq,
-          query: validateAbsentClassesReportOfStudentReq,
+          params: attendanceValidator.validateAbsentClassesOfStudentParamReq,
+          query: attendanceValidator.validateAbsentClassesReportOfStudentReq,
         }),
       ],
-      getAbsentClassesReportOfStudents
+      attendanceController.getAbsentClassesReportOfStudents
     );
   }
 }

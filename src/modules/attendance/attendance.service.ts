@@ -377,6 +377,7 @@ const getAbsentClassesCountOfStudent = (params: {
       },
     },
   ]);
+  
 export default {
   create,
   listAll,

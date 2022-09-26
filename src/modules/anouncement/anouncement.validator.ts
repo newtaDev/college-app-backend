@@ -1,5 +1,4 @@
 import Joi from 'joi';
-import { min } from 'lodash';
 import { AnouncementLayoutType, AnounceTo } from '../../utils/enums';
 import { joiObject } from '../../utils/helpers';
 import { Validators } from '../../utils/validators';
