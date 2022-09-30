@@ -3,7 +3,7 @@ import { ApiException } from '../../shared/exceptions/api_exceptions';
 import { successResponse } from '../../shared/interfaces/req_res_interfaces';
 import { s3Services } from '../../shared/services/aws/s3_services';
 import { AnouncementLayoutType } from '../../utils/enums';
-import anouncementService from './anouncement.service';
+import { anouncementServices } from './anouncement.service';
 import { v4 as uuid } from 'uuid';
 import { multerServices } from '../../shared/services/multer_services';
 import { I_AnouncementFormDataFiles } from './anouncement.model';
@@ -53,8 +53,16 @@ export const create = async (
         multipleImages: imageFileNames,
       };
     }
+    const _createdOrModifiedBy = {
+      userId: req.user.id,
+      userType: req.user.userType,
+    };
     /// [req.body] doesnot contain [File] type from formData
-    const _anouncement = await anouncementService.create(createAnouncementBody);
+    const _anouncement = await anouncementServices.create({
+      ...createAnouncementBody,
+      createdBy: _createdOrModifiedBy,
+      lastModifiedBy: _createdOrModifiedBy,
+    });
     res.status(201).send(successResponse(_anouncement));
   } catch (error) {
     return next(
@@ -72,9 +80,13 @@ export const updateById = async (
   next: NextFunction
 ) => {
   try {
-    const _anouncement = await anouncementService.updateById(
+    const _createdOrModifiedBy = {
+      userId: req.user.id,
+      userType: req.user.userType,
+    };
+    const _anouncement = await anouncementServices.updateById(
       req.params.anouncementId,
-      req.body
+      { ...req.body, lastModifiedBy: _createdOrModifiedBy }
     );
     if (!_anouncement) throw Error('Anouncement not found');
     res.send(successResponse(_anouncement));
@@ -95,7 +107,7 @@ export const getAll = async (
   next: NextFunction
 ) => {
   try {
-    const _anouncement = await anouncementService.listAll();
+    const _anouncement = await anouncementServices.listAll();
     res.send(successResponse(_anouncement));
   } catch (error) {
     return next(
@@ -107,13 +119,59 @@ export const getAll = async (
     );
   }
 };
+
+export const getAllForStudents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const _anouncement = await anouncementServices.listAllWithForStudents(
+      req.query.anounceToClassId as string,
+      req.query.showMyClassesOnly === 'true'
+    );
+    res.send(successResponse(_anouncement));
+  } catch (error) {
+    return next(
+      new ApiException({
+        message: 'Student Anouncement listing failed',
+        devMsg: error instanceof Error ? error.message : null,
+        statuscode: 400,
+      })
+    );
+  }
+};
+export const getAllForTeachers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    console.log(req.query.showAnouncementsCreatedByMe);
+
+    const _anouncement = await anouncementServices.listAllWithForTeachers(
+      req.query.teacherId as string,
+      req.query.showAnouncementsCreatedByMe === 'true'
+    );
+    res.send(successResponse(_anouncement));
+  } catch (error) {
+    return next(
+      new ApiException({
+        message: 'Student Anouncement listing failed',
+        devMsg: error instanceof Error ? error.message : null,
+        statuscode: 400,
+      })
+    );
+  }
+};
+
 export const findById = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const _anouncement = await anouncementService.findById(
+    const _anouncement = await anouncementServices.findById(
       req.params.anouncementId
     );
     if (!_anouncement) throw Error('Anouncement not found');
@@ -134,7 +192,7 @@ export const deleteById = async (
   next: NextFunction
 ) => {
   try {
-    const _anouncement = await anouncementService.deleteById(
+    const _anouncement = await anouncementServices.deleteById(
       req.params.anouncementId
     );
     if (!_anouncement) throw Error('Anouncement not found');

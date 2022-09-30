@@ -23,5 +23,13 @@ export const validateCreateFormData = joiObject<I_AnouncementFormDataFiles>({
   imageFile: Validators.validImage(),
   multipleFiles: Joi.any(),
 });
+export const validateListAllForStudentQuery = joiObject({
+  anounceToClassId: Joi.string().required(),
+  showMyClassesOnly: Joi.bool().default(false),
+});
+export const validateListAllForTeacherQuery = joiObject({
+  teacherId: Joi.string().required(),
+  showAnouncementsCreatedByMe: Joi.bool().default(false),
+});
 
 export * as anouncementValidator from './anouncement.validator';

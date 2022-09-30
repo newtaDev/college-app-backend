@@ -14,10 +14,26 @@ export class AnouncementRouter implements I_BaseRouter {
   path = '/anouncements';
   router: Router;
   private initRoutes(): void {
+    this.router.get(this.path, authMiddleware(), anouncementController.getAll);
     this.router.get(
-      this.path,
-      authMiddleware(),
-      anouncementController.getAll
+      `${this.path}/students`,
+      [
+        authMiddleware(),
+        validateSchemaMiddleware({
+          query: anouncementValidator.validateListAllForStudentQuery,
+        }),
+      ],
+      anouncementController.getAllForStudents
+    );
+    this.router.get(
+      `${this.path}/teachers`,
+      [
+        authMiddleware(),
+        validateSchemaMiddleware({
+          query: anouncementValidator.validateListAllForTeacherQuery,
+        }),
+      ],
+      anouncementController.getAllForTeachers
     );
     this.router.post(
       this.path,

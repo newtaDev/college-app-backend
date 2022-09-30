@@ -1,15 +1,54 @@
 import { FilterQuery, UpdateQuery } from 'mongoose';
 import { collegeDb } from '../../config/database/college.db';
+import { AnounceTo } from '../../utils/enums';
 import { I_Anouncement } from './anouncement.model';
 
-const create = (params: I_Anouncement) => collegeDb.Anouncement.create(params);
+export const create = (params: I_Anouncement) =>
+  collegeDb.Anouncement.create(params);
 
-const listAll = () => collegeDb.Anouncement.find();
+export const listAll = () =>
+  collegeDb.Anouncement.find().sort({ createdAt: -1 });
 
-const findById = (anouncementId: string) =>
+export const listAllWithForStudents = (
+  anounceToClassIds: string,
+  showMyClassesOnly: boolean
+) => {
+  if (showMyClassesOnly) {
+    return collegeDb.Anouncement.find({
+      anounceToClassIds: { $elemMatch: { $eq: anounceToClassIds } },
+    }).sort({ createdAt: -1 });
+  }
+  return collegeDb.Anouncement.find({
+    $or: [
+      { anounceTo: AnounceTo.students },
+      { anounceTo: AnounceTo.all },
+      { anounceToClassIds: { $elemMatch: { $eq: anounceToClassIds } } },
+    ],
+  }).sort({ createdAt: -1 });
+};
+
+export const listAllWithForTeachers = (
+  teacherId: string,
+  showAnouncementsCreatedByMe: boolean
+) => {
+  if (showAnouncementsCreatedByMe) {
+    return collegeDb.Anouncement.find({ 'createdBy.userId': teacherId }).sort({
+      createdAt: -1,
+    });
+  }
+  return collegeDb.Anouncement.find({
+    $or: [
+      { anounceTo: AnounceTo.teachers },
+      { anounceTo: AnounceTo.all },
+      { 'createdBy.userId': teacherId },
+    ],
+  }).sort({ createdAt: -1 });
+};
+
+export const findById = (anouncementId: string) =>
   collegeDb.Anouncement.findById(anouncementId);
 
-const updateById = (
+export const updateById = (
   anouncementId: string,
   updatedData: UpdateQuery<I_Anouncement>
 ) =>
@@ -17,17 +56,10 @@ const updateById = (
     new: true,
   });
 
-const findOne = (query: FilterQuery<I_Anouncement>) =>
+export const findOne = (query: FilterQuery<I_Anouncement>) =>
   collegeDb.Anouncement.findOne(query);
 
-const deleteById = (anouncementId: string) =>
+export const deleteById = (anouncementId: string) =>
   collegeDb.Anouncement.findByIdAndDelete(anouncementId);
 
-export default {
-  create,
-  listAll,
-  findById,
-  findOne,
-  updateById,
-  deleteById,
-};
+export * as anouncementServices from './anouncement.service';
