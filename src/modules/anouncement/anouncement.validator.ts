@@ -10,18 +10,18 @@ export const validateAnouncementIdParam = joiObject({
 export const validateCreateBody = joiObject<I_Anouncement>({
   title: Joi.string().required(),
   description: Joi.string().required(),
-  anounce_to: Joi.string()
+  anounceTo: Joi.string()
     .valid(...Object.values(AnounceTo))
     .required(),
   anouncementLayoutType: Joi.string()
     .valid(...Object.values(AnouncementLayoutType))
     .required(),
-  anounce_to_classIds: Joi.array(),
+  anounceToClassIds: Joi.array().items(Validators.mongoIdValidator()),
   collegeId: Validators.mongoIdValidator(),
 });
 export const validateCreateFormData = joiObject<I_AnouncementFormDataFiles>({
   imageFile: Validators.validImage(),
-  multipleFiles: Joi.array().items(Validators.validImage()),
+  multipleFiles: Joi.any(),
 });
 
 export * as anouncementValidator from './anouncement.validator';

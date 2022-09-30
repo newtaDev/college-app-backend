@@ -7,6 +7,7 @@ import anouncementService from './anouncement.service';
 import { v4 as uuid } from 'uuid';
 import { multerServices } from '../../shared/services/multer_services';
 import { I_AnouncementFormDataFiles } from './anouncement.model';
+import { Validators } from '../../utils/validators';
 
 export const create = async (
   req: Request,
@@ -32,7 +33,15 @@ export const create = async (
       req.body.anouncementLayoutType == AnouncementLayoutType.multiImageWithText
     ) {
       const imageFileNames: string[] = [];
-      const _multipleFiles = multerFiles.multipleFiles as Express.Multer.File[];
+      /// To solve single file issue in list
+      let _multipleFiles = multerFiles.multipleFiles as Express.Multer.File[];
+      if (_multipleFiles.length == undefined) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await Validators.isValidImage(multerFiles.multipleFiles as any);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        _multipleFiles = [multerFiles.multipleFiles as any];
+      }
+
       for (let index = 0; index < _multipleFiles.length; index++) {
         const _fileName = await _uploadAnouncementImagesToS3(
           _multipleFiles.at(index)

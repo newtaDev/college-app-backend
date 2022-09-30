@@ -72,9 +72,13 @@ export class Validators {
     });
   }
   static validImage() {
-    const imageFormats = ['image/jpeg'];
+    const imageFormats = ['image/jpeg', 'image/png', 'image/webp'];
     return joiObject({
       mimetype: Joi.string().valid(...Object.values(imageFormats)),
     }).unknown();
+  }
+  static isValidImage(file: Express.Multer.File) {
+    const schema = Validators.validImage();
+    return schema.validateAsync(file);
   }
 }

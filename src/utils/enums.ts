@@ -25,7 +25,6 @@ export enum AnounceTo {
   teachers = 'TEACHERS',
   staffs = 'STAFFS',
   students = 'STUDENTS',
-  classes = 'CLASSES',
 }
 export enum AnouncementLayoutType {
   imageWithText = 'IMAGE_WITH_TEXT',

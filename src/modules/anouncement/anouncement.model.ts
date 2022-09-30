@@ -7,8 +7,8 @@ export interface I_Anouncement {
   title: string;
   description: string;
   anouncementLayoutType: AnouncementLayoutType;
-  anounce_to: AnounceTo;
-  anounce_to_classIds?: Types.ObjectId[];
+  anounceTo: AnounceTo;
+  anounceToClassIds?: Types.ObjectId[];
   imageName?: string;
   multipleImages?: string[];
 }
@@ -36,13 +36,13 @@ export const anouncementSchema = new Schema<
   collegeId: { type: Schema.Types.ObjectId, required: true, ref: 'College' },
   title: { type: String, required: true },
   description: { type: String, required: true },
-  anounce_to: { type: String, enum: AnounceTo, required: true },
+  anounceTo: { type: String, enum: AnounceTo, required: true },
   anouncementLayoutType: {
     type: String,
     enum: AnouncementLayoutType,
     required: true,
   },
-  anounce_to_classIds: { type: [Schema.Types.ObjectId], default: [] },
+  anounceToClassIds: { type: [Schema.Types.ObjectId], default: [] },
   imageName: { type: String },
   multipleImages: { type: [String] },
 });
