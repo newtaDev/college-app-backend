@@ -45,7 +45,7 @@ export const facultySchema = new Schema<
           `${props.value} is not valid username`,
       },
     },
-    password: { type: String, required: true },
+    password: { type: String, required: true,select:false },
     collegeId: {
       type: Schema.Types.ObjectId,
       required: true,

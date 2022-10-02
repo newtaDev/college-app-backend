@@ -25,13 +25,22 @@ export const loginUser = async (
     const _email = req.body.email;
     const _password = req.body.password;
     const _userType = req.body.userType;
-    const _user = await authService.loginUser(_email, _userType);
-    if (!_user) throw Error(`${_userType} not found`);
-    if (!(await _user.isPasswordValid(_password)))
+
+    /// login and validate with password
+    const _userLoginData = await authService.loginUser(_email, _userType);
+    if (!_userLoginData) throw Error(`${_userType} not found`);
+    if (!(await _userLoginData.isPasswordValid(_password)))
       throw new Error("password doesn't match");
     const isAdmin = [...adminUsersList]
-      .map(userType => userType == _user.userType)
+      .map(userType => userType == _userType)
       .includes(true);
+
+    /// Get all details of user
+    const _user = await authService.getUserDetailsById(
+      _userLoginData._id.toString(),
+      _userType
+    );
+    if (!_user) throw Error(`${_userType} not found`);
     //create access and refresh token
     const payload: I_JwtUserPayload = {
       id: _user.id,

@@ -40,7 +40,7 @@ export const teacherSchema = new Schema<
         message: (props: ValidatorProps) => `${props.value} is not valid email`,
       },
     },
-    password: { type: String, required: true },
+    password: { type: String, required: true,select:false },
     emoji: { type: String },
     bio: { type: String },
     collegeId: {

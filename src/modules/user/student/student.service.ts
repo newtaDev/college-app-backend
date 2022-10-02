@@ -14,29 +14,24 @@ const create = (params: I_Student) => collegeDb.Student.create(params);
 
 const listAll = (query?: FilterQuery<I_Student>) =>
   collegeDb.Student.find(query || {})
-    .select(['-__v', '-password'])
     .populate(_populateClass);
 
 const findById = (studentId: string) =>
   collegeDb.Student.findById(studentId)
-    .select(['-__v', '-password'])
     .populate(_populateClass);
 
 const updateById = (studentId: string, updatedData: UpdateQuery<I_Student>) =>
   collegeDb.Student.findOneAndUpdate({ _id: studentId }, updatedData, {
     new: true,
   })
-    .select(['-__v', '-password'])
     .populate(_populateClass);
 
 const findOne = (query: FilterQuery<I_Student>) =>
   collegeDb.Student.findOne(query)
-    .select(['-__v', '-password'])
     .populate(_populateClass);
 
 const deleteById = (studentId: string) =>
   collegeDb.Student.findByIdAndDelete(studentId)
-    .select(['-__v', '-password'])
     .populate(_populateClass);
 
 const getCountOfStudents = (collegeId?: string, classId?: string) =>

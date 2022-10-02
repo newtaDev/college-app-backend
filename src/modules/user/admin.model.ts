@@ -43,7 +43,7 @@ export const adminSchema = new Schema<I_Admin, AdminModel, I_AdminMethods>(
           `${props.value} is not valid username`,
       },
     },
-    password: { type: String, required: true },
+    password: { type: String, required: true, select: false },
     collegeId: { type: Schema.Types.ObjectId, ref: College },
     userType: {
       type: String,
