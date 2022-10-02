@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import { collegeDb } from '../../config/database/college.db';
 import { ApiException } from '../../shared/exceptions/api_exceptions';
 import { importData } from './data/data';
-import { adminIds, superAdminIds } from './data/ids';
 import { importAdminsData, importSuperAdminsData } from './data/admins.data';
 
 const importCollegeData = importData.map(college => college.data);

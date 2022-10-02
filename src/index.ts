@@ -1,6 +1,7 @@
 import App from './app';
 import { AppKeys } from './config/keys/app_keys';
 import { appRoutes } from './routers/routes';
+
 const app = new App({
   appRouters: appRoutes,
   // mongoUri: AppKeys.db_conn_str('college_app'),

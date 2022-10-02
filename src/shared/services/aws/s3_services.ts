@@ -51,8 +51,10 @@ export const getSignedUrlOfFile = async (fileName: string) => {
     Bucket: AppKeys.aws_bucket_name,
     Key: fileName,
   });
-  const seconds = 24 * 60 * 60; // 24 hrs
-  const url = await getSignedUrl(s3Client, command, { expiresIn: seconds });
+  const expiresInSec = 24 * 60 * 60; // expires in 24 hrs
+  const url = await getSignedUrl(s3Client, command, {
+    expiresIn: expiresInSec,
+  });
 
   return url;
 };

@@ -7,7 +7,9 @@ export const create = (params: I_Anouncement) =>
   collegeDb.Anouncement.create(params);
 
 export const listAll = () =>
-  collegeDb.Anouncement.find().sort({ createdAt: -1 });
+  collegeDb.Anouncement.find()
+    .sort({ createdAt: -1 })
+    .populate(['createdBy.userId', 'lastModifiedBy.userId']);
 
 export const listAllWithForStudents = (
   anounceToClassIds: string,
@@ -16,15 +18,18 @@ export const listAllWithForStudents = (
   if (showMyClassesOnly) {
     return collegeDb.Anouncement.find({
       anounceToClassIds: { $elemMatch: { $eq: anounceToClassIds } },
-    }).sort({ createdAt: -1 });
+    })
+      .sort({ createdAt: -1 })
+      .populate(['createdBy.userId', 'lastModifiedBy.userId']);
   }
   return collegeDb.Anouncement.find({
     $or: [
-      { anounceTo: AnounceTo.students },
       { anounceTo: AnounceTo.all },
       { anounceToClassIds: { $elemMatch: { $eq: anounceToClassIds } } },
     ],
-  }).sort({ createdAt: -1 });
+  })
+    .sort({ createdAt: -1 })
+    .populate(['createdBy.userId', 'lastModifiedBy.userId']);
 };
 
 export const listAllWithForTeachers = (
@@ -32,9 +37,11 @@ export const listAllWithForTeachers = (
   showAnouncementsCreatedByMe: boolean
 ) => {
   if (showAnouncementsCreatedByMe) {
-    return collegeDb.Anouncement.find({ 'createdBy.userId': teacherId }).sort({
-      createdAt: -1,
-    });
+    return collegeDb.Anouncement.find({ 'createdBy.userId': teacherId })
+      .sort({
+        createdAt: -1,
+      })
+      .populate(['createdBy.userId', 'lastModifiedBy.userId']);
   }
   return collegeDb.Anouncement.find({
     $or: [
@@ -42,11 +49,16 @@ export const listAllWithForTeachers = (
       { anounceTo: AnounceTo.all },
       { 'createdBy.userId': teacherId },
     ],
-  }).sort({ createdAt: -1 });
+  })
+    .sort({ createdAt: -1 })
+    .populate(['createdBy.userId', 'lastModifiedBy.userId']);
 };
 
 export const findById = (anouncementId: string) =>
-  collegeDb.Anouncement.findById(anouncementId);
+  collegeDb.Anouncement.findById(anouncementId).populate([
+    'createdBy.userId',
+    'lastModifiedBy.userId',
+  ]);
 
 export const updateById = (
   anouncementId: string,
@@ -57,9 +69,15 @@ export const updateById = (
   });
 
 export const findOne = (query: FilterQuery<I_Anouncement>) =>
-  collegeDb.Anouncement.findOne(query);
+  collegeDb.Anouncement.findOne(query).populate([
+    'createdBy.userId',
+    'lastModifiedBy.userId',
+  ]);
 
 export const deleteById = (anouncementId: string) =>
-  collegeDb.Anouncement.findByIdAndDelete(anouncementId);
+  collegeDb.Anouncement.findByIdAndDelete(anouncementId).populate([
+    'createdBy.userId',
+    'lastModifiedBy.userId',
+  ]);
 
 export * as anouncementServices from './anouncement.service';

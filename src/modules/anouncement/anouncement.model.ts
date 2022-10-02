@@ -1,10 +1,12 @@
 import mongoose, { Model, Schema, Types } from 'mongoose';
+import { AppKeys } from '../../config/keys/app_keys';
 import {
   I_CreatedBy,
   I_LastModifiedBy,
 } from '../../shared/interfaces/interfaces';
 import { s3Services } from '../../shared/services/aws/s3_services';
-import { AnouncementLayoutType, AnounceTo, UserType } from '../../utils/enums';
+import { AnouncementLayoutType, AnounceTo } from '../../utils/enums';
+import { createdOrModifiedBySchema } from '../../utils/helpers';
 
 export interface I_Anouncement {
   collegeId: Types.ObjectId;
@@ -19,20 +21,6 @@ export interface I_Anouncement {
   lastModifiedBy: I_LastModifiedBy;
 }
 
-const _createdOrModifiedBy = new Schema<I_CreatedBy | I_LastModifiedBy>(
-  {
-    userId: {
-      type: Schema.Types.ObjectId,
-      required: true,
-    },
-    userType: {
-      type: String,
-      enum: UserType,
-      required: true,
-    },
-  },
-  { _id: false }
-);
 export interface I_AnouncementFormDataFiles {
   imageFile?: Express.Multer.File;
   multipleFiles?: Express.Multer.File[];
@@ -40,7 +28,7 @@ export interface I_AnouncementFormDataFiles {
 
 interface I_AnouncementMethods {
   getImageUrl(): Promise<string> | null;
-  getMultipleImageUrls(): Promise<string[] | null>;
+  getMultipleImageUrls(): Promise<string[]>;
 }
 
 export type AnouncementModel = Model<
@@ -67,22 +55,35 @@ export const anouncementSchema = new Schema<
     anounceToClassIds: { type: [Schema.Types.ObjectId], default: [] },
     imageName: { type: String },
     multipleImages: { type: [String] },
-    createdBy: _createdOrModifiedBy,
-    lastModifiedBy: _createdOrModifiedBy,
+    createdBy: createdOrModifiedBySchema({ isCreate: true }),
+    lastModifiedBy: createdOrModifiedBySchema({ isCreate: false }),
   },
   { timestamps: true }
 );
 
 anouncementSchema.methods.getImageUrl = function () {
-  return s3Services.getSignedUrlOfFile(this.imageName);
+  if (this.anouncementLayoutType != AnouncementLayoutType.imageWithText)
+    return null;
+  return s3Services.getSignedUrlOfFile(
+    `${AppKeys.aws_s3_anouncemet_folder_name}${this.imageName}`
+  );
 };
 
 anouncementSchema.methods.getMultipleImageUrls = async function () {
   const _multiImages: string[] = [];
-  if (this.multipleImages == null) return null;
+  if (
+    this.multipleImages == null ||
+    this.multipleImages.length <= 0 ||
+    this.anouncementLayoutType != AnouncementLayoutType.multiImageWithText
+  )
+    return [];
   for (let index = 0; index < this.multipleImages.length; index++) {
     _multiImages.push(
-      await s3Services.getSignedUrlOfFile(this.multipleImages.at(0))
+      await s3Services.getSignedUrlOfFile(
+        `${AppKeys.aws_s3_anouncemet_folder_name}${this.multipleImages.at(
+          index
+        )}`
+      )
     );
   }
   return _multiImages;

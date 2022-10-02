@@ -8,6 +8,14 @@ import { v4 as uuid } from 'uuid';
 import { multerServices } from '../../shared/services/multer_services';
 import { I_AnouncementFormDataFiles } from './anouncement.model';
 import { Validators } from '../../utils/validators';
+import {
+  I_CreatedBy,
+  I_LastModifiedBy,
+} from '../../shared/interfaces/interfaces';
+import { getModelNameFromUserType } from '../../utils/helpers';
+import { Types } from 'mongoose';
+import { AppKeys } from '../../config/keys/app_keys';
+import sharp from 'sharp';
 
 export const create = async (
   req: Request,
@@ -53,9 +61,10 @@ export const create = async (
         multipleImages: imageFileNames,
       };
     }
-    const _createdOrModifiedBy = {
-      userId: req.user.id,
+    const _createdOrModifiedBy = <I_CreatedBy | I_LastModifiedBy>{
+      userId: new Types.ObjectId(req.user.id),
       userType: req.user.userType,
+      modelName: getModelNameFromUserType(req.user.userType),
     };
     /// [req.body] doesnot contain [File] type from formData
     const _anouncement = await anouncementServices.create({
@@ -80,9 +89,10 @@ export const updateById = async (
   next: NextFunction
 ) => {
   try {
-    const _createdOrModifiedBy = {
-      userId: req.user.id,
+    const _createdOrModifiedBy = <I_CreatedBy | I_LastModifiedBy>{
+      userId: new Types.ObjectId(req.user.id),
       userType: req.user.userType,
+      modelName: getModelNameFromUserType(req.user.userType),
     };
     const _anouncement = await anouncementServices.updateById(
       req.params.anouncementId,
@@ -107,8 +117,9 @@ export const getAll = async (
   next: NextFunction
 ) => {
   try {
-    const _anouncement = await anouncementServices.listAll();
-    res.send(successResponse(_anouncement));
+    const _anouncements = await anouncementServices.listAll();
+    const anouncementsWithUrls = await generateAnouncementUrls(_anouncements);
+    res.send(successResponse(anouncementsWithUrls));
   } catch (error) {
     return next(
       new ApiException({
@@ -126,11 +137,13 @@ export const getAllForStudents = async (
   next: NextFunction
 ) => {
   try {
-    const _anouncement = await anouncementServices.listAllWithForStudents(
+    const _anouncements = await anouncementServices.listAllWithForStudents(
       req.query.anounceToClassId as string,
       req.query.showMyClassesOnly === 'true'
     );
-    res.send(successResponse(_anouncement));
+    const anouncementsWithUrls = await generateAnouncementUrls(_anouncements);
+
+    res.send(successResponse(anouncementsWithUrls));
   } catch (error) {
     return next(
       new ApiException({
@@ -141,19 +154,34 @@ export const getAllForStudents = async (
     );
   }
 };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const generateAnouncementUrls = async (anouncements: any[]) => {
+  const anouncementsWithUrls: object[] = [];
+  for (let index = 0; index < anouncements.length; index++) {
+    const imageName = await anouncements[index].getImageUrl();
+    const multipleImages = await anouncements[index].getMultipleImageUrls();
+
+    anouncementsWithUrls.push({
+      ...anouncements[index].toObject(),
+      imageName,
+      multipleImages,
+    });
+  }
+  return anouncementsWithUrls;
+};
 export const getAllForTeachers = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    console.log(req.query.showAnouncementsCreatedByMe);
-
-    const _anouncement = await anouncementServices.listAllWithForTeachers(
+    const _anouncements = await anouncementServices.listAllWithForTeachers(
       req.query.teacherId as string,
       req.query.showAnouncementsCreatedByMe === 'true'
     );
-    res.send(successResponse(_anouncement));
+    const anouncementsWithUrls = await generateAnouncementUrls(_anouncements);
+
+    res.send(successResponse(anouncementsWithUrls));
   } catch (error) {
     return next(
       new ApiException({
@@ -252,12 +280,26 @@ const _uploadAnouncementImagesToS3 = async (
 ): Promise<string> => {
   const fileName = _generateFileName(imageFile?.originalname as string);
   const contentType = imageFile?.mimetype as string;
+  const resizedImage = await _resizeImage(imageFile);
   await s3Services.uploadFileToS3({
-    file: imageFile?.buffer,
-    fileName: `anouncements/${fileName}`,
+    file: resizedImage,
+    fileName: `${AppKeys.aws_s3_anouncemet_folder_name}${fileName}`,
     contentType: contentType,
   });
   return fileName;
+};
+
+const _resizeImage = (imageFile: Express.Multer.File | undefined) => {
+  const sizeInMb = (imageFile?.size || 0) / (1024 * 1024);
+  let resizeImageQuality = 40;
+  if (sizeInMb >= 2) {
+    resizeImageQuality = 25;
+  }
+  return sharp(imageFile?.buffer)
+    .jpeg({ progressive: true, force: false, quality: resizeImageQuality })
+    .png({ progressive: true, force: false, quality: resizeImageQuality })
+    .webp({ force: false, quality: resizeImageQuality })
+    .toBuffer();
 };
 
 export * as anouncementController from './anouncement.controller';

@@ -59,6 +59,7 @@ export const convertListOfFilesToObjectWithKeyValues = (
         [cur.fieldname]: cur,
       };
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     {} as any /// {} is initial value
   );
 export * as multerServices from './multer_services';

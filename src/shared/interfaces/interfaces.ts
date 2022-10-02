@@ -3,6 +3,7 @@ import { UserType } from '../../utils/enums';
 
 export interface I_CreatedBy {
   userType: UserType;
+  modelName: string;
   userId: Types.ObjectId;
 }
 
