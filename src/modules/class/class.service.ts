@@ -13,19 +13,19 @@ const listAllWithDetails = (collegeId: string) =>
   ]);
 
 const findById = (classId: string, collegeId: string) =>
-  collegeDb.Class.findOne({ classId, collegeId });
+  collegeDb.Class.findOne({_id:  classId, collegeId });
 
 const updateById = (
   classId: string,
   collegeId: string,
   updatedData: UpdateQuery<I_Class>
 ) =>
-  collegeDb.Class.findOneAndUpdate({ classId, collegeId }, updatedData, {
+  collegeDb.Class.findOneAndUpdate({_id:  classId, collegeId }, updatedData, {
     new: true,
   });
 
 const deleteById = (classId: string, collegeId: string) =>
-  collegeDb.Class.findOneAndDelete({ classId, collegeId });
+  collegeDb.Class.findOneAndDelete({_id: classId, collegeId });
 
 const findOne = (query: FilterQuery<I_Class>, collegeId: string) =>
   collegeDb.Class.findOne({ collegeId, ...query });
