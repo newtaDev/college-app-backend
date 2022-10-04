@@ -56,7 +56,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
         } as I_Class & { _id: Types.ObjectId },
         students: classes.students.map((studentId, studentIndex) => ({
           _id: studentId,
-          name: `Stundet ${studentIndex}`,
+          name: `Student ${studentIndex}`,
           email: `college${collegeIndex}.class${classIndex}.student${studentIndex}@gmail.com`,
           password: 'Newta1234',
           collegeId: college._id,

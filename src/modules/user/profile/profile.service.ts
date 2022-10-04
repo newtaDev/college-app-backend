@@ -1,7 +1,7 @@
 import { collegeDb } from '../../../config/database/college.db';
 import { UserType } from '../../../utils/enums';
 
-const getProfileDetailsById = (id: string, userType: UserType) => {
+export const getProfileDetailsById = (id: string, userType: UserType) => {
   /// Find using `userType` if multiple `userType` is present in same collection
   switch (userType) {
     case UserType.admin:
@@ -26,10 +26,27 @@ const getProfileDetailsById = (id: string, userType: UserType) => {
   }
 };
 
-// const searchProfiles = ()=> {
+export const searchUserProfiles = async (searchText: string) => {
+  const studentProfiles = await collegeDb.Student.find({
+    $or: [
+      { name: { $regex: searchText, $options: 'i' } },
+      { username: { $regex: searchText, $options: 'i' } },
+    ],
+  }).limit(4);
+  const teacherProfiles = await collegeDb.Teacher.find({
+    $or: [
+      { name: { $regex: searchText, $options: 'i' } },
+      { username: { $regex: searchText, $options: 'i' } },
+    ],
+  }).limit(3);
+  const facultyProfiles = await collegeDb.Faculty.find({
+    $or: [
+      { name: { $regex: searchText, $options: 'i' } },
+      { username: { $regex: searchText, $options: 'i' } },
+    ],
+  }).limit(3);
 
-// }
-
-export default {
-  getProfileDetailsById,
+  return [...studentProfiles, ...teacherProfiles, ...facultyProfiles];
 };
+
+export * as profileServices from './profile.service';
