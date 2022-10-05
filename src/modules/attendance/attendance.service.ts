@@ -315,10 +315,11 @@ const getAbsentStudentsReportInEachSubject = (
         },
       },
     },
-     /// removing [_id] filed
-     {
+    /// removing [_id] filed
+    {
       $unset: 'student.password',
     },
+    { $sort: { absent_classes: -1 } },
   ]);
 
 /*
@@ -377,7 +378,7 @@ const getAbsentClassesCountOfStudent = (params: {
       },
     },
   ]);
-  
+
 export default {
   create,
   listAll,
