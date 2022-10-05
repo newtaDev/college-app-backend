@@ -129,7 +129,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
       _id: facultyId,
       name: `Faculty ${facultyIndex}`,
       username: `faculty_college${collegeIndex}_${facultyIndex}`,
-      email: `newta.college${collegeIndex}.faculty${facultyIndex}@gmail.com`,
+      email: `college${collegeIndex}.faculty${facultyIndex}@gmail.com`,
       password: 'Newta1234',
       collegeId: college._id,
       userType: UserType.staff,

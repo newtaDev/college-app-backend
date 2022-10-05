@@ -41,6 +41,7 @@ export const create = async (
       req.body.anouncementLayoutType == AnouncementLayoutType.multiImageWithText
     ) {
       const imageFileNames: string[] = [];
+      /// if we send one file in [multipleFiles] then some issues is caused
       /// To solve single file issue in list
       let _multipleFiles = multerFiles.multipleFiles as Express.Multer.File[];
       if (_multipleFiles.length == undefined) {
