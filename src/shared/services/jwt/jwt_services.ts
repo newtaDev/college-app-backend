@@ -2,7 +2,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { AppKeys } from '../../../config/keys/app_keys';
 import logger from '../../../utils/logger';
 
-const createAccessToken = (payload: object) => {
+export const createAccessToken = (payload: object) => {
   try {
     const _token = jwt.sign(
       { data: payload },
@@ -18,7 +18,7 @@ const createAccessToken = (payload: object) => {
   }
 };
 
-const createQrToken = (payload: object) => {
+export const createQrToken = (payload: object) => {
   try {
     const _token = jwt.sign(
       { data: payload },
@@ -30,7 +30,7 @@ const createQrToken = (payload: object) => {
     throw error;
   }
 };
-const createRefreshToken = (payload: object) => {
+export const createRefreshToken = (payload: object) => {
   try {
     const _token = jwt.sign(
       { data: payload },
@@ -45,8 +45,25 @@ const createRefreshToken = (payload: object) => {
     throw error;
   }
 };
+export const createOtpToken = (payload: object) => {
+  try {
+    const _token = jwt.sign(
+      { data: payload },
+      AppKeys.jwt_otp_key as jwt.Secret,
+      {
+        expiresIn: '5m',
+      }
+    );
+    return _token;
+  } catch (error) {
+    logger.debug(`---Create OTP Token Failed---`);
+    throw error;
+  }
+};
 
-const verifyAndDecodeAccessToken = (token: string): string | JwtPayload => {
+export const verifyAndDecodeAccessToken = (
+  token: string
+): string | JwtPayload => {
   try {
     const payload = jwt.verify(token, AppKeys.jwt_access_key as jwt.Secret);
     logger.info('--- Verified Access Token ---');
@@ -57,7 +74,9 @@ const verifyAndDecodeAccessToken = (token: string): string | JwtPayload => {
   }
 };
 
-const verifyAndDecodeRefreshToken = (token: string): string | JwtPayload => {
+export const verifyAndDecodeRefreshToken = (
+  token: string
+): string | JwtPayload => {
   try {
     const payload = jwt.verify(token, AppKeys.jwt_refresh_key as jwt.Secret);
     logger.info(`--- Verified Refresh Token ---`);
@@ -67,11 +86,16 @@ const verifyAndDecodeRefreshToken = (token: string): string | JwtPayload => {
     throw error;
   }
 };
-
-export {
-  createAccessToken,
-  createRefreshToken,
-  createQrToken,
-  verifyAndDecodeAccessToken,
-  verifyAndDecodeRefreshToken,
+export const verifyAndDecodeOtpToken = (
+  token: string
+): string | JwtPayload => {
+  try {
+    const payload = jwt.verify(token, AppKeys.jwt_otp_key as jwt.Secret);
+    logger.info(`--- Verified OTP Token ---`);
+    return payload;
+  } catch (error) {
+    logger.debug(`---OTP Token Failed ---`);
+    throw error;
+  }
 };
+export * as jwtServices from './jwt_services';

@@ -14,15 +14,16 @@ const _populateStudent = [
     },
   },
 ];
-const registerAsTeacher = (teacher: I_Teacher) =>
+export const registerAsTeacher = (teacher: I_Teacher) =>
   collegeDb.Teacher.create(teacher);
-const registerAsStudent = (student: I_Student) =>
+export const registerAsStudent = (student: I_Student) =>
   collegeDb.Student.create(student);
-const registerAsFaculty = (faculty: I_Faculty) =>
+export const registerAsFaculty = (faculty: I_Faculty) =>
   collegeDb.Faculty.create(faculty);
-const registerAsAdmin = (admin: I_Admin) => collegeDb.Admin.create(admin);
+export const registerAsAdmin = (admin: I_Admin) =>
+  collegeDb.Admin.create(admin);
 
-const getUserWithQuery = async (
+export const getUserWithQuery = async (
   query?: FilterQuery<I_Student | I_Admin | I_Faculty | I_Teacher>
 ) => {
   const student = await collegeDb.Student.findOne(query).populate(
@@ -40,7 +41,7 @@ const getUserWithQuery = async (
   return null;
 };
 
-const loginUser = (email: string, userType: UserType) => {
+export const loginUser = (email: string, userType: UserType) => {
   /// Find using `userType` if multiple `userType` is present in same collection
   switch (userType) {
     case UserType.admin:
@@ -66,7 +67,7 @@ const loginUser = (email: string, userType: UserType) => {
   }
 };
 
-const getUserDetailsById = (id: string, userType: UserType) => {
+export const getUserDetailsById = (id: string, userType: UserType) => {
   /// Find using `userType` if multiple `userType` is present in same collection
   switch (userType) {
     case UserType.admin:
@@ -83,13 +84,25 @@ const getUserDetailsById = (id: string, userType: UserType) => {
       return collegeDb.Teacher.findById(id).populate('assignedClasses');
   }
 };
-
-export default {
-  registerAsStudent,
-  registerAsTeacher,
-  registerAsFaculty,
-  registerAsAdmin,
-  loginUser,
-  getUserDetailsById,
-  getUserWithQuery,
+export const createNewPassword = (
+  id: string,
+  userType: UserType,
+  newPassword: string
+) => {
+  const updatedData = { password: newPassword };
+  switch (userType) {
+    case UserType.admin:
+      return collegeDb.Admin.findOneAndUpdate({ _id: id }, updatedData);
+    case UserType.superAdmin:
+      return collegeDb.Admin.findOneAndUpdate({ _id: id }, updatedData);
+    case UserType.staff:
+      return collegeDb.Faculty.findOneAndUpdate({ _id: id }, updatedData);
+    case UserType.principal:
+      return collegeDb.Faculty.findOneAndUpdate({ _id: id }, updatedData);
+    case UserType.student:
+      return collegeDb.Student.findOneAndUpdate({ _id: id }, updatedData);
+    case UserType.teacher:
+      return collegeDb.Teacher.findOneAndUpdate({ _id: id }, updatedData);
+  }
 };
+export * as authService from './auth.service';

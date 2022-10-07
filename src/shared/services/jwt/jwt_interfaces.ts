@@ -7,3 +7,8 @@ export interface I_JwtUserPayload {
   collegeId?: string;
   isAdmin: boolean;
 }
+export interface I_JwtOtpPayload {
+  userId: string;
+  userType: UserType;
+  otp: string;
+}

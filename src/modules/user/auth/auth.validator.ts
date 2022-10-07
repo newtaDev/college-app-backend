@@ -78,3 +78,15 @@ export const checkUserExistsValidationQuery = joiObject({
   username: Validators.validateUsername().message('Invalid username'),
   email: Joi.string().email(),
 });
+export const validateForgotPasswordQuery = joiObject({
+  email: Joi.string().email().required(),
+});
+export const validateResetPasswordQuery = joiObject({
+  otpToken: Joi.string().required(),
+});
+export const validateResetPasswordBody = joiObject({
+  otp: Joi.string().required(),
+  newPassword: Joi.string().required(),
+});
+
+export * as authValidator from './auth.validator';

@@ -1,12 +1,12 @@
+import bcrypt from 'bcrypt';
 import { Response, NextFunction, Request } from 'express';
 import { ApiException } from '../../../shared/exceptions/api_exceptions';
 import { successResponse } from '../../../shared/interfaces/req_res_interfaces';
-import { I_JwtUserPayload } from '../../../shared/services/jwt/jwt_interfaces';
 import {
-  createAccessToken,
-  createRefreshToken,
-} from '../../../shared/services/jwt/jwt_services';
-import authService from './auth.service';
+  I_JwtOtpPayload,
+  I_JwtUserPayload,
+} from '../../../shared/services/jwt/jwt_interfaces';
+import { authService } from './auth.service';
 import { omit } from 'lodash';
 import { I_Faculty } from '../faculty.model';
 import { I_Admin } from '../admin.model';
@@ -14,7 +14,11 @@ import { I_Student } from '../student/student.model';
 import { I_Teacher } from '../teacher/teacher.model';
 import { adminUsersList } from '../../../utils/roles';
 import { isMongoIdExitsOrValid } from '../../../shared/functions/verify_mongo_ids';
-
+import { AppKeys } from '../../../config/keys/app_keys';
+import { resetPassswordTemplate } from '../../../shared/templates/reset_password_html_temp';
+import { jwtServices } from '../../../shared/services/jwt/jwt_services';
+import { emailServices } from '../../../shared/services/email.services';
+import { JwtPayload, TokenExpiredError } from 'jsonwebtoken';
 /// Login
 export const loginUser = async (
   req: Request,
@@ -49,8 +53,8 @@ export const loginUser = async (
       collegeId: _user.collegeId?.toString(),
       isAdmin: isAdmin,
     };
-    const accessToken = createAccessToken(payload);
-    const refreshToken = createRefreshToken(payload);
+    const accessToken = jwtServices.createAccessToken(payload);
+    const refreshToken = jwtServices.createRefreshToken(payload);
     // snd response
     res.send(
       successResponse({
@@ -113,8 +117,8 @@ export const registerAsTeacher = async (
       collegeId: _user.collegeId?.toString(),
       isAdmin: false,
     };
-    const accessToken = createAccessToken(payload);
-    const refreshToken = createRefreshToken(payload);
+    const accessToken = jwtServices.createAccessToken(payload);
+    const refreshToken = jwtServices.createRefreshToken(payload);
     // snd response
     res.status(201).send(
       successResponse({
@@ -154,8 +158,8 @@ export const registerAsStudent = async (
       collegeId: _user.collegeId.toString(),
       isAdmin: false,
     };
-    const accessToken = createAccessToken(payload);
-    const refreshToken = createRefreshToken(payload);
+    const accessToken = jwtServices.createAccessToken(payload);
+    const refreshToken = jwtServices.createRefreshToken(payload);
     // snd response
     res.status(201).send(
       successResponse({
@@ -193,8 +197,8 @@ export const registerAsFaculty = async (
       collegeId: _user.collegeId.toString(),
       isAdmin: false,
     };
-    const accessToken = createAccessToken(payload);
-    const refreshToken = createRefreshToken(payload);
+    const accessToken = jwtServices.createAccessToken(payload);
+    const refreshToken = jwtServices.createRefreshToken(payload);
     // snd response
     res.status(201).send(
       successResponse({
@@ -232,8 +236,8 @@ export const registerAsAdmin = async (
       collegeId: _user.collegeId?.toString(),
       isAdmin: false,
     };
-    const accessToken = createAccessToken(payload);
-    const refreshToken = createRefreshToken(payload);
+    const accessToken = jwtServices.createAccessToken(payload);
+    const refreshToken = jwtServices.createRefreshToken(payload);
     // snd response
     res.status(201).send(
       successResponse({
@@ -278,3 +282,91 @@ export const checkUserExists = async (
     );
   }
 };
+export const forgotPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const email = req.query.email as string;
+    // verify user
+    const _user = await authService.getUserWithQuery({ email: email });
+    if (!_user) throw new Error('User not found');
+    // generate and hash OTP
+    const generatedOtp = Math.floor(1000 + Math.random() * 9000);
+    const hashedOtp = await bcrypt.hash(generatedOtp.toString(), 10);
+    // create jwt token for OTP
+    const otpToken = jwtServices.createOtpToken({
+      otp: hashedOtp,
+      userId: _user._id.toString(),
+      userType: _user.userType,
+    });
+    // send email to user
+    await emailServices.sendEmail({
+      from: AppKeys.email_address,
+      to: 'newtonmichael100@gmail.com',
+      subject: 'Reset your account password',
+      // text: 'Node.js testing mail 3 from tejas ',
+      html: resetPassswordTemplate(generatedOtp.toString()),
+    });
+    return res.status(200).send(successResponse(undefined, { otpToken }));
+  } catch (error) {
+    return next(
+      new ApiException({
+        message: 'Forgot password failed',
+        devMsg: error instanceof Error ? error.message : null,
+        statuscode: 400,
+      })
+    );
+  }
+};
+
+export const resetPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const otpToken = req.query.otpToken as string;
+    const entredOtp = req.body.otp as string;
+    const newPassword = req.body.newPassword as string;
+    // verify and decode [otpToken]
+    const payload = jwtServices.verifyAndDecodeOtpToken(otpToken) as JwtPayload;
+    const otpPayolad = payload.data as I_JwtOtpPayload;
+    // verify entred OTP
+    if (!(await bcrypt.compare(entredOtp, otpPayolad.otp))) {
+      throw new Error('Invalid otp');
+    }
+    // check user
+    const _user = await authService.getUserDetailsById(
+      otpPayolad.userId,
+      otpPayolad.userType
+    );
+    if (!_user) throw new Error('User not found');
+    // Reset password
+    await authService.createNewPassword(
+      _user._id.toString(),
+      _user.userType,
+      newPassword
+    );
+    return res.status(200).send(successResponse());
+  } catch (error) {
+    if (error instanceof TokenExpiredError) {
+      return next(
+        new ApiException({
+          message: 'Reset password failed',
+          devMsg: 'OTP expired',
+          statuscode: 400,
+        })
+      );
+    }
+    return next(
+      new ApiException({
+        message: 'Reset password failed',
+        devMsg: error instanceof Error ? error.message : null,
+        statuscode: 400,
+      })
+    );
+  }
+};
+export * as authController from './auth.controller';
