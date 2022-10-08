@@ -5,43 +5,50 @@ import { I_Teacher } from './teacher.model';
 const create = (params: I_Teacher) => collegeDb.Teacher.create(params);
 
 const listAll = (query?: FilterQuery<I_Teacher>) =>
-  collegeDb.Teacher.find(query || {})
-    .populate('assignedClasses');
+  collegeDb.Teacher.find(query || {}).populate([
+    'assignedClasses',
+    'assignedSubjects',
+  ]);
 
 const findById = (teacherId: string) =>
-  collegeDb.Teacher.findById(teacherId)
-    .populate('assignedClasses');
+  collegeDb.Teacher.findById(teacherId).populate([
+    'assignedClasses',
+    'assignedSubjects',
+  ]);
 
 const updateById = (teacherId: string, updatedData: UpdateQuery<I_Teacher>) =>
   collegeDb.Teacher.findOneAndUpdate({ _id: teacherId }, updatedData, {
     new: true,
-  })
-    .populate('assignedClasses');
+  }).populate(['assignedClasses', 'assignedSubjects']);
 
 const findOne = (query: FilterQuery<I_Teacher>) =>
-  collegeDb.Teacher.findOne(query)
-    .populate('assignedClasses');
+  collegeDb.Teacher.findOne(query).populate([
+    'assignedClasses',
+    'assignedSubjects',
+  ]);
 
 const deleteById = (teacherId: string) =>
-  collegeDb.Teacher.findByIdAndDelete(teacherId)
-    .populate('assignedClasses');
+  collegeDb.Teacher.findByIdAndDelete(teacherId).populate([
+    'assignedClasses',
+    'assignedSubjects',
+  ]);
 
 const getCountOfTeachers = (collegeId?: string) =>
   collegeDb.Teacher.find({ collegeId }).count();
 
 const getAssignedClasses = async (teacherId: string) =>
   (
-    await collegeDb.Teacher.findById(teacherId)
-      .populate([
-        {
-          path: 'assignedClasses',
-          populate: [
-            'collegeId',
-            'courseId',
-            { path: 'assignedToId', select: '-password' },
-          ],
-        },
-      ])
+    await collegeDb.Teacher.findById(teacherId).populate([
+      'assignedSubjects',
+      {
+        path: 'assignedClasses',
+        populate: [
+          'collegeId',
+          'courseId',
+          { path: 'assignedToId', select: '-password' },
+        ],
+      },
+    ])
   )?.assignedClasses;
 // const getAssignedClasses = (teacherId: string) =>
 //   collegeDb.Teacher.aggregate([

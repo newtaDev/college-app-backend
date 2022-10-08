@@ -15,6 +15,7 @@ export interface I_Teacher {
   bio?: string;
   collegeId: Types.ObjectId;
   assignedClasses: Types.ObjectId[];
+  assignedSubjects: Types.ObjectId[];
   userType: TeacherUserTypes;
   phoneNumber?: number;
   currentAddress?: number;
@@ -59,6 +60,12 @@ export const teacherSchema = new Schema<
       default: [],
       required: true,
       ref: 'Class',
+    },
+    assignedSubjects: {
+      type: [Schema.Types.ObjectId],
+      default: [],
+      required: true,
+      ref: 'Subject',
     },
     phoneNumber: Number,
     currentAddress: String,

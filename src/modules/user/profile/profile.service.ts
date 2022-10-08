@@ -22,7 +22,7 @@ export const getProfileDetailsById = (id: string, userType: UserType) => {
         },
       ]);
     case UserType.teacher:
-      return collegeDb.Teacher.findById(id).populate('assignedClasses');
+      return collegeDb.Teacher.findById(id).populate('assignedClasses','assignedSubjects');
   }
 };
 

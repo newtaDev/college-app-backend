@@ -13,6 +13,7 @@ export const validateTeacherRegistration = joiObject<I_Teacher>({
   collegeId: Validators.mongoIdValidator().required(),
   userType: Joi.string().valid(...Object.values(UserType)),
   assignedClasses: Joi.array().items(Validators.mongoIdValidator()).required(),
+  assignedSubjects: Joi.array().items(Validators.mongoIdValidator()).required(),
   email: Joi.string().email(),
   username: Validators.validateUsername().message('Invalid username'),
   isProfileCompleted: Joi.bool(),

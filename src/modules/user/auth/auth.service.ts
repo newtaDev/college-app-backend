@@ -31,7 +31,7 @@ export const getUserWithQuery = async (
   );
   if (student) return student;
   const teacher = await collegeDb.Teacher.findOne(query).populate(
-    'assignedClasses'
+    ['assignedClasses','assignedSubjects']
   );
   if (teacher) return teacher;
   const faculty = await collegeDb.Faculty.findOne(query);
@@ -81,7 +81,7 @@ export const getUserDetailsById = (id: string, userType: UserType) => {
     case UserType.student:
       return collegeDb.Student.findById(id).populate(_populateStudent);
     case UserType.teacher:
-      return collegeDb.Teacher.findById(id).populate('assignedClasses');
+      return collegeDb.Teacher.findById(id).populate(['assignedClasses','assignedSubjects']);
   }
 };
 export const resetNewPassword = (
