@@ -27,14 +27,18 @@ const importClassData = importData
   )
   .flat();
 
-const importSubjectData = importData
-  .map(college => college.courseData.map(course => course.subjects).flat())
-  .flat();
-
 const importAttendanceData = importData
   .map(college =>
     college.courseData
       .map(course => course.classData.map(classes => classes.attendance).flat())
+      .flat()
+  )
+  .flat();
+
+const importSubjectData = importData
+  .map(college =>
+    college.courseData
+      .map(course => course.classData.map(classes => classes.subjects).flat())
       .flat()
   )
   .flat();
@@ -116,7 +120,7 @@ export const deleteInitialData = async (
     await collegeDb.Subject.deleteMany({ isTestData: true });
     /// delete attendences
     await collegeDb.Attendance.deleteMany({ isTestData: true });
-    
+
     await collegeDb.ClassTimeTable.deleteMany({ isTestData: true });
     res.send({ status: 'DELETE SUCCESS' });
   } catch (error) {

@@ -28,23 +28,15 @@ export const importData = collegeIds.map((college, collegeIndex) => {
     courseData: college.courses.map((course, courseIndex) => ({
       data: {
         _id: course._id,
-        name: `Course name ${courseIndex}`,
+        name: course.name,
         collegeId: college._id,
         totalSem: 4 + courseIndex,
         isTestData: true,
       } as I_Course & { _id: Types.ObjectId },
-      subjects: course.subjects.map((subjectId, subjectIndex) => ({
-        _id: subjectId,
-        collegeId: college._id,
-        courseId: course._id,
-        isMainSubject: subjectIndex % 3 == 0 ? false : true,
-        name: `Subject Name ${subjectIndex}`,
-        isTestData: true,
-      })) as (I_Subject & { _id: Types.ObjectId })[],
       classData: course.classes.map((classes, classIndex) => ({
         data: {
           _id: classes._id,
-          name: `Class Names ${classIndex}`,
+          name: classes.name,
           collegeId: college._id,
           courseId: course._id,
           assignedToId: college.teachers?.at(classIndex % 2 == 0 ? 0 : 1),
@@ -54,10 +46,19 @@ export const importData = collegeIds.map((college, collegeIndex) => {
           isCollegeCompleted: false,
           isTestData: true,
         } as I_Class & { _id: Types.ObjectId },
-        students: classes.students.map((studentId, studentIndex) => ({
+        subjects: classes.subjects.ids.map((subjectId, subjectIndex) => ({
+          _id: subjectId,
+          collegeId: college._id,
+          courseId: course._id,
+          isMainSubject: subjectIndex % 3 == 0 ? false : true,
+          name: classes.subjects.names[subjectIndex],
+          isTestData: true,
+          classId: classes._id,
+        })) as (I_Subject & { _id: Types.ObjectId })[],
+        students: classes.students.ids.map((studentId, studentIndex) => ({
           _id: studentId,
-          name: `Student ${studentIndex}`,
-          email: `college${collegeIndex}.class${classIndex}.student${studentIndex}@gmail.com`,
+          name: classes.students.names[studentIndex],
+          email: `college${collegeIndex}${courseIndex}${classIndex}.student${studentIndex}@gmail.com`,
           password: 'Newta1234',
           collegeId: college._id,
           userType: UserType.student,
@@ -71,16 +72,18 @@ export const importData = collegeIds.map((college, collegeIndex) => {
             _id: attendanceId,
             classId: classes._id,
             collegeId: college._id,
-            subjectId: course.subjects.at(attendanceIndex % 2 == 0 ? 0 : 1),
+            subjectId: classes.subjects.ids.at(
+              attendanceIndex % 2 == 0 ? 0 : 1
+            ),
             classStartTime: `${String(attendanceIndex).padStart(2, '0')}:00`,
             classEndTime: `${String(attendanceIndex).padStart(2, '0')}:45`,
             currentSem: 1,
             attendanceTakenOn: new Date(
               `08-14-2022 ${String(attendanceIndex).padStart(2, '0')}:00`
             ),
-            absentStudents: classes.students
+            absentStudents: classes.students.ids
               .sort(() => 0.5 - Math.random())
-              .slice(0, Math.random() * classes.students.length),
+              .slice(0, Math.random() * classes.students.ids.length),
             isTestData: true,
           })
         ) as (I_Attendance & { _id: Types.ObjectId })[],
@@ -89,7 +92,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
             _id: timeTableId,
             classId: classes._id,
             collegeId: college._id,
-            subjectId: course.subjects.at(tableIndex % 2 == 0 ? 0 : 1),
+            subjectId: classes.subjects.ids.at(tableIndex % 2 == 0 ? 0 : 1),
             teacherId: college.teachers?.at(classIndex % 2 == 0 ? 0 : 1),
             startingTime: `${String(tableIndex).padStart(2, '0')}:00`,
             endingTime: `${String(tableIndex).padStart(2, '0')}:45`,
@@ -112,6 +115,13 @@ export const importData = collegeIds.map((college, collegeIndex) => {
       const randomAssignedClasses = randomCourseWithRandomClasses.map(
         classes => classes._id
       );
+      const randomAssignedSubjects = randomCourseWithRandomClasses
+        .map(classes =>
+          classes.subjects.ids
+            .sort(() => 0.5 - Math.random())
+            .slice(0, Math.random() * classes.subjects.ids.length)
+        )
+        .flat();
 
       return {
         _id: teacherId,
@@ -121,6 +131,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
         collegeId: college._id,
         userType: UserType.teacher,
         assignedClasses: randomAssignedClasses,
+        assignedSubjects: randomAssignedSubjects,
         dob: new Date('03-13-1988'),
         isTestData: true,
       };
