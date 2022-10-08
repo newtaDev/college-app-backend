@@ -1,5 +1,5 @@
 import { joiObject } from '../../utils/helpers';
-import { Validators } from '../../utils/validators';
+import { Validators } from './validators';
 
 export const restrictUpdatingCollegeId = joiObject({
   collegeId: Validators.restrictUpdatingCollegeId(),

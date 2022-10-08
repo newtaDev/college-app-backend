@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import { Week } from '../../../utils/enums';
 import { joiObject } from '../../../utils/helpers';
-import { Validators } from '../../../utils/validators';
+import { Validators } from '../../../shared/validators/validators';
 import { I_ClassTimeTable } from './class_time_table.model';
 
 export const validateClassTimeTableByIdParam = joiObject({

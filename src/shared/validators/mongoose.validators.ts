@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import classService from '../../modules/class/class.service';
 import collegeService from '../../modules/college/college.service';
 import courseService from '../../modules/course/course.service';
@@ -11,6 +12,17 @@ interface I_MongoModelIds {
   subjectId?: string;
   teacherId?: string;
 }
+
+
+// validate mongoose object id
+export const isValidMongoId = (val: string): string => {
+  const _error = new Error('Invalid Mongo Id');
+  if (Types.ObjectId.isValid(val)) {
+    if (String(new Types.ObjectId(val)) === val) return val;
+    throw _error;
+  }
+  throw _error;
+};
 
 /* if given Id is not null then it will validate
  Also checks if it belongs to same college or not */

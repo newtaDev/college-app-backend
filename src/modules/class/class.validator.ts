@@ -1,6 +1,6 @@
 import Joi from 'joi';
 import { joiObject } from '../../utils/helpers';
-import { Validators } from '../../utils/validators';
+import { Validators } from '../../shared/validators/validators';
 import { I_Class } from './class.model';
 
 export const validateClassByIdParam = joiObject({

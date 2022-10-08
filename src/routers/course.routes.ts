@@ -13,7 +13,7 @@ import {
   validateCreateCourse,
 } from '../modules/course/course.validator';
 import I_BaseRouter from './routes';
-import { restrictUpdatingCollegeId } from '../shared/functions/update_validators';
+import { restrictUpdatingCollegeId } from '../shared/validators/joi_validators';
 
 export class CourseRouter implements I_BaseRouter {
   constructor() {

@@ -13,7 +13,7 @@ import {
   getAllClassTimeTables,
   updateClassTimeTableById,
 } from '../../modules/time_table/class_time_table/class_time_table.controller';
-import { restrictUpdatingCollegeId } from '../../shared/functions/update_validators';
+import { restrictUpdatingCollegeId } from '../../shared/validators/joi_validators';
 
 export class ClassTimeTableRouter implements I_BaseRouter {
   constructor() {

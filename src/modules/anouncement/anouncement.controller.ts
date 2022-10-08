@@ -7,7 +7,7 @@ import { anouncementServices } from './anouncement.service';
 import { v4 as uuid } from 'uuid';
 import { multerServices } from '../../shared/services/multer_services';
 import { I_AnouncementFormDataFiles } from './anouncement.model';
-import { Validators } from '../../utils/validators';
+import { Validators } from '../../shared/validators/validators';
 import {
   I_CreatedBy,
   I_LastModifiedBy,

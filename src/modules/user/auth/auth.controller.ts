@@ -13,7 +13,7 @@ import { I_Admin } from '../admin.model';
 import { I_Student } from '../student/student.model';
 import { I_Teacher } from '../teacher/teacher.model';
 import { adminUsersList } from '../../../utils/roles';
-import { isMongoIdExitsOrValid } from '../../../shared/functions/verify_mongo_ids';
+import { isMongoIdExitsOrValid } from '../../../shared/validators/mongoose.validators';
 import { AppKeys } from '../../../config/keys/app_keys';
 import { resetPassswordTemplate } from '../../../shared/templates/reset_password_html_temp';
 import { jwtServices } from '../../../shared/services/jwt/jwt_services';
@@ -344,7 +344,7 @@ export const resetPassword = async (
     );
     if (!_user) throw new Error('User not found');
     // Reset password
-    await authService.createNewPassword(
+    await authService.resetNewPassword(
       _user._id.toString(),
       _user.userType,
       newPassword

@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import { UserType } from '../../../utils/enums';
 import { joiObject } from '../../../utils/helpers';
-import { Validators } from '../../../utils/validators';
+import { Validators } from '../../../shared/validators/validators';
 import { I_Admin } from '../admin.model';
 import { I_Faculty } from '../faculty.model';
 import { I_Student } from '../student/student.model';

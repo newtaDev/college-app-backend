@@ -1,4 +1,4 @@
-import { Validators } from '../../../utils/validators';
+import { Validators } from '../../../shared/validators/validators';
 import mongoose, { Schema, Types, ValidatorProps } from 'mongoose';
 import { I_CreatedBy } from '../../../shared/interfaces/interfaces';
 import { UserType, Week } from '../../../utils/enums';

@@ -5,7 +5,7 @@ import { adminUsersList, AdminUserTypes } from '../../utils/roles';
 import { College } from '../college/college.model';
 import { docHooks, queryHooks } from '../../utils/mongoose';
 import logger from '../../utils/logger';
-import { Validators } from '../../utils/validators';
+import { Validators } from '../../shared/validators/validators';
 
 export interface I_Admin {
   name: string;

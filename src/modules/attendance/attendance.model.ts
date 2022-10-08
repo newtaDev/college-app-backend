@@ -6,7 +6,7 @@ import {
   I_CreatedBy,
   I_LastModifiedBy,
 } from '../../shared/interfaces/interfaces';
-import { Validators } from '../../utils/validators';
+import { Validators } from '../../shared/validators/validators';
 
 export interface I_Attendance {
   collegeId: Types.ObjectId;

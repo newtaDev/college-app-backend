@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import { UserType } from '../../../utils/enums';
 import { joiObject } from '../../../utils/helpers';
-import { Validators } from '../../../utils/validators';
+import { Validators } from '../../../shared/validators/validators';
 
 export const validateGetUserProfileQuery = joiObject({
   userType: Joi.string()

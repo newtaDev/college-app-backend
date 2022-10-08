@@ -84,7 +84,7 @@ export const getUserDetailsById = (id: string, userType: UserType) => {
       return collegeDb.Teacher.findById(id).populate('assignedClasses');
   }
 };
-export const createNewPassword = (
+export const resetNewPassword = (
   id: string,
   userType: UserType,
   newPassword: string

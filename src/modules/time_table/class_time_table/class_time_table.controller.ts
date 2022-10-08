@@ -3,7 +3,7 @@ import { ApiException } from '../../../shared/exceptions/api_exceptions';
 import { I_ClassTimeTable } from './class_time_table.model';
 import class_time_tableService from './class_time_table.service';
 import { successResponse } from '../../../shared/interfaces/req_res_interfaces';
-import { isMongoIdExitsOrValid } from '../../../shared/functions/verify_mongo_ids';
+import { isMongoIdExitsOrValid } from '../../../shared/validators/mongoose.validators';
 
 export const createClassTimeTable = async (
   req: Request,

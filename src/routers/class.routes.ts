@@ -14,7 +14,7 @@ import {
 import { validateSchemaMiddleware } from '../middlewares/validation_middleware';
 import I_BaseRouter from './routes';
 import { authMiddleware } from '../middlewares/auth_middleware';
-import { restrictUpdatingCollegeId } from '../shared/functions/update_validators';
+import { restrictUpdatingCollegeId } from '../shared/validators/joi_validators';
 
 export class ClassRouter implements I_BaseRouter {
   constructor() {

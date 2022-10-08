@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import _ from 'lodash';
 import { ApiException } from '../../shared/exceptions/api_exceptions';
-import { isMongoIdExitsOrValid } from '../../shared/functions/verify_mongo_ids';
+import { isMongoIdExitsOrValid } from '../../shared/validators/mongoose.validators';
 import { successResponse } from '../../shared/interfaces/req_res_interfaces';
 import subjectService from './subject.service';
 

@@ -4,7 +4,7 @@ import { UserType } from '../../utils/enums';
 import { facultyUsersList, FacultyUserTypes } from '../../utils/roles';
 import { docHooks, queryHooks } from '../../utils/mongoose';
 import logger from '../../utils/logger';
-import { Validators } from '../../utils/validators';
+import { Validators } from '../../shared/validators/validators';
 
 export interface I_Faculty {
   name: string;

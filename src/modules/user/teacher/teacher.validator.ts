@@ -1,5 +1,5 @@
 import { joiObject } from '../../../utils/helpers';
-import { Validators } from '../../../utils/validators';
+import { Validators } from '../../../shared/validators/validators';
 
 export const validateTeacherByIdParam = joiObject({
   teacherId: Validators.mongoIdValidator().required(),

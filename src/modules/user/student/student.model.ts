@@ -10,7 +10,7 @@ import { UserType } from '../../../utils/enums';
 import { studentUsersList, StudentUserTypes } from '../../../utils/roles';
 import logger from '../../../utils/logger';
 import { docHooks, queryHooks } from '../../../utils/mongoose';
-import { Validators } from '../../../utils/validators';
+import { Validators } from '../../../shared/validators/validators';
 
 export interface I_Student {
   name: string;

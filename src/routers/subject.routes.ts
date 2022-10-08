@@ -15,7 +15,7 @@ import { authMiddleware } from '../middlewares/auth_middleware';
 import { validateSchemaMiddleware } from '../middlewares/validation_middleware';
 
 import I_BaseRouter from './routes';
-import { restrictUpdatingCollegeId } from '../shared/functions/update_validators';
+import { restrictUpdatingCollegeId } from '../shared/validators/joi_validators';
 
 export class SubjectRouter implements I_BaseRouter {
   constructor() {

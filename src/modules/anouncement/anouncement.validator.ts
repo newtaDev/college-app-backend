@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import { AnouncementLayoutType, AnounceTo } from '../../utils/enums';
 import { joiObject } from '../../utils/helpers';
-import { Validators } from '../../utils/validators';
+import { Validators } from '../../shared/validators/validators';
 import { I_Anouncement, I_AnouncementFormDataFiles } from './anouncement.model';
 
 export const validateAnouncementIdParam = joiObject({
