@@ -23,6 +23,17 @@ export const validateCreateAttendance = joiObject<I_Attendance>({
   attendanceTakenOn: Joi.date().required(),
 });
 
+export const attendanceQueryByClassValidator = joiObject({
+  classId: Validators.mongoIdValidator().required(),
+  currentSem: Joi.number().required(),
+  collegeId: Validators.mongoIdValidator(),
+});
+export const getAllSubjectsQueryValidator = joiObject({
+  classId: Validators.mongoIdValidator().required(),
+  subjectId: Validators.mongoIdValidator().required(),
+  collegeId: Validators.mongoIdValidator(),
+});
+
 export const validateAttendancesWithAllSubjects = joiObject({
   classId: Validators.mongoIdValidator(),
   currentSem: Joi.number(),
@@ -44,4 +55,4 @@ export const validateAbsentClassesReportOfStudentReq = joiObject({
   collegeId: Validators.mongoIdValidator(),
 });
 
-export * as attendanceValidator from './attendance.validator'
+export * as attendanceValidator from './attendance.validator';

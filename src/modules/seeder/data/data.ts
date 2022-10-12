@@ -13,6 +13,24 @@ import { collegeIds } from './ids';
 
 export const importData = collegeIds.map((college, collegeIndex) => {
   const randomCourses = college.courses.sort(() => 0.5 - Math.random());
+  const randomCourseWithRandomClasses = randomCourses
+    .map(course =>
+      course.classes
+        .sort(() => 0.5 - Math.random())
+        .slice(0, Math.random() * course.classes.length)
+    )
+    .flat(); // to merge two lists into one;
+
+  const randomAssignedClasses = randomCourseWithRandomClasses.map(
+    classes => classes._id
+  );
+  const randomAssignedSubjects = randomCourseWithRandomClasses
+    .map(classes =>
+      classes.subjects.ids
+        .sort(() => 0.5 - Math.random())
+        .slice(0, Math.random() * classes.subjects.ids.length)
+    )
+    .flat();
 
   return {
     data: {
@@ -72,7 +90,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
             _id: attendanceId,
             classId: classes._id,
             collegeId: college._id,
-            subjectId: classes.subjects.ids.at(
+            subjectId: randomAssignedSubjects.at(
               attendanceIndex % 2 == 0 ? 0 : 1
             ),
             classStartTime: `${String(attendanceIndex).padStart(2, '0')}:00`,
@@ -92,7 +110,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
             _id: timeTableId,
             classId: classes._id,
             collegeId: college._id,
-            subjectId: classes.subjects.ids.at(tableIndex % 2 == 0 ? 0 : 1),
+            subjectId: randomAssignedSubjects.at(tableIndex % 2 == 0 ? 0 : 1),
             teacherId: college.teachers?.at(classIndex % 2 == 0 ? 0 : 1),
             startingTime: `${String(tableIndex).padStart(2, '0')}:00`,
             endingTime: `${String(tableIndex).padStart(2, '0')}:45`,
@@ -103,39 +121,18 @@ export const importData = collegeIds.map((college, collegeIndex) => {
       })),
     })),
 
-    teachers: college.teachers?.map((teacherId, teacherIndex) => {
-      const randomCourseWithRandomClasses = randomCourses
-        .map(course =>
-          course.classes
-            .sort(() => 0.5 - Math.random())
-            .slice(0, Math.random() * course.classes.length)
-        )
-        .flat(); // to merge two lists into one;
-
-      const randomAssignedClasses = randomCourseWithRandomClasses.map(
-        classes => classes._id
-      );
-      const randomAssignedSubjects = randomCourseWithRandomClasses
-        .map(classes =>
-          classes.subjects.ids
-            .sort(() => 0.5 - Math.random())
-            .slice(0, Math.random() * classes.subjects.ids.length)
-        )
-        .flat();
-
-      return {
-        _id: teacherId,
-        name: `Teacher Name${teacherIndex}`,
-        email: `college${collegeIndex}.teacher${teacherIndex}@gmail.com`,
-        password: 'Newta1234',
-        collegeId: college._id,
-        userType: UserType.teacher,
-        assignedClasses: randomAssignedClasses,
-        assignedSubjects: randomAssignedSubjects,
-        dob: new Date('03-13-1988'),
-        isTestData: true,
-      };
-    }) as (I_Teacher & { _id: Types.ObjectId })[],
+    teachers: college.teachers?.map((teacherId, teacherIndex) => ({
+      _id: teacherId,
+      name: `Teacher Name${teacherIndex}`,
+      email: `college${collegeIndex}.teacher${teacherIndex}@gmail.com`,
+      password: 'Newta1234',
+      collegeId: college._id,
+      userType: UserType.teacher,
+      assignedClasses: randomAssignedClasses,
+      assignedSubjects: randomAssignedSubjects,
+      dob: new Date('03-13-1988'),
+      isTestData: true,
+    })) as (I_Teacher & { _id: Types.ObjectId })[],
     faculties: college.faculty.map((facultyId, facultyIndex) => ({
       _id: facultyId,
       name: `Faculty ${facultyIndex}`,

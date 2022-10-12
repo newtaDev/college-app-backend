@@ -1,11 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import _ from 'lodash';
 import { ApiException } from '../../shared/exceptions/api_exceptions';
 import { successResponse } from '../../shared/interfaces/req_res_interfaces';
-import { I_JwtUserPayload } from '../../shared/services/jwt/jwt_interfaces';
 import classService from '../class/class.service';
 import studentService from '../user/student/student.service';
-import attendanceService from './attendance.service';
+import { attendanceService } from './attendance.service';
 
 export const create = async (
   req: Request,
@@ -55,13 +53,6 @@ export const getAll = async (
   next: NextFunction
 ) => {
   try {
-    if (!_.isEmpty(req.query)) {
-      const _attendanceQuery = await _getAllAttendancesWithQueries(
-        req.query,
-        req.user
-      );
-      return res.send(successResponse(_attendanceQuery));
-    }
     const _attendance = await attendanceService.listAll();
     res.send(successResponse(_attendance));
   } catch (error) {
@@ -75,33 +66,72 @@ export const getAll = async (
   }
 };
 
-const _getAllAttendancesWithQueries = async (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  query: Record<string, any>,
-  user: I_JwtUserPayload
+export const attendanceQueryByClass = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) => {
   try {
-    const collegeId = (query.collegeId ?? user.collegeId)?.toString() as string;
-    const classId = query.classId?.toString() as string;
-    const currentSem = Number(query.currentSem);
-    const totalStudentsInClass = await studentService.getCountOfStudents(
+    const collegeId = (
+      req.query.collegeId ?? req.user.collegeId
+    )?.toString() as string;
+    const classId = req.query.classId?.toString() as string;
+    const currentSem = Number(req.query.currentSem);
+    const totalStudentsInClass = await studentService.getCountOfStudents({
       collegeId,
-      classId
-    );
+      classId,
+    });
+
     const classSubjectsReport =
-      await attendanceService.getAttendanceWithCountOfAbsentAndPresntStudents(
+      await attendanceService.getAttendanceWithCountOfAbsentAndPresntStudentsByClass(
         collegeId,
         classId,
         currentSem,
         totalStudentsInClass
       );
-    return classSubjectsReport;
+    res.send(successResponse(classSubjectsReport));
   } catch (error) {
-    throw new ApiException({
-      message: 'Attendance Query failed',
-      devMsg: error instanceof Error ? error.message : null,
-      statuscode: 400,
+    return next(
+      new ApiException({
+        message: 'Attendance filtred by class failed',
+        devMsg: error instanceof Error ? error.message : null,
+        statuscode: 400,
+      })
+    );
+  }
+};
+export const attendanceQueryBySubject = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const collegeId = (
+      req.query.collegeId ?? req.user.collegeId
+    )?.toString() as string;
+    const classId = req.query.classId?.toString() as string;
+    const subjectId = req.query.subjectId?.toString() as string;
+    const totalStudentsInClass = await studentService.getCountOfStudents({
+      collegeId,
+      classId,
     });
+
+    const classSubjectsReport =
+      await attendanceService.getAttendanceWithCountOfAbsentAndPresntStudentsBySubject(
+        collegeId,
+        subjectId,
+        classId,
+        totalStudentsInClass
+      );
+    res.send(successResponse(classSubjectsReport));
+  } catch (error) {
+    return next(
+      new ApiException({
+        message: 'Attendance filtred by class failed',
+        devMsg: error instanceof Error ? error.message : null,
+        statuscode: 400,
+      })
+    );
   }
 };
 
@@ -116,10 +146,10 @@ export const getAttendancesReportOfSubjects = async (
     )?.toString() as string;
     const classId = req.query.classId?.toString() as string;
     const currentSem = Number(req.query.currentSem);
-    const totalStudentsInClass = await studentService.getCountOfStudents(
+    const totalStudentsInClass = await studentService.getCountOfStudents({
       collegeId,
-      classId
-    );
+      classId,
+    });
     const classSubjectsReport =
       await attendanceService.getReportOfAllSubjectsInClass(
         collegeId,

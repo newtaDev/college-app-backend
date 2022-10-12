@@ -2,35 +2,39 @@ import { FilterQuery, UpdateQuery } from 'mongoose';
 import { collegeDb } from '../../../config/database/college.db';
 import { I_Teacher } from './teacher.model';
 
+const _populateAssignedClass = {
+  path: 'assignedSubjects',
+  populate: ['courseId', 'classId'],
+};
 const create = (params: I_Teacher) => collegeDb.Teacher.create(params);
 
 const listAll = (query?: FilterQuery<I_Teacher>) =>
   collegeDb.Teacher.find(query || {}).populate([
     'assignedClasses',
-    'assignedSubjects',
+    _populateAssignedClass,
   ]);
 
 const findById = (teacherId: string) =>
   collegeDb.Teacher.findById(teacherId).populate([
     'assignedClasses',
-    'assignedSubjects',
+    _populateAssignedClass,
   ]);
 
 const updateById = (teacherId: string, updatedData: UpdateQuery<I_Teacher>) =>
   collegeDb.Teacher.findOneAndUpdate({ _id: teacherId }, updatedData, {
     new: true,
-  }).populate(['assignedClasses', 'assignedSubjects']);
+  }).populate(['assignedClasses', _populateAssignedClass]);
 
 const findOne = (query: FilterQuery<I_Teacher>) =>
   collegeDb.Teacher.findOne(query).populate([
     'assignedClasses',
-    'assignedSubjects',
+    _populateAssignedClass,
   ]);
 
 const deleteById = (teacherId: string) =>
   collegeDb.Teacher.findByIdAndDelete(teacherId).populate([
     'assignedClasses',
-    'assignedSubjects',
+    _populateAssignedClass,
   ]);
 
 const getCountOfTeachers = (collegeId?: string) =>
@@ -39,7 +43,6 @@ const getCountOfTeachers = (collegeId?: string) =>
 const getAssignedClasses = async (teacherId: string) =>
   (
     await collegeDb.Teacher.findById(teacherId).populate([
-      'assignedSubjects',
       {
         path: 'assignedClasses',
         populate: [

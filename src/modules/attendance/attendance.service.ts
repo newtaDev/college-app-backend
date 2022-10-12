@@ -2,14 +2,15 @@ import { FilterQuery, Types, UpdateQuery } from 'mongoose';
 import { collegeDb } from '../../config/database/college.db';
 import { I_Attendance } from './attendance.model';
 
-const create = (params: I_Attendance) => collegeDb.Attendance.create(params);
+export const create = (params: I_Attendance) =>
+  collegeDb.Attendance.create(params);
 
-const listAll = () => collegeDb.Attendance.find().sort({ updatedAt: 1 });
+export const listAll = () => collegeDb.Attendance.find().sort({ updatedAt: 1 });
 
-const findById = (attendanceId: string) =>
+export const findById = (attendanceId: string) =>
   collegeDb.Attendance.findById(attendanceId);
 
-const updateById = (
+export const updateById = (
   attendanceId: string,
   updatedData: UpdateQuery<I_Attendance>
 ) =>
@@ -17,13 +18,13 @@ const updateById = (
     new: true,
   });
 
-const findOne = (query: FilterQuery<I_Attendance>) =>
+export const findOne = (query: FilterQuery<I_Attendance>) =>
   collegeDb.Attendance.findOne(query);
 
-const deleteById = (attendanceId: string) =>
+export const deleteById = (attendanceId: string) =>
   collegeDb.Attendance.findByIdAndDelete(attendanceId);
 
-const getAttendanceWithCountOfAbsentAndPresntStudents = (
+export const getAttendanceWithCountOfAbsentAndPresntStudentsByClass = (
   collegeId: string,
   classId: string,
   currentSem: number,
@@ -88,7 +89,71 @@ const getAttendanceWithCountOfAbsentAndPresntStudents = (
     { $sort: { updatedAt: -1 } },
   ]);
 
-const getReportOfAllSubjectsInClass = (
+export const getAttendanceWithCountOfAbsentAndPresntStudentsBySubject = (
+  collegeId: string,
+  subjectId: string,
+  classId: string,
+  totalStudentsInClass: number
+) =>
+  collegeDb.Attendance.aggregate([
+    {
+      $match: {
+        collegeId: {
+          $eq: new Types.ObjectId(collegeId),
+        },
+        /// on runtime checks if [subjectId] is not null  if exists and then peerform this query
+        ...(subjectId && {
+          subjectId: {
+            $eq: new Types.ObjectId(subjectId),
+          },
+        }),
+        ...(classId && {
+          classId: {
+            $eq: new Types.ObjectId(classId),
+          },
+        }),
+      },
+    },
+    {
+      $addFields: {
+        absentStudentCount: {
+          $size: '$absentStudents',
+        },
+      },
+    },
+    {
+      $addFields: {
+        presentStudentCount: {
+          $subtract: [totalStudentsInClass, '$absentStudentCount'],
+        },
+      },
+    },
+    /// populating [subjectId] from `subjects` collection
+    {
+      $lookup: {
+        from: 'subjects', /// collection name
+        localField: 'subjectId',
+        foreignField: '_id',
+        as: 'subject',
+      },
+    },
+    {
+      /// subject array will be overwritten
+      $addFields: {
+        // $mergeObjects: [
+        //   {
+        //     $arrayElemAt: ['$subject', 0],
+        //   },
+        // ],
+        subject: {
+          $arrayElemAt: ['$subject', 0],
+        },
+      },
+    },
+    { $sort: { updatedAt: -1 } },
+  ]);
+
+export const getReportOfAllSubjectsInClass = (
   collegeId: string,
   classId: string,
   currentSem: number,
@@ -192,7 +257,7 @@ Reponse:
 subject: object,
 total_attendance_taken: number
  */
-const getTotalAttendanceTakenInEachSubjectsOfClass = (params: {
+export const getTotalAttendanceTakenInEachSubjectsOfClass = (params: {
   collegeId: string;
   classId: string;
   currentSem: number;
@@ -247,7 +312,7 @@ const getTotalAttendanceTakenInEachSubjectsOfClass = (params: {
       },
     },
   ]);
-const getAbsentStudentsReportInEachSubject = (
+export const getAbsentStudentsReportInEachSubject = (
   collegeId: string,
   classId: string,
   subjectId: string,
@@ -329,7 +394,7 @@ _id : ObjectId
 absent_class_count: number
 subject : Object
 */
-const getAbsentClassesCountOfStudent = (params: {
+export const getAbsentClassesCountOfStudent = (params: {
   collegeId: string;
   classId: string;
   currentSem: number;
@@ -378,17 +443,4 @@ const getAbsentClassesCountOfStudent = (params: {
       },
     },
   ]);
-
-export default {
-  create,
-  listAll,
-  findById,
-  findOne,
-  updateById,
-  deleteById,
-  getAbsentStudentsReportInEachSubject,
-  getReportOfAllSubjectsInClass,
-  getAttendanceWithCountOfAbsentAndPresntStudents,
-  getTotalAttendanceTakenInEachSubjectsOfClass,
-  getAbsentClassesCountOfStudent,
-};
+export * as attendanceService from './attendance.service';

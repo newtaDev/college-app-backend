@@ -13,29 +13,24 @@ const _populateClass = [
 const create = (params: I_Student) => collegeDb.Student.create(params);
 
 const listAll = (query?: FilterQuery<I_Student>) =>
-  collegeDb.Student.find(query || {})
-    .populate(_populateClass);
+  collegeDb.Student.find(query || {}).populate(_populateClass);
 
 const findById = (studentId: string) =>
-  collegeDb.Student.findById(studentId)
-    .populate(_populateClass);
+  collegeDb.Student.findById(studentId).populate(_populateClass);
 
 const updateById = (studentId: string, updatedData: UpdateQuery<I_Student>) =>
   collegeDb.Student.findOneAndUpdate({ _id: studentId }, updatedData, {
     new: true,
-  })
-    .populate(_populateClass);
+  }).populate(_populateClass);
 
 const findOne = (query: FilterQuery<I_Student>) =>
-  collegeDb.Student.findOne(query)
-    .populate(_populateClass);
+  collegeDb.Student.findOne(query).populate(_populateClass);
 
 const deleteById = (studentId: string) =>
-  collegeDb.Student.findByIdAndDelete(studentId)
-    .populate(_populateClass);
+  collegeDb.Student.findByIdAndDelete(studentId).populate(_populateClass);
 
-const getCountOfStudents = (collegeId?: string, classId?: string) =>
-  collegeDb.Student.find({ collegeId, classId }).count();
+const getCountOfStudents = (query: FilterQuery<I_Student>) =>
+  collegeDb.Student.find(query).count();
 
 export default {
   create,

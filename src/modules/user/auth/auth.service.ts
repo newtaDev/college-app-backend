@@ -6,7 +6,7 @@ import { I_Faculty } from '../faculty.model';
 import { I_Student } from '../student/student.model';
 import { I_Teacher } from '../teacher/teacher.model';
 
-const _populateStudent = [
+const _populateClassAndCourse = [
   {
     path: 'classId',
     populate: {
@@ -27,12 +27,16 @@ export const getUserWithQuery = async (
   query?: FilterQuery<I_Student | I_Admin | I_Faculty | I_Teacher>
 ) => {
   const student = await collegeDb.Student.findOne(query).populate(
-    _populateStudent
+    _populateClassAndCourse
   );
   if (student) return student;
-  const teacher = await collegeDb.Teacher.findOne(query).populate(
-    ['assignedClasses','assignedSubjects']
-  );
+  const teacher = await collegeDb.Teacher.findOne(query).populate([
+    'assignedClasses',
+    {
+      path: 'assignedSubjects',
+      populate: ['courseId', 'classId'],
+    },
+  ]);
   if (teacher) return teacher;
   const faculty = await collegeDb.Faculty.findOne(query);
   if (faculty) return faculty;
@@ -79,9 +83,15 @@ export const getUserDetailsById = (id: string, userType: UserType) => {
     case UserType.principal:
       return collegeDb.Faculty.findById(id);
     case UserType.student:
-      return collegeDb.Student.findById(id).populate(_populateStudent);
+      return collegeDb.Student.findById(id).populate(_populateClassAndCourse);
     case UserType.teacher:
-      return collegeDb.Teacher.findById(id).populate(['assignedClasses','assignedSubjects']);
+      return collegeDb.Teacher.findById(id).populate([
+        'assignedClasses',
+        {
+          path: 'assignedSubjects',
+          populate: ['courseId', 'classId'],
+        },
+      ]);
   }
 };
 export const resetNewPassword = (

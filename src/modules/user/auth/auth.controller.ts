@@ -304,7 +304,7 @@ export const forgotPassword = async (
     // send email to user
     await emailServices.sendEmail({
       from: AppKeys.email_address,
-      to: 'newtonmichael100@gmail.com',
+      to: email,
       subject: 'Reset your account password',
       // text: 'Node.js testing mail 3 from tejas ',
       html: resetPassswordTemplate(generatedOtp.toString()),

@@ -13,15 +13,26 @@ export class AttendanceRouter implements I_BaseRouter {
   path = '/attendance';
   router: Router;
   private initRoutes(): void {
+    this.router.get(this.path, [authMiddleware()], attendanceController.getAll);
     this.router.get(
-      this.path,
+      `${this.path}/queryByClass`,
       [
         authMiddleware(),
         validateSchemaMiddleware({
-          query: attendanceValidator.validateAttendancesWithAllSubjects,
+          query: attendanceValidator.attendanceQueryByClassValidator,
         }),
       ],
-      attendanceController.getAll
+      attendanceController.attendanceQueryByClass
+    );
+    this.router.get(
+      `${this.path}/queryBySubject`,
+      [
+        authMiddleware(),
+        validateSchemaMiddleware({
+          query: attendanceValidator.getAllSubjectsQueryValidator,
+        }),
+      ],
+      attendanceController.attendanceQueryBySubject
     );
     this.router.post(
       this.path,
