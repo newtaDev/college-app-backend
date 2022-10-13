@@ -82,6 +82,10 @@ export const checkUserExistsValidationQuery = joiObject({
 export const validateForgotPasswordQuery = joiObject({
   email: Joi.string().email().required(),
 });
+export const validateChangePasswordBody = joiObject({
+  oldPassword: Joi.string().required(),
+  newPassword: Joi.string().required(),
+});
 export const validateResetPasswordQuery = joiObject({
   otpToken: Joi.string().required(),
 });

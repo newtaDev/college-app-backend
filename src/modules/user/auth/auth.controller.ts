@@ -26,25 +26,25 @@ export const loginUser = async (
   next: NextFunction
 ) => {
   try {
-    const _email = req.body.email;
+    const email = req.body.email;
     const _password = req.body.password;
-    const _userType = req.body.userType;
+    const userType = req.body.userType;
 
     /// login and validate with password
-    const _userLoginData = await authService.loginUser(_email, _userType);
-    if (!_userLoginData) throw Error(`${_userType} not found`);
+    const _userLoginData = await authService.loginUser({ email, userType });
+    if (!_userLoginData) throw Error(`${userType} not found`);
     if (!(await _userLoginData.isPasswordValid(_password)))
       throw new Error("password doesn't match");
     const isAdmin = [...adminUsersList]
-      .map(userType => userType == _userType)
+      .map(type => type == userType)
       .includes(true);
 
     /// Get all details of user
     const _user = await authService.getUserDetailsById(
       _userLoginData._id.toString(),
-      _userType
+      userType
     );
-    if (!_user) throw Error(`${_userType} not found`);
+    if (!_user) throw Error(`${userType} not found`);
     //create access and refresh token
     const payload: I_JwtUserPayload = {
       id: _user.id,
@@ -276,6 +276,38 @@ export const checkUserExists = async (
     return next(
       new ApiException({
         message: 'Username validation failed',
+        devMsg: error instanceof Error ? error.message : null,
+        statuscode: 400,
+      })
+    );
+  }
+};
+export const changePassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const _oldPassword = req.body.oldPassword;
+    const _newPassword = req.body.newPassword;
+    const userId = req.user.id;
+    const userType = req.user.userType;
+
+    /// login and validate with password
+    const _user = await authService.loginUser({ userId, userType });
+    if (!_user) throw Error(`${userType} not found`);
+    if (!(await _user.isPasswordValid(_oldPassword)))
+      throw new Error("password doesn't match");
+    await authService.resetNewPassword(
+      _user._id.toString(),
+      userType,
+      _newPassword
+    );
+    return res.status(200).send(successResponse());
+  } catch (error) {
+    return next(
+      new ApiException({
+        message: 'Change password failed',
         devMsg: error instanceof Error ? error.message : null,
         statuscode: 400,
       })

@@ -45,29 +45,49 @@ export const getUserWithQuery = async (
   return null;
 };
 
-export const loginUser = (email: string, userType: UserType) => {
+export const loginUser = (params: {
+  email?: string;
+  userId?: string;
+  userType: UserType;
+}) => {
   /// Find using `userType` if multiple `userType` is present in same collection
-  switch (userType) {
+  switch (params.userType) {
     case UserType.admin:
-      return collegeDb.Admin.findOne({ email: email, userType }).select(
-        'password'
-      );
+      return collegeDb.Admin.findOne({
+        ...(params.email && { email: params.email }),
+        ...(params.userId && { _id: params.userId }),
+        userType: params.userType,
+      }).select('password');
     case UserType.superAdmin:
-      return collegeDb.Admin.findOne({ email: email, userType }).select(
-        'password'
-      );
+      return collegeDb.Admin.findOne({
+        ...(params.email && { email: params.email }),
+        ...(params.userId && { _id: params.userId }),
+        userType: params.userType,
+      }).select('password');
     case UserType.staff:
-      return collegeDb.Faculty.findOne({ email: email, userType }).select(
-        'password'
-      );
+      return collegeDb.Faculty.findOne({
+        ...(params.email && { email: params.email }),
+        ...(params.userId && { _id: params.userId }),
+        userType: params.userType,
+      }).select('password');
     case UserType.principal:
-      return collegeDb.Faculty.findOne({ email: email, userType }).select(
-        'password'
-      );
+      return collegeDb.Faculty.findOne({
+        ...(params.email && { email: params.email }),
+        ...(params.userId && { _id: params.userId }),
+        userType: params.userType,
+      }).select('password');
     case UserType.student:
-      return collegeDb.Student.findOne({ email: email }).select('password');
+      return collegeDb.Student.findOne({
+        ...(params.email && { email: params.email }),
+        ...(params.userId && { _id: params.userId }),
+        userType: params.userType,
+      }).select('password');
     case UserType.teacher:
-      return collegeDb.Teacher.findOne({ email: email }).select('password');
+      return collegeDb.Teacher.findOne({
+        ...(params.email && { email: params.email }),
+        ...(params.userId && { _id: params.userId }),
+        userType: params.userType,
+      }).select('password');
   }
 };
 

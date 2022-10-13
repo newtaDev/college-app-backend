@@ -57,6 +57,16 @@ export class AuthRouter implements I_BaseRouter {
       authController.registerAsAdmin
     );
 
+    this.router.post(
+      `${this.path}/changePassword`,
+      [
+        authMiddleware(),
+        validateSchemaMiddleware({
+          body: authValidator.validateChangePasswordBody,
+        }),
+      ],
+      authController.changePassword
+    );
     this.router.get(
       `${this.path}/forgotPassword`,
       validateSchemaMiddleware({
