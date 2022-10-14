@@ -15,7 +15,6 @@ export interface I_Teacher {
   bio?: string;
   collegeId: Types.ObjectId;
   assignedClasses: Types.ObjectId[];
-  assignedSubjects: Types.ObjectId[];
   userType: TeacherUserTypes;
   phoneNumber?: number;
   currentAddress?: number;
@@ -23,7 +22,7 @@ export interface I_Teacher {
   isProfileCompleted?: boolean;
   isTestData?: boolean;
 }
-interface I_TeacherMethods {
+export interface I_TeacherMethods {
   isPasswordValid(password: string): Promise<boolean>;
 }
 export type TeacherModel = Model<I_Teacher, unknown, I_TeacherMethods>;
@@ -41,7 +40,7 @@ export const teacherSchema = new Schema<
         message: (props: ValidatorProps) => `${props.value} is not valid email`,
       },
     },
-    password: { type: String, required: true,select:false },
+    password: { type: String, required: true, select: false },
     emoji: { type: String },
     bio: { type: String },
     collegeId: {
@@ -60,12 +59,6 @@ export const teacherSchema = new Schema<
       default: [],
       required: true,
       ref: 'Class',
-    },
-    assignedSubjects: {
-      type: [Schema.Types.ObjectId],
-      default: [],
-      required: true,
-      ref: 'Subject',
     },
     phoneNumber: Number,
     currentAddress: String,

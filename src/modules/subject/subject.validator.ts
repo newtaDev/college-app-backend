@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { joiObject } from '../../utils/helpers';
+import { joiObject } from '../../shared/helpers/joi.helper';
 import { Validators } from '../../shared/validators/validators';
 import { I_Subject } from './subject.model';
 
@@ -15,5 +15,7 @@ export const validateCreateSubject = joiObject<I_Subject>({
   name: Joi.string().required(),
   collegeId: Validators.mongoIdValidator(),
   courseId: Validators.mongoIdValidator().required(),
+  classId: Validators.mongoIdValidator().required(),
+  assignedTo: Validators.mongoIdValidator().required(),
   isMainSubject: Joi.boolean().required(),
 });

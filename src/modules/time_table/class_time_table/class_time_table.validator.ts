@@ -1,6 +1,6 @@
 import Joi from 'joi';
 import { Week } from '../../../utils/enums';
-import { joiObject } from '../../../utils/helpers';
+import { joiObject } from '../../../shared/helpers/joi.helper';
 import { Validators } from '../../../shared/validators/validators';
 import { I_ClassTimeTable } from './class_time_table.model';
 

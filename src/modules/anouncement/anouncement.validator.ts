@@ -1,6 +1,6 @@
 import Joi from 'joi';
 import { AnouncementLayoutType, AnounceTo } from '../../utils/enums';
-import { joiObject } from '../../utils/helpers';
+import { joiObject } from '../../shared/helpers/joi.helper';
 import { Validators } from '../../shared/validators/validators';
 import { I_Anouncement, I_AnouncementFormDataFiles } from './anouncement.model';
 

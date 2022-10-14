@@ -11,6 +11,7 @@ export interface I_Subject {
   collegeId: Types.ObjectId;
   courseId: Types.ObjectId;
   classId: Types.ObjectId;
+  assignedTo: Types.ObjectId;
   isMainSubject: boolean;
   createdBy?: I_CreatedBy;
   lastModifiedBy?: I_LastModifiedBy;
@@ -36,6 +37,7 @@ export const subjectSchema = new Schema<I_Subject>(
     collegeId: { type: Schema.Types.ObjectId, required: true, ref: 'College' },
     courseId: { type: Schema.Types.ObjectId, required: true, ref: 'Course' },
     classId: { type: Schema.Types.ObjectId, required: true, ref: 'Class' },
+    assignedTo: { type: Schema.Types.ObjectId, required: true, ref: 'Teacher' },
     isMainSubject: { type: Boolean, required: true, default: true },
     createdBy: _createdOrModifiedBy,
     lastModifiedBy: _createdOrModifiedBy,

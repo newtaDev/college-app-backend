@@ -12,7 +12,7 @@ import {
   I_CreatedBy,
   I_LastModifiedBy,
 } from '../../shared/interfaces/interfaces';
-import { getModelNameFromUserType } from '../../utils/helpers';
+import { getModelNameFromUserType } from '../../shared/helpers/mongoose.helper';
 import { Types } from 'mongoose';
 import { AppKeys } from '../../config/keys/app_keys';
 import sharp from 'sharp';

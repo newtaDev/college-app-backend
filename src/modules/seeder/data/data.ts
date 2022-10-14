@@ -24,13 +24,6 @@ export const importData = collegeIds.map((college, collegeIndex) => {
   const randomAssignedClasses = randomCourseWithRandomClasses.map(
     classes => classes._id
   );
-  const randomAssignedSubjects = randomCourseWithRandomClasses
-    .map(classes =>
-      classes.subjects.ids
-        .sort(() => 0.5 - Math.random())
-        .slice(0, Math.random() * classes.subjects.ids.length)
-    )
-    .flat();
 
   return {
     data: {
@@ -71,6 +64,10 @@ export const importData = collegeIds.map((college, collegeIndex) => {
           isMainSubject: subjectIndex % 3 == 0 ? false : true,
           name: classes.subjects.names[subjectIndex],
           isTestData: true,
+          assignedTo:
+            college.teachers[
+              Math.floor(Math.random() * college.teachers.length)
+            ],
           classId: classes._id,
         })) as (I_Subject & { _id: Types.ObjectId })[],
         students: classes.students.ids.map((studentId, studentIndex) => ({
@@ -90,9 +87,10 @@ export const importData = collegeIds.map((college, collegeIndex) => {
             _id: attendanceId,
             classId: classes._id,
             collegeId: college._id,
-            subjectId: randomAssignedSubjects.at(
-              attendanceIndex % 2 == 0 ? 0 : 1
-            ),
+            subjectId:
+              classes.subjects.ids[
+                Math.floor(Math.random() * classes.subjects.ids.length)
+              ],
             classStartTime: `${String(attendanceIndex).padStart(2, '0')}:00`,
             classEndTime: `${String(attendanceIndex).padStart(2, '0')}:45`,
             currentSem: 1,
@@ -110,8 +108,14 @@ export const importData = collegeIds.map((college, collegeIndex) => {
             _id: timeTableId,
             classId: classes._id,
             collegeId: college._id,
-            subjectId: randomAssignedSubjects.at(tableIndex % 2 == 0 ? 0 : 1),
-            teacherId: college.teachers?.at(classIndex % 2 == 0 ? 0 : 1),
+            subjectId:
+              classes.subjects.ids[
+                Math.floor(Math.random() * classes.subjects.ids.length)
+              ],
+            teacherId:
+              college.teachers[
+                Math.floor(Math.random() * college.teachers.length)
+              ],
             startingTime: `${String(tableIndex).padStart(2, '0')}:00`,
             endingTime: `${String(tableIndex).padStart(2, '0')}:45`,
             week: tableIndex % 2 == 0 ? Week.monday : Week.wednesday,
@@ -129,7 +133,6 @@ export const importData = collegeIds.map((college, collegeIndex) => {
       collegeId: college._id,
       userType: UserType.teacher,
       assignedClasses: randomAssignedClasses,
-      assignedSubjects: randomAssignedSubjects,
       dob: new Date('03-13-1988'),
       isTestData: true,
     })) as (I_Teacher & { _id: Types.ObjectId })[],

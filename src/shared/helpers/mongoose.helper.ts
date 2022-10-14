@@ -1,12 +1,7 @@
-import Joi from 'joi';
 import { Schema } from 'mongoose';
-import { collegeDb } from '../config/database/college.db';
-import { I_CreatedBy, I_LastModifiedBy } from '../shared/interfaces/interfaces';
-import { UserType } from './enums';
-
-export const joiObject = <T>(
-  schema?: Joi.PartialSchemaMap<T> | undefined | Joi.PartialSchemaMap<unknown>
-) => Joi.object<T, false, unknown>(schema);
+import { collegeDb } from '../../config/database/college.db';
+import { I_CreatedBy, I_LastModifiedBy } from '../interfaces/interfaces';
+import { UserType } from '../../utils/enums';
 
 export const getModelNameFromUserType = (userType: UserType): string => {
   switch (userType) {

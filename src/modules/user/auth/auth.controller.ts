@@ -47,7 +47,7 @@ export const loginUser = async (
     if (!_user) throw Error(`${userType} not found`);
     //create access and refresh token
     const payload: I_JwtUserPayload = {
-      id: _user.id,
+      id: _user._id.toString(),
       name: _user.name,
       userType: _user.userType,
       collegeId: _user.collegeId?.toString(),
@@ -60,7 +60,7 @@ export const loginUser = async (
       successResponse({
         accessToken,
         refreshToken,
-        user: omit(_user.toObject(), ['__v', 'password']),
+        user: _user,
       })
     );
   } catch (error) {

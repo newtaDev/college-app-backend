@@ -1,28 +1,36 @@
 import { collegeDb } from '../../../config/database/college.db';
 import { UserType } from '../../../utils/enums';
+import { teacherService } from '../teacher/teacher.service';
 
-export const getProfileDetailsById = (id: string, userType: UserType) => {
+export const getProfileDetailsById = async (id: string, userType: UserType) => {
   /// Find using `userType` if multiple `userType` is present in same collection
   switch (userType) {
     case UserType.admin:
-      return collegeDb.Admin.findById(id);
+      return (await collegeDb.Admin.findById(id))?.toObject();
     case UserType.superAdmin:
-      return collegeDb.Admin.findById(id);
+      return (await collegeDb.Admin.findById(id))?.toObject();
     case UserType.staff:
-      return collegeDb.Faculty.findById(id);
+      return (await collegeDb.Faculty.findById(id))?.toObject();
     case UserType.principal:
-      return collegeDb.Faculty.findById(id);
+      return (await collegeDb.Faculty.findById(id))?.toObject();
     case UserType.student:
-      return collegeDb.Student.findById(id).populate([
-        {
-          path: 'classId',
-          populate: {
-            path: 'courseId',
+      return (
+        await collegeDb.Student.findById(id).populate([
+          {
+            path: 'classId',
+            populate: {
+              path: 'courseId',
+            },
           },
-        },
+        ])
+      )?.toObject();
+
+    case UserType.teacher: {
+      const teacher = await collegeDb.Teacher.findById(id).populate([
+        'assignedClasses',
       ]);
-    case UserType.teacher:
-      return collegeDb.Teacher.findById(id).populate('assignedClasses','assignedSubjects');
+      return teacherService.generateWithAssignedSubjects(teacher);
+    }
   }
 };
 

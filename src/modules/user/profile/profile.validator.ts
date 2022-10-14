@@ -1,6 +1,6 @@
 import Joi from 'joi';
 import { UserType } from '../../../utils/enums';
-import { joiObject } from '../../../utils/helpers';
+import { joiObject } from '../../../shared/helpers/joi.helper';
 import { Validators } from '../../../shared/validators/validators';
 
 export const validateGetUserProfileQuery = joiObject({

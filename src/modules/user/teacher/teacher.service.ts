@@ -1,46 +1,87 @@
-import { FilterQuery, UpdateQuery } from 'mongoose';
+import { FilterQuery, UpdateQuery, Document, Types } from 'mongoose';
 import { collegeDb } from '../../../config/database/college.db';
-import { I_Teacher } from './teacher.model';
+import { subjectService } from '../../subject/subject.service';
+import { I_Teacher, I_TeacherMethods } from './teacher.model';
 
-const _populateAssignedClass = {
-  path: 'assignedSubjects',
-  populate: ['courseId', 'classId'],
+type TeacherDoc =
+  | (Document<unknown, unknown, I_Teacher> &
+      I_Teacher & {
+        _id: Types.ObjectId;
+      } & I_TeacherMethods)
+  | null;
+
+export const generateWithAssignedSubjects = async (teacherDoc: TeacherDoc) => {
+  if (teacherDoc) {
+    const assignedSubjects = await subjectService.findAssignedSubjectsOfTeacher(
+      teacherDoc._id.toString()
+    );
+    const _teacher = {
+      ...teacherDoc.toObject(),
+      assignedSubjects: assignedSubjects,
+    };
+    return _teacher;
+  }
+  return null;
 };
-const create = (params: I_Teacher) => collegeDb.Teacher.create(params);
+export const create = async (params: I_Teacher) => {
+  const teacher = await collegeDb.Teacher.create(params);
+  return generateWithAssignedSubjects(teacher);
+};
 
-const listAll = (query?: FilterQuery<I_Teacher>) =>
-  collegeDb.Teacher.find(query || {}).populate([
+export const listAll = async (query?: FilterQuery<I_Teacher>) => {
+  const teachers = await collegeDb.Teacher.find(query || {}).populate([
     'assignedClasses',
-    _populateAssignedClass,
   ]);
+  const teachersList = [];
+  for (let index = 0; index < teachers.length; index++) {
+    if (teachers[index]) {
+      const assignedSubjects =
+        await subjectService.findAssignedSubjectsOfTeacher(
+          teachers[index]._id.toString()
+        );
+      const _doc = {
+        ...teachers[index].toObject(),
+        assignedSubjects: assignedSubjects,
+      };
+      teachersList.push(_doc);
+    }
+  }
+  return teachersList;
+};
 
-const findById = (teacherId: string) =>
-  collegeDb.Teacher.findById(teacherId).populate([
+export const findById = async (teacherId: string) => {
+  const teacher = await collegeDb.Teacher.findById(teacherId).populate([
     'assignedClasses',
-    _populateAssignedClass,
   ]);
+  return generateWithAssignedSubjects(teacher);
+};
 
-const updateById = (teacherId: string, updatedData: UpdateQuery<I_Teacher>) =>
-  collegeDb.Teacher.findOneAndUpdate({ _id: teacherId }, updatedData, {
-    new: true,
-  }).populate(['assignedClasses', _populateAssignedClass]);
+export const updateById = async (
+  teacherId: string,
+  updatedData: UpdateQuery<I_Teacher>
+) => {
+  const teacher = await collegeDb.Teacher.findOneAndUpdate(
+    { _id: teacherId },
+    updatedData,
+    { new: true }
+  ).populate(['assignedClasses']);
+  return generateWithAssignedSubjects(teacher);
+};
 
-const findOne = (query: FilterQuery<I_Teacher>) =>
-  collegeDb.Teacher.findOne(query).populate([
+export const findOne = async (query: FilterQuery<I_Teacher>) => {
+  const teacher = await collegeDb.Teacher.findOne(query).populate([
     'assignedClasses',
-    _populateAssignedClass,
   ]);
+  return generateWithAssignedSubjects(teacher);
+};
 
-const deleteById = (teacherId: string) =>
-  collegeDb.Teacher.findByIdAndDelete(teacherId).populate([
-    'assignedClasses',
-    _populateAssignedClass,
-  ]);
+export const deleteById = (teacherId: string) =>
+  collegeDb.Teacher.findByIdAndDelete(teacherId).populate(['assignedClasses']);
 
-const getCountOfTeachers = (collegeId?: string) =>
+export const getCountOfTeachers = (collegeId?: string) =>
   collegeDb.Teacher.find({ collegeId }).count();
 
-const getAssignedClasses = async (teacherId: string) =>
+export const getAssignedClasses = async (teacherId: string) =>
   (
     await collegeDb.Teacher.findById(teacherId).populate([
       {
@@ -133,13 +174,4 @@ const getAssignedClasses = async (teacherId: string) =>
 //     },
 //   ]);
 
-export default {
-  create,
-  listAll,
-  findById,
-  findOne,
-  updateById,
-  deleteById,
-  getCountOfTeachers,
-  getAssignedClasses,
-};
+export * as teacherService from './teacher.service';

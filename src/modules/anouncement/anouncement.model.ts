@@ -6,7 +6,7 @@ import {
 } from '../../shared/interfaces/interfaces';
 import { s3Services } from '../../shared/services/aws/s3_services';
 import { AnouncementLayoutType, AnounceTo } from '../../utils/enums';
-import { createdOrModifiedBySchema } from '../../utils/helpers';
+import { createdOrModifiedBySchema } from '../../shared/helpers/mongoose.helper';
 
 export interface I_Anouncement {
   collegeId: Types.ObjectId;

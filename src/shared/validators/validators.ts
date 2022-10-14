@@ -1,6 +1,6 @@
 import { isValidMongoId } from './mongoose.validators';
 import Joi from 'joi';
-import { joiObject } from '../../utils/helpers';
+import { joiObject } from '../helpers/joi.helper';
 
 // contains basic validations
 export class Validators {

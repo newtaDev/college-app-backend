@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { ApiException } from '../../shared/exceptions/api_exceptions';
 import { isMongoIdExitsOrValid } from '../../shared/validators/mongoose.validators';
 import { successResponse } from '../../shared/interfaces/req_res_interfaces';
-import subjectService from './subject.service';
+import { subjectService } from './subject.service';
 
 export const createSubject = async (
   req: Request,
@@ -78,7 +78,7 @@ export const getAllSubjects = async (
 ) => {
   try {
     if (!_.isEmpty(req.query)) {
-      const _subjectQuery = await subjectService.listAll(req.query).populate('courseId');
+      const _subjectQuery = await subjectService.listAll(req.query);
       return res.send(successResponse(_subjectQuery));
     }
     const _subject = await subjectService.listAll();

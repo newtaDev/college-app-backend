@@ -5,6 +5,7 @@ import { I_Admin } from '../admin.model';
 import { I_Faculty } from '../faculty.model';
 import { I_Student } from '../student/student.model';
 import { I_Teacher } from '../teacher/teacher.model';
+import { teacherService } from '../teacher/teacher.service';
 
 const _populateClassAndCourse = [
   {
@@ -30,14 +31,9 @@ export const getUserWithQuery = async (
     _populateClassAndCourse
   );
   if (student) return student;
-  const teacher = await collegeDb.Teacher.findOne(query).populate([
-    'assignedClasses',
-    {
-      path: 'assignedSubjects',
-      populate: ['courseId', 'classId'],
-    },
-  ]);
-  if (teacher) return teacher;
+  const teacher = await collegeDb.Teacher.findOne(query);
+  if (teacher)
+    return await teacherService.generateWithAssignedSubjects(teacher);
   const faculty = await collegeDb.Faculty.findOne(query);
   if (faculty) return faculty;
   const admin = await collegeDb.Admin.findOne(query);
@@ -91,27 +87,27 @@ export const loginUser = (params: {
   }
 };
 
-export const getUserDetailsById = (id: string, userType: UserType) => {
+export const getUserDetailsById = async (id: string, userType: UserType) => {
   /// Find using `userType` if multiple `userType` is present in same collection
   switch (userType) {
     case UserType.admin:
-      return collegeDb.Admin.findById(id);
+      return (await collegeDb.Admin.findById(id))?.toObject();
     case UserType.superAdmin:
-      return collegeDb.Admin.findById(id);
+      return (await collegeDb.Admin.findById(id))?.toObject();
     case UserType.staff:
-      return collegeDb.Faculty.findById(id);
+      return (await collegeDb.Faculty.findById(id))?.toObject();
     case UserType.principal:
-      return collegeDb.Faculty.findById(id);
+      return (await collegeDb.Faculty.findById(id))?.toObject();
     case UserType.student:
-      return collegeDb.Student.findById(id).populate(_populateClassAndCourse);
-    case UserType.teacher:
-      return collegeDb.Teacher.findById(id).populate([
+      return (
+        await collegeDb.Student.findById(id).populate(_populateClassAndCourse)
+      )?.toObject();
+    case UserType.teacher: {
+      const teacher = await collegeDb.Teacher.findById(id).populate([
         'assignedClasses',
-        {
-          path: 'assignedSubjects',
-          populate: ['courseId', 'classId'],
-        },
       ]);
+      return teacherService.generateWithAssignedSubjects(teacher);
+    }
   }
 };
 export const resetNewPassword = (

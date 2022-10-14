@@ -2,8 +2,8 @@ import { Types } from 'mongoose';
 import classService from '../../modules/class/class.service';
 import collegeService from '../../modules/college/college.service';
 import courseService from '../../modules/course/course.service';
-import subjectService from '../../modules/subject/subject.service';
-import teacherService from '../../modules/user/teacher/teacher.service';
+import {subjectService} from '../../modules/subject/subject.service';
+import {teacherService} from '../../modules/user/teacher/teacher.service';
 
 interface I_MongoModelIds {
   collegeId?: string;

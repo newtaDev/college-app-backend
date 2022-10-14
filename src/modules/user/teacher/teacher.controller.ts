@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import _ from 'lodash';
 import { ApiException } from '../../../shared/exceptions/api_exceptions';
 import { successResponse } from '../../../shared/interfaces/req_res_interfaces';
-import teacherService from './teacher.service';
+import {teacherService} from './teacher.service';
 
 export const updateTeacherById = async (
   req: Request,

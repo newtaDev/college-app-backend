@@ -1,6 +1,6 @@
 import Joi from 'joi';
 import { UserType } from '../../../utils/enums';
-import { joiObject } from '../../../utils/helpers';
+import { joiObject } from '../../../shared/helpers/joi.helper';
 import { Validators } from '../../../shared/validators/validators';
 import { I_Admin } from '../admin.model';
 import { I_Faculty } from '../faculty.model';
@@ -13,7 +13,6 @@ export const validateTeacherRegistration = joiObject<I_Teacher>({
   collegeId: Validators.mongoIdValidator().required(),
   userType: Joi.string().valid(...Object.values(UserType)),
   assignedClasses: Joi.array().items(Validators.mongoIdValidator()).required(),
-  assignedSubjects: Joi.array().items(Validators.mongoIdValidator()).required(),
   email: Joi.string().email(),
   username: Validators.validateUsername().message('Invalid username'),
   isProfileCompleted: Joi.bool(),

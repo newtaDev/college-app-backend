@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { joiObject } from '../../utils/helpers';
+import { joiObject } from '../../shared/helpers/joi.helper';
 import { Validators } from '../../shared/validators/validators';
 import { I_Attendance } from './attendance.model';
 
