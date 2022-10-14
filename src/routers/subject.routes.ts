@@ -1,16 +1,6 @@
 import { Router } from 'express';
-import {
-  createSubject,
-  deleteSubjectById,
-  findSubjectById,
-  getAllSubjects,
-  updateSubjectById,
-} from '../modules/subject/subject.controller';
-import {
-  validateCreateSubject,
-  validateSubjectByIdParam,
-  validateSubjectQuery,
-} from '../modules/subject/subject.validator';
+import { subjectController } from '../modules/subject/subject.controller';
+import { subjectValidator } from '../modules/subject/subject.validator';
 import { authMiddleware } from '../middlewares/auth_middleware';
 import { validateSchemaMiddleware } from '../middlewares/validation_middleware';
 
@@ -29,44 +19,52 @@ export class SubjectRouter implements I_BaseRouter {
       this.path,
       [
         authMiddleware(),
-        validateSchemaMiddleware({ query: validateSubjectQuery }),
+        validateSchemaMiddleware({
+          query: subjectValidator.validateSubjectQuery,
+        }),
       ],
-      getAllSubjects
+      subjectController.getAllSubjects
     );
     this.router.post(
       this.path,
       [
         authMiddleware(),
-        validateSchemaMiddleware({ body: validateCreateSubject }),
+        validateSchemaMiddleware({
+          body: subjectValidator.validateCreateSubject,
+        }),
       ],
-      createSubject
+      subjectController.createSubject
     );
     this.router.get(
       `${this.path}/:subjectId`,
       [
         authMiddleware(),
-        validateSchemaMiddleware({ params: validateSubjectByIdParam }),
+        validateSchemaMiddleware({
+          params: subjectValidator.validateSubjectByIdParam,
+        }),
       ],
-      findSubjectById
+      subjectController.findSubjectById
     );
     this.router.put(
       `${this.path}/:subjectId`,
       [
         authMiddleware(),
         validateSchemaMiddleware({
-          params: validateSubjectByIdParam,
+          params: subjectValidator.validateSubjectByIdParam,
           body: restrictUpdatingCollegeId,
         }),
       ],
-      updateSubjectById
+      subjectController.updateSubjectById
     );
     this.router.delete(
       `${this.path}/:subjectId`,
       [
         authMiddleware(),
-        validateSchemaMiddleware({ params: validateSubjectByIdParam }),
+        validateSchemaMiddleware({
+          params: subjectValidator.validateSubjectByIdParam,
+        }),
       ],
-      deleteSubjectById
+      subjectController.deleteSubjectById
     );
   }
 }

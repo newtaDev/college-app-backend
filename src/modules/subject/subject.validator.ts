@@ -9,6 +9,7 @@ export const validateSubjectByIdParam = joiObject({
 
 export const validateSubjectQuery = joiObject({
   courseId: Validators.mongoIdValidator(),
+  classId: Validators.mongoIdValidator(),
 });
 export const validateCreateSubject = joiObject<I_Subject>({
   _id: Validators.mongoIdValidator(),
@@ -18,4 +19,7 @@ export const validateCreateSubject = joiObject<I_Subject>({
   classId: Validators.mongoIdValidator().required(),
   assignedTo: Validators.mongoIdValidator().required(),
   isMainSubject: Joi.boolean().required(),
+  semester: Joi.number().required(),
 });
+
+export * as subjectValidator from './subject.validator';

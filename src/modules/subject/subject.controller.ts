@@ -128,6 +128,7 @@ export const findSubjectById = async (
     );
   }
 };
+
 export const deleteSubjectById = async (
   req: Request,
   res: Response,
@@ -168,3 +169,5 @@ const _isSubjectBelogsToMyCollege = async (req: Request) => {
     throw Error("You can't modify/delete subject of other college");
   return _findSubject;
 };
+
+export * as subjectController from './subject.controller';

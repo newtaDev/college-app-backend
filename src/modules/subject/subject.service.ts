@@ -5,7 +5,11 @@ import { I_Subject } from './subject.model';
 export const create = (params: I_Subject) => collegeDb.Subject.create(params);
 
 export const listAll = (query?: FilterQuery<I_Subject>) =>
-  collegeDb.Subject.find(query || {}).populate('courseId');
+  collegeDb.Subject.find(query || {}).populate([
+    'courseId',
+    'classId',
+    'assignedTo',
+  ]);
 
 export const findById = (subjectId: string) =>
   collegeDb.Subject.findById(subjectId);

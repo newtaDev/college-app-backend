@@ -64,6 +64,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
           isMainSubject: subjectIndex % 3 == 0 ? false : true,
           name: classes.subjects.names[subjectIndex],
           isTestData: true,
+          semester: subjectIndex % 2 == 0 ? 1 : 2,
           assignedTo:
             college.teachers[
               Math.floor(Math.random() * college.teachers.length)

@@ -9,9 +9,9 @@ const listAll = (query?: FilterQuery<I_ClassTimeTable>) =>
   collegeDb.ClassTimeTable.find(query ?? {})
     .sort({ startingTime: 1 })
     .populate([
-      'subjectId',
       'teacherId',
       { path: 'classId', populate: ['courseId'] },
+      { path: 'subjectId', populate: ['classId'] },
     ]);
 
 const findById = (classTimeTableId: string) =>
