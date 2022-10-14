@@ -297,8 +297,9 @@ const _resizeImage = (imageFile: Express.Multer.File | undefined) => {
     resizeImageQuality = 25;
   }
   return sharp(imageFile?.buffer)
-    .jpeg({ progressive: true, force: false, quality: resizeImageQuality })
-    .png({ progressive: true, force: false, quality: resizeImageQuality })
+    .rotate()
+    .jpeg({ force: false, quality: resizeImageQuality })
+    .png({ force: false, quality: resizeImageQuality })
     .webp({ force: false, quality: resizeImageQuality })
     .toBuffer();
 };
