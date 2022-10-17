@@ -2,8 +2,8 @@ import { Router } from 'express';
 import { validateSchemaMiddleware } from '../middlewares/validation_middleware';
 import { authMiddleware } from '../middlewares/auth_middleware';
 import I_BaseRouter from './routes';
-import { anouncementController } from '../modules/anouncement/anouncement.controller';
-import { anouncementValidator } from '../modules/anouncement/anouncement.validator';
+import { anouncementController } from '../modules/announcement/announcement.controller';
+import { anouncementValidator } from '../modules/announcement/announcement.validator';
 import { multerServices } from '../shared/services/multer_services';
 
 export class AnouncementRouter implements I_BaseRouter {

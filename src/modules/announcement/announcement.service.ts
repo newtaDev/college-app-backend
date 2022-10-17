@@ -1,7 +1,7 @@
 import { FilterQuery, UpdateQuery } from 'mongoose';
 import { collegeDb } from '../../config/database/college.db';
 import { AnounceTo } from '../../utils/enums';
-import { I_Anouncement } from './anouncement.model';
+import { I_Anouncement } from './announcement.model';
 
 export const create = (params: I_Anouncement) =>
   collegeDb.Anouncement.create(params);
@@ -80,4 +80,4 @@ export const deleteById = (anouncementId: string) =>
     'lastModifiedBy.userId',
   ]);
 
-export * as anouncementServices from './anouncement.service';
+export * as anouncementServices from './announcement.service';

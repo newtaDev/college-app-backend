@@ -2,7 +2,7 @@ import Joi from 'joi';
 import { AnouncementLayoutType, AnounceTo } from '../../utils/enums';
 import { joiObject } from '../../shared/helpers/joi.helper';
 import { Validators } from '../../shared/validators/validators';
-import { I_Anouncement, I_AnouncementFormDataFiles } from './anouncement.model';
+import { I_Anouncement, I_AnouncementFormDataFiles } from './announcement.model';
 
 export const validateAnouncementIdParam = joiObject({
   anouncementId: Validators.mongoIdValidator().required(),
@@ -32,4 +32,4 @@ export const validateListAllForTeacherQuery = joiObject({
   showAnouncementsCreatedByMe: Joi.bool().default(false),
 });
 
-export * as anouncementValidator from './anouncement.validator';
+export * as anouncementValidator from './announcement.validator';

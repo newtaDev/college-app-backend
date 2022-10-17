@@ -3,10 +3,10 @@ import { ApiException } from '../../shared/exceptions/api_exceptions';
 import { successResponse } from '../../shared/interfaces/req_res_interfaces';
 import { s3Services } from '../../shared/services/aws/s3_services';
 import { AnouncementLayoutType } from '../../utils/enums';
-import { anouncementServices } from './anouncement.service';
+import { anouncementServices } from './announcement.service';
 import { v4 as uuid } from 'uuid';
 import { multerServices } from '../../shared/services/multer_services';
-import { I_AnouncementFormDataFiles } from './anouncement.model';
+import { I_AnouncementFormDataFiles } from './announcement.model';
 import { Validators } from '../../shared/validators/validators';
 import {
   I_CreatedBy,
@@ -304,4 +304,4 @@ const _resizeImage = (imageFile: Express.Multer.File | undefined) => {
     .toBuffer();
 };
 
-export * as anouncementController from './anouncement.controller';
+export * as anouncementController from './announcement.controller';
