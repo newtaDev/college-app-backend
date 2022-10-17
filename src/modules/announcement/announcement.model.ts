@@ -5,14 +5,14 @@ import {
   I_LastModifiedBy,
 } from '../../shared/interfaces/interfaces';
 import { s3Services } from '../../shared/services/aws/s3_services';
-import { AnouncementLayoutType, AnounceTo } from '../../utils/enums';
+import { AnnouncementLayoutType, AnounceTo } from '../../utils/enums';
 import { createdOrModifiedBySchema } from '../../shared/helpers/mongoose.helper';
 
-export interface I_Anouncement {
+export interface I_Announcement {
   collegeId: Types.ObjectId;
   title: string;
   description: string;
-  anouncementLayoutType: AnouncementLayoutType;
+  announcementLayoutType: AnnouncementLayoutType;
   anounceTo: AnounceTo;
   anounceToClassIds?: Types.ObjectId[];
   imageName?: string;
@@ -21,35 +21,35 @@ export interface I_Anouncement {
   lastModifiedBy: I_LastModifiedBy;
 }
 
-export interface I_AnouncementFormDataFiles {
+export interface I_AnnouncementFormDataFiles {
   imageFile?: Express.Multer.File;
   multipleFiles?: Express.Multer.File[];
 }
 
-interface I_AnouncementMethods {
+interface I_AnnouncementMethods {
   getImageUrl(): Promise<string> | null;
   getMultipleImageUrls(): Promise<string[]>;
 }
 
-export type AnouncementModel = Model<
-  I_Anouncement,
+export type AnnouncementModel = Model<
+  I_Announcement,
   unknown,
-  I_AnouncementMethods
+  I_AnnouncementMethods
 >;
 
-export const anouncementSchema = new Schema<
-  I_Anouncement,
-  AnouncementModel,
-  I_AnouncementMethods
+export const announcementSchema = new Schema<
+  I_Announcement,
+  AnnouncementModel,
+  I_AnnouncementMethods
 >(
   {
     collegeId: { type: Schema.Types.ObjectId, required: true, ref: 'College' },
     title: { type: String, required: true },
     description: { type: String, required: true },
     anounceTo: { type: String, enum: AnounceTo, required: true },
-    anouncementLayoutType: {
+    announcementLayoutType: {
       type: String,
-      enum: AnouncementLayoutType,
+      enum: AnnouncementLayoutType,
       required: true,
     },
     anounceToClassIds: { type: [Schema.Types.ObjectId], default: [] },
@@ -61,20 +61,20 @@ export const anouncementSchema = new Schema<
   { timestamps: true }
 );
 
-anouncementSchema.methods.getImageUrl = function () {
-  if (this.anouncementLayoutType != AnouncementLayoutType.imageWithText)
+announcementSchema.methods.getImageUrl = function () {
+  if (this.announcementLayoutType != AnnouncementLayoutType.imageWithText)
     return null;
   return s3Services.getSignedUrlOfFile(
     `${AppKeys.aws_s3_anouncemet_folder_name}${this.imageName}`
   );
 };
 
-anouncementSchema.methods.getMultipleImageUrls = async function () {
+announcementSchema.methods.getMultipleImageUrls = async function () {
   const _multiImages: string[] = [];
   if (
     this.multipleImages == null ||
     this.multipleImages.length <= 0 ||
-    this.anouncementLayoutType != AnouncementLayoutType.multiImageWithText
+    this.announcementLayoutType != AnnouncementLayoutType.multiImageWithText
   )
     return [];
   for (let index = 0; index < this.multipleImages.length; index++) {
@@ -89,7 +89,7 @@ anouncementSchema.methods.getMultipleImageUrls = async function () {
   return _multiImages;
 };
 
-export const Anouncement = mongoose.model<I_Anouncement, AnouncementModel>(
-  'Anouncement',
-  anouncementSchema
+export const Announcement = mongoose.model<I_Announcement, AnnouncementModel>(
+  'Announcement',
+  announcementSchema
 );

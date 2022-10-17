@@ -2,11 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 import { ApiException } from '../../shared/exceptions/api_exceptions';
 import { successResponse } from '../../shared/interfaces/req_res_interfaces';
 import { s3Services } from '../../shared/services/aws/s3_services';
-import { AnouncementLayoutType } from '../../utils/enums';
-import { anouncementServices } from './announcement.service';
+import { AnnouncementLayoutType } from '../../utils/enums';
+import { announcementServices } from './announcement.service';
 import { v4 as uuid } from 'uuid';
 import { multerServices } from '../../shared/services/multer_services';
-import { I_AnouncementFormDataFiles } from './announcement.model';
+import { I_AnnouncementFormDataFiles } from './announcement.model';
 import { Validators } from '../../shared/validators/validators';
 import {
   I_CreatedBy,
@@ -23,22 +23,22 @@ export const create = async (
   next: NextFunction
 ) => {
   try {
-    let createAnouncementBody = req.body;
+    let createAnnouncementBody = req.body;
     const multerFiles = multerServices.convertListOfFilesToObjectWithKeyValues(
       req.files as Express.Multer.File[]
-    ) as I_AnouncementFormDataFiles;
+    ) as I_AnnouncementFormDataFiles;
     // validate
-    _validateAnouncementImageFiles(req);
+    _validateAnnouncementImageFiles(req);
     // single
-    if (req.body.anouncementLayoutType == AnouncementLayoutType.imageWithText) {
-      const fileName = await _uploadAnouncementImagesToS3(
+    if (req.body.announcementLayoutType == AnnouncementLayoutType.imageWithText) {
+      const fileName = await _uploadAnnouncementImagesToS3(
         multerFiles.imageFile
       );
-      createAnouncementBody = { ...createAnouncementBody, imageName: fileName };
+      createAnnouncementBody = { ...createAnnouncementBody, imageName: fileName };
     }
     // multiple
     if (
-      req.body.anouncementLayoutType == AnouncementLayoutType.multiImageWithText
+      req.body.announcementLayoutType == AnnouncementLayoutType.multiImageWithText
     ) {
       const imageFileNames: string[] = [];
       /// if we send one file in [multipleFiles] then some issues is caused
@@ -52,13 +52,13 @@ export const create = async (
       }
 
       for (let index = 0; index < _multipleFiles.length; index++) {
-        const _fileName = await _uploadAnouncementImagesToS3(
+        const _fileName = await _uploadAnnouncementImagesToS3(
           _multipleFiles.at(index)
         );
         imageFileNames.push(_fileName);
       }
-      createAnouncementBody = {
-        ...createAnouncementBody,
+      createAnnouncementBody = {
+        ...createAnnouncementBody,
         multipleImages: imageFileNames,
       };
     }
@@ -68,16 +68,16 @@ export const create = async (
       modelName: getModelNameFromUserType(req.user.userType),
     };
     /// [req.body] doesnot contain [File] type from formData
-    const _anouncement = await anouncementServices.create({
-      ...createAnouncementBody,
+    const _announcement = await announcementServices.create({
+      ...createAnnouncementBody,
       createdBy: _createdOrModifiedBy,
       lastModifiedBy: _createdOrModifiedBy,
     });
-    res.status(201).send(successResponse(_anouncement));
+    res.status(201).send(successResponse(_announcement));
   } catch (error) {
     return next(
       new ApiException({
-        message: 'Anouncement creation failed',
+        message: 'Announcement creation failed',
         devMsg: error instanceof Error ? error.message : null,
         statuscode: 400,
       })
@@ -95,16 +95,16 @@ export const updateById = async (
       userType: req.user.userType,
       modelName: getModelNameFromUserType(req.user.userType),
     };
-    const _anouncement = await anouncementServices.updateById(
-      req.params.anouncementId,
+    const _announcement = await announcementServices.updateById(
+      req.params.announcementId,
       { ...req.body, lastModifiedBy: _createdOrModifiedBy }
     );
-    if (!_anouncement) throw Error('Anouncement not found');
-    res.send(successResponse(_anouncement));
+    if (!_announcement) throw Error('Announcement not found');
+    res.send(successResponse(_announcement));
   } catch (error) {
     return next(
       new ApiException({
-        message: 'Anouncement Updation failed',
+        message: 'Announcement Updation failed',
         devMsg: error instanceof Error ? error.message : null,
         statuscode: 400,
       })
@@ -118,13 +118,13 @@ export const getAll = async (
   next: NextFunction
 ) => {
   try {
-    const _anouncements = await anouncementServices.listAll();
-    const anouncementsWithUrls = await generateAnouncementUrls(_anouncements);
-    res.send(successResponse(anouncementsWithUrls));
+    const _announcements = await announcementServices.listAll();
+    const announcementsWithUrls = await generateAnnouncementUrls(_announcements);
+    res.send(successResponse(announcementsWithUrls));
   } catch (error) {
     return next(
       new ApiException({
-        message: 'Anouncement listing failed',
+        message: 'Announcement listing failed',
         devMsg: error instanceof Error ? error.message : null,
         statuscode: 400,
       })
@@ -138,17 +138,17 @@ export const getAllForStudents = async (
   next: NextFunction
 ) => {
   try {
-    const _anouncements = await anouncementServices.listAllWithForStudents(
+    const _announcements = await announcementServices.listAllWithForStudents(
       req.query.anounceToClassId as string,
       req.query.showMyClassesOnly === 'true'
     );
-    const anouncementsWithUrls = await generateAnouncementUrls(_anouncements);
+    const announcementsWithUrls = await generateAnnouncementUrls(_announcements);
 
-    res.send(successResponse(anouncementsWithUrls));
+    res.send(successResponse(announcementsWithUrls));
   } catch (error) {
     return next(
       new ApiException({
-        message: 'Student Anouncement listing failed',
+        message: 'Student Announcement listing failed',
         devMsg: error instanceof Error ? error.message : null,
         statuscode: 400,
       })
@@ -156,19 +156,19 @@ export const getAllForStudents = async (
   }
 };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const generateAnouncementUrls = async (anouncements: any[]) => {
-  const anouncementsWithUrls: object[] = [];
-  for (let index = 0; index < anouncements.length; index++) {
-    const imageName = await anouncements[index].getImageUrl();
-    const multipleImages = await anouncements[index].getMultipleImageUrls();
+const generateAnnouncementUrls = async (announcements: any[]) => {
+  const announcementsWithUrls: object[] = [];
+  for (let index = 0; index < announcements.length; index++) {
+    const imageName = await announcements[index].getImageUrl();
+    const multipleImages = await announcements[index].getMultipleImageUrls();
 
-    anouncementsWithUrls.push({
-      ...anouncements[index].toObject(),
+    announcementsWithUrls.push({
+      ...announcements[index].toObject(),
       imageName,
       multipleImages,
     });
   }
-  return anouncementsWithUrls;
+  return announcementsWithUrls;
 };
 export const getAllForTeachers = async (
   req: Request,
@@ -176,17 +176,17 @@ export const getAllForTeachers = async (
   next: NextFunction
 ) => {
   try {
-    const _anouncements = await anouncementServices.listAllWithForTeachers(
+    const _announcements = await announcementServices.listAllWithForTeachers(
       req.query.teacherId as string,
-      req.query.showAnouncementsCreatedByMe === 'true'
+      req.query.showAnnouncementsCreatedByMe === 'true'
     );
-    const anouncementsWithUrls = await generateAnouncementUrls(_anouncements);
+    const announcementsWithUrls = await generateAnnouncementUrls(_announcements);
 
-    res.send(successResponse(anouncementsWithUrls));
+    res.send(successResponse(announcementsWithUrls));
   } catch (error) {
     return next(
       new ApiException({
-        message: 'Student Anouncement listing failed',
+        message: 'Student Announcement listing failed',
         devMsg: error instanceof Error ? error.message : null,
         statuscode: 400,
       })
@@ -200,15 +200,15 @@ export const findById = async (
   next: NextFunction
 ) => {
   try {
-    const _anouncement = await anouncementServices.findById(
-      req.params.anouncementId
+    const _announcement = await announcementServices.findById(
+      req.params.announcementId
     );
-    if (!_anouncement) throw Error('Anouncement not found');
-    res.send(successResponse(_anouncement));
+    if (!_announcement) throw Error('Announcement not found');
+    res.send(successResponse(_announcement));
   } catch (error) {
     return next(
       new ApiException({
-        message: 'Error in finding Anouncement',
+        message: 'Error in finding Announcement',
         devMsg: error instanceof Error ? error.message : null,
         statuscode: 400,
       })
@@ -221,51 +221,51 @@ export const deleteById = async (
   next: NextFunction
 ) => {
   try {
-    const _anouncement = await anouncementServices.deleteById(
-      req.params.anouncementId
+    const _announcement = await announcementServices.deleteById(
+      req.params.announcementId
     );
-    if (!_anouncement) throw Error('Anouncement not found');
+    if (!_announcement) throw Error('Announcement not found');
 
-    if (_anouncement?.imageName) {
+    if (_announcement?.imageName) {
       await s3Services.deleteFileFromS3(
-        `anouncements/${_anouncement?.imageName}`
+        `announcements/${_announcement?.imageName}`
       );
     }
 
-    if (_anouncement?.multipleImages) {
+    if (_announcement?.multipleImages) {
       for (
         let index = 0;
-        index < _anouncement?.multipleImages.length;
+        index < _announcement?.multipleImages.length;
         index++
       ) {
         await s3Services.deleteFileFromS3(
-          `anouncements/${_anouncement?.multipleImages[index]}`
+          `announcements/${_announcement?.multipleImages[index]}`
         );
       }
     }
-    res.send(successResponse(_anouncement));
+    res.send(successResponse(_announcement));
   } catch (error) {
     return next(
       new ApiException({
-        message: 'Error in deleting Anouncement',
+        message: 'Error in deleting Announcement',
         devMsg: error instanceof Error ? error.message : null,
         statuscode: 400,
       })
     );
   }
 };
-const _validateAnouncementImageFiles = (req: Request) => {
+const _validateAnnouncementImageFiles = (req: Request) => {
   const multerFiles = multerServices.convertListOfFilesToObjectWithKeyValues(
     req.files as Express.Multer.File[]
-  ) as I_AnouncementFormDataFiles;
+  ) as I_AnnouncementFormDataFiles;
 
   if (!multerFiles) throw new Error('[ multerFiles ] is Empty');
-  if (req.body.anouncementLayoutType == AnouncementLayoutType.imageWithText) {
+  if (req.body.announcementLayoutType == AnnouncementLayoutType.imageWithText) {
     if (multerFiles.imageFile == null)
       throw Error('[ imageFile ] filed is required');
   }
   if (
-    req.body.anouncementLayoutType == AnouncementLayoutType.multiImageWithText
+    req.body.announcementLayoutType == AnnouncementLayoutType.multiImageWithText
   ) {
     if (
       multerFiles.multipleFiles == null ||
@@ -276,7 +276,7 @@ const _validateAnouncementImageFiles = (req: Request) => {
 };
 const _generateFileName = (fileName: string) => `${uuid()}-${fileName}`;
 
-const _uploadAnouncementImagesToS3 = async (
+const _uploadAnnouncementImagesToS3 = async (
   imageFile: Express.Multer.File | undefined
 ): Promise<string> => {
   const fileName = _generateFileName(imageFile?.originalname as string);
@@ -304,4 +304,4 @@ const _resizeImage = (imageFile: Express.Multer.File | undefined) => {
     .toBuffer();
 };
 
-export * as anouncementController from './announcement.controller';
+export * as announcementController from './announcement.controller';

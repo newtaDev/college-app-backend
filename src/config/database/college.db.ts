@@ -1,5 +1,5 @@
 import { Attendance } from '../../modules/attendance/attendance.model';
-import { Anouncement } from '../../modules/announcement/announcement.model';
+import { Announcement } from '../../modules/announcement/announcement.model';
 import { Class } from '../../modules/class/class.model';
 import { College } from '../../modules/college/college.model';
 import { Course } from '../../modules/course/course.model';
@@ -24,5 +24,5 @@ export const collegeDb = {
   Subject,
   ClassTimeTable,
   Attendance,
-  Anouncement,
+   Announcement,
 };

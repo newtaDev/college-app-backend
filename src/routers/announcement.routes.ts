@@ -2,38 +2,38 @@ import { Router } from 'express';
 import { validateSchemaMiddleware } from '../middlewares/validation_middleware';
 import { authMiddleware } from '../middlewares/auth_middleware';
 import I_BaseRouter from './routes';
-import { anouncementController } from '../modules/announcement/announcement.controller';
-import { anouncementValidator } from '../modules/announcement/announcement.validator';
+import { announcementController } from '../modules/announcement/announcement.controller';
+import { announcementValidator } from '../modules/announcement/announcement.validator';
 import { multerServices } from '../shared/services/multer_services';
 
-export class AnouncementRouter implements I_BaseRouter {
+export class AnnouncementRouter implements I_BaseRouter {
   constructor() {
     this.router = Router();
     this.initRoutes();
   }
-  path = '/anouncements';
+  path = '/announcements';
   router: Router;
   private initRoutes(): void {
-    this.router.get(this.path, authMiddleware(), anouncementController.getAll);
+    this.router.get(this.path, authMiddleware(), announcementController.getAll);
     this.router.get(
       `${this.path}/students`,
       [
         authMiddleware(),
         validateSchemaMiddleware({
-          query: anouncementValidator.validateListAllForStudentQuery,
+          query: announcementValidator.validateListAllForStudentQuery,
         }),
       ],
-      anouncementController.getAllForStudents
+      announcementController.getAllForStudents
     );
     this.router.get(
       `${this.path}/teachers`,
       [
         authMiddleware(),
         validateSchemaMiddleware({
-          query: anouncementValidator.validateListAllForTeacherQuery,
+          query: announcementValidator.validateListAllForTeacherQuery,
         }),
       ],
-      anouncementController.getAllForTeachers
+      announcementController.getAllForTeachers
     );
     this.router.post(
       this.path,
@@ -41,41 +41,41 @@ export class AnouncementRouter implements I_BaseRouter {
         authMiddleware(),
         multerServices.multerClient().any(),
         validateSchemaMiddleware({
-          body: anouncementValidator.validateCreateBody,
-          formDataFiles: anouncementValidator.validateCreateFormData,
+          body: announcementValidator.validateCreateBody,
+          formDataFiles: announcementValidator.validateCreateFormData,
         }),
       ],
-      anouncementController.create
+      announcementController.create
     );
     this.router.get(
-      `${this.path}/:anouncementId`,
+      `${this.path}/:announcementId`,
       [
         authMiddleware(),
         validateSchemaMiddleware({
-          params: anouncementValidator.validateAnouncementIdParam,
+          params: announcementValidator.validateAnnouncementIdParam,
         }),
       ],
-      anouncementController.findById
+      announcementController.findById
     );
     this.router.put(
-      `${this.path}/:anouncementId`,
+      `${this.path}/:announcementId`,
       [
         authMiddleware(),
         validateSchemaMiddleware({
-          params: anouncementValidator.validateAnouncementIdParam,
+          params: announcementValidator.validateAnnouncementIdParam,
         }),
       ],
-      anouncementController.updateById
+      announcementController.updateById
     );
     this.router.delete(
-      `${this.path}/:anouncementId`,
+      `${this.path}/:announcementId`,
       [
         authMiddleware(),
         validateSchemaMiddleware({
-          params: anouncementValidator.validateAnouncementIdParam,
+          params: announcementValidator.validateAnnouncementIdParam,
         }),
       ],
-      anouncementController.deleteById
+      announcementController.deleteById
     );
   }
 }

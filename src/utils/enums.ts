@@ -26,7 +26,7 @@ export enum AnounceTo {
   staffs = 'STAFFS',
   students = 'STUDENTS',
 }
-export enum AnouncementLayoutType {
+export enum AnnouncementLayoutType {
   imageWithText = 'IMAGE_WITH_TEXT',
   multiImageWithText = 'MULTI_IMAGE_WITH_TEXT',
   onlyText = 'ONLY_TEXT',

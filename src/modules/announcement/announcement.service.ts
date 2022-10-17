@@ -1,13 +1,13 @@
 import { FilterQuery, UpdateQuery } from 'mongoose';
 import { collegeDb } from '../../config/database/college.db';
 import { AnounceTo } from '../../utils/enums';
-import { I_Anouncement } from './announcement.model';
+import { I_Announcement } from './announcement.model';
 
-export const create = (params: I_Anouncement) =>
-  collegeDb.Anouncement.create(params);
+export const create = (params: I_Announcement) =>
+  collegeDb.Announcement.create(params);
 
 export const listAll = () =>
-  collegeDb.Anouncement.find()
+  collegeDb.Announcement.find()
     .sort({ createdAt: -1 })
     .populate(['createdBy.userId', 'lastModifiedBy.userId']);
 
@@ -16,13 +16,13 @@ export const listAllWithForStudents = (
   showMyClassesOnly: boolean
 ) => {
   if (showMyClassesOnly) {
-    return collegeDb.Anouncement.find({
+    return collegeDb.Announcement.find({
       anounceToClassIds: { $elemMatch: { $eq: anounceToClassIds } },
     })
       .sort({ createdAt: -1 })
       .populate(['createdBy.userId', 'lastModifiedBy.userId']);
   }
-  return collegeDb.Anouncement.find({
+  return collegeDb.Announcement.find({
     $or: [
       { anounceTo: AnounceTo.all },
       { anounceToClassIds: { $elemMatch: { $eq: anounceToClassIds } } },
@@ -34,16 +34,16 @@ export const listAllWithForStudents = (
 
 export const listAllWithForTeachers = (
   teacherId: string,
-  showAnouncementsCreatedByMe: boolean
+  showAnnouncementsCreatedByMe: boolean
 ) => {
-  if (showAnouncementsCreatedByMe) {
-    return collegeDb.Anouncement.find({ 'createdBy.userId': teacherId })
+  if (showAnnouncementsCreatedByMe) {
+    return collegeDb.Announcement.find({ 'createdBy.userId': teacherId })
       .sort({
         createdAt: -1,
       })
       .populate(['createdBy.userId', 'lastModifiedBy.userId']);
   }
-  return collegeDb.Anouncement.find({
+  return collegeDb.Announcement.find({
     $or: [
       { anounceTo: AnounceTo.teachers },
       { anounceTo: AnounceTo.all },
@@ -54,30 +54,30 @@ export const listAllWithForTeachers = (
     .populate(['createdBy.userId', 'lastModifiedBy.userId']);
 };
 
-export const findById = (anouncementId: string) =>
-  collegeDb.Anouncement.findById(anouncementId).populate([
+export const findById = (announcementId: string) =>
+  collegeDb.Announcement.findById(announcementId).populate([
     'createdBy.userId',
     'lastModifiedBy.userId',
   ]);
 
 export const updateById = (
-  anouncementId: string,
-  updatedData: UpdateQuery<I_Anouncement>
+  announcementId: string,
+  updatedData: UpdateQuery<I_Announcement>
 ) =>
-  collegeDb.Anouncement.findByIdAndUpdate(anouncementId, updatedData, {
+  collegeDb.Announcement.findByIdAndUpdate(announcementId, updatedData, {
     new: true,
   });
 
-export const findOne = (query: FilterQuery<I_Anouncement>) =>
-  collegeDb.Anouncement.findOne(query).populate([
+export const findOne = (query: FilterQuery<I_Announcement>) =>
+  collegeDb.Announcement.findOne(query).populate([
     'createdBy.userId',
     'lastModifiedBy.userId',
   ]);
 
-export const deleteById = (anouncementId: string) =>
-  collegeDb.Anouncement.findByIdAndDelete(anouncementId).populate([
+export const deleteById = (announcementId: string) =>
+  collegeDb.Announcement.findByIdAndDelete(announcementId).populate([
     'createdBy.userId',
     'lastModifiedBy.userId',
   ]);
 
-export * as anouncementServices from './announcement.service';
+export * as announcementServices from './announcement.service';
