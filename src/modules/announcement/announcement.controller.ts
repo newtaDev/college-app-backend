@@ -7,7 +7,7 @@ import { announcementServices } from './announcement.service';
 import { v4 as uuid } from 'uuid';
 import { multerServices } from '../../shared/services/multer_services';
 import { I_AnnouncementFormDataFiles } from './announcement.model';
-import { Validators } from '../../shared/validators/validators';
+
 import {
   I_CreatedBy,
   I_LastModifiedBy,
@@ -30,26 +30,24 @@ export const create = async (
     // validate
     _validateAnnouncementImageFiles(req);
     // single
-    if (req.body.announcementLayoutType == AnnouncementLayoutType.imageWithText) {
+    if (
+      req.body.announcementLayoutType == AnnouncementLayoutType.imageWithText
+    ) {
       const fileName = await _uploadAnnouncementImagesToS3(
-        multerFiles.imageFile
+        multerFiles.imageFile?.at(0)
       );
-      createAnnouncementBody = { ...createAnnouncementBody, imageName: fileName };
+      createAnnouncementBody = {
+        ...createAnnouncementBody,
+        imageName: fileName,
+      };
     }
     // multiple
     if (
-      req.body.announcementLayoutType == AnnouncementLayoutType.multiImageWithText
+      req.body.announcementLayoutType ==
+      AnnouncementLayoutType.multiImageWithText
     ) {
       const imageFileNames: string[] = [];
-      /// if we send one file in [multipleFiles] then some issues is caused
-      /// To solve single file issue in list
-      let _multipleFiles = multerFiles.multipleFiles as Express.Multer.File[];
-      if (_multipleFiles.length == undefined) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        await Validators.isValidImage(multerFiles.multipleFiles as any);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        _multipleFiles = [multerFiles.multipleFiles as any];
-      }
+      const _multipleFiles = multerFiles.multipleFiles as Express.Multer.File[];
 
       for (let index = 0; index < _multipleFiles.length; index++) {
         const _fileName = await _uploadAnnouncementImagesToS3(
@@ -119,7 +117,9 @@ export const getAll = async (
 ) => {
   try {
     const _announcements = await announcementServices.listAll();
-    const announcementsWithUrls = await generateAnnouncementUrls(_announcements);
+    const announcementsWithUrls = await generateAnnouncementUrls(
+      _announcements
+    );
     res.send(successResponse(announcementsWithUrls));
   } catch (error) {
     return next(
@@ -142,7 +142,9 @@ export const getAllForStudents = async (
       req.query.anounceToClassId as string,
       req.query.showMyClassesOnly === 'true'
     );
-    const announcementsWithUrls = await generateAnnouncementUrls(_announcements);
+    const announcementsWithUrls = await generateAnnouncementUrls(
+      _announcements
+    );
 
     res.send(successResponse(announcementsWithUrls));
   } catch (error) {
@@ -180,7 +182,9 @@ export const getAllForTeachers = async (
       req.query.teacherId as string,
       req.query.showAnnouncementsCreatedByMe === 'true'
     );
-    const announcementsWithUrls = await generateAnnouncementUrls(_announcements);
+    const announcementsWithUrls = await generateAnnouncementUrls(
+      _announcements
+    );
 
     res.send(successResponse(announcementsWithUrls));
   } catch (error) {
@@ -261,7 +265,7 @@ const _validateAnnouncementImageFiles = (req: Request) => {
 
   if (!multerFiles) throw new Error('[ multerFiles ] is Empty');
   if (req.body.announcementLayoutType == AnnouncementLayoutType.imageWithText) {
-    if (multerFiles.imageFile == null)
+    if (multerFiles.imageFile?.at(0) == null)
       throw Error('[ imageFile ] filed is required');
   }
   if (

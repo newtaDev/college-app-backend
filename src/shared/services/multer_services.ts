@@ -15,7 +15,7 @@ const arr = [
         name: 'aaa'
     },
     {
-        sid: 456,
+        sid: 123,
         name: 'bbb'
     },
     {
@@ -26,9 +26,13 @@ const arr = [
 
 * to:
 {
-  '123': { sid: 123, name: 'aaa' },
-  '456': { sid: 456, name: 'bbb' },
-  '789': { sid: 789, name: 'ccc' }
+  '123':[
+          { sid: 123, name: 'aaa' },
+          { sid: 123, name: 'bbb' }
+        ]
+  '789': [
+    { sid: 789, name: 'ccc' }
+  ]
 }
 * use
 const result = arr.reduce((obj, cur) => ({...obj, [cur.sid]: cur}), {})
@@ -42,21 +46,21 @@ export const convertListOfFilesToObjectWithKeyValues = (
       /// if [key] aldready exists then pushs existing item to its [key]
       if (cur.fieldname in initialAndPreviousObj) {
         const matchedItem = initialAndPreviousObj[cur.fieldname];
-        if (Array.isArray(matchedItem)) {
-          return {
-            ...initialAndPreviousObj,
-            [cur.fieldname]: [...matchedItem, cur],
-          };
-        } else {
-          return {
-            ...initialAndPreviousObj,
-            [cur.fieldname]: [matchedItem, cur],
-          };
-        }
+        // if (Array.isArray(matchedItem)) {
+        return {
+          ...initialAndPreviousObj,
+          [cur.fieldname]: [...matchedItem, cur],
+        };
+        //   } else {
+        //     return {
+        //       ...initialAndPreviousObj,
+        //       [cur.fieldname]: [matchedItem, cur],
+        //     };
+        //   }
       }
       return {
         ...initialAndPreviousObj,
-        [cur.fieldname]: cur,
+        [cur.fieldname]: [cur],
       };
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

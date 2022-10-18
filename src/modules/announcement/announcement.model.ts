@@ -22,7 +22,7 @@ export interface I_Announcement {
 }
 
 export interface I_AnnouncementFormDataFiles {
-  imageFile?: Express.Multer.File;
+  imageFile?: Express.Multer.File[];
   multipleFiles?: Express.Multer.File[];
 }
 
