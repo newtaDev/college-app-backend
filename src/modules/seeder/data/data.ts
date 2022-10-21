@@ -6,7 +6,7 @@ import { I_College } from '../../college/college.model';
 import { I_Course } from '../../course/course.model';
 import { I_Subject } from '../../subject/subject.model';
 import { I_ClassTimeTable } from '../../time_table/class_time_table/class_time_table.model';
-import { I_Faculty } from '../../user/faculty.model';
+import { I_Faculty } from '../../user/faculty/faculty.model';
 import { I_Student } from '../../user/student/student.model';
 import { I_Teacher } from '../../user/teacher/teacher.model';
 import { collegeIds } from './ids';

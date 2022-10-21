@@ -8,8 +8,8 @@ import {
 } from '../../../shared/services/jwt/jwt_interfaces';
 import { authService } from './auth.service';
 import { omit } from 'lodash';
-import { I_Faculty } from '../faculty.model';
-import { I_Admin } from '../admin.model';
+import { I_Faculty } from '../faculty/faculty.model';
+import { I_Admin } from '../admin/admin.model';
 import { I_Student } from '../student/student.model';
 import { I_Teacher } from '../teacher/teacher.model';
 import { adminUsersList } from '../../../utils/roles';
@@ -19,6 +19,7 @@ import { resetPassswordTemplate } from '../../../shared/templates/reset_password
 import { jwtServices } from '../../../shared/services/jwt/jwt_services';
 import { emailServices } from '../../../shared/services/email.services';
 import { JwtPayload, TokenExpiredError } from 'jsonwebtoken';
+import { userService } from '../user.service';
 /// Login
 export const loginUser = async (
   req: Request,
@@ -40,7 +41,7 @@ export const loginUser = async (
       .includes(true);
 
     /// Get all details of user
-    const _user = await authService.getUserDetailsById(
+    const _user = await userService.getUserDetailsById(
       _userLoginData._id.toString(),
       userType
     );
@@ -63,29 +64,6 @@ export const loginUser = async (
         user: _user,
       })
     );
-  } catch (error) {
-    return next(
-      new ApiException({
-        message: 'Login failed',
-        devMsg: error instanceof Error ? error.message : null,
-        statuscode: 400,
-      })
-    );
-  }
-};
-export const getUserDetailsFromToken = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    if (!req.user) throw Error('No Token Payload found');
-    const _id = req.user.id;
-    const _userType = req.user.userType;
-    const _user = await authService.getUserDetailsById(_id, _userType);
-    if (!_user) throw Error(`${_userType} not found`);
-    // snd response
-    res.send(successResponse(_user));
   } catch (error) {
     return next(
       new ApiException({
@@ -262,7 +240,7 @@ export const checkUserExists = async (
   next: NextFunction
 ) => {
   try {
-    const _user = await authService.getUserWithQuery(req.query);
+    const _user = await userService.getUserWithQuery(req.query);
 
     if (_user)
       return next(
@@ -282,38 +260,7 @@ export const checkUserExists = async (
     );
   }
 };
-export const changePassword = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const _oldPassword = req.body.oldPassword;
-    const _newPassword = req.body.newPassword;
-    const userId = req.user.id;
-    const userType = req.user.userType;
 
-    /// login and validate with password
-    const _user = await authService.loginUser({ userId, userType });
-    if (!_user) throw Error(`${userType} not found`);
-    if (!(await _user.isPasswordValid(_oldPassword)))
-      throw new Error("password doesn't match");
-    await authService.resetNewPassword(
-      _user._id.toString(),
-      userType,
-      _newPassword
-    );
-    return res.status(200).send(successResponse());
-  } catch (error) {
-    return next(
-      new ApiException({
-        message: 'Change password failed',
-        devMsg: error instanceof Error ? error.message : null,
-        statuscode: 400,
-      })
-    );
-  }
-};
 export const forgotPassword = async (
   req: Request,
   res: Response,
@@ -322,7 +269,7 @@ export const forgotPassword = async (
   try {
     const email = req.query.email as string;
     // verify user
-    const _user = await authService.getUserWithQuery({ email: email });
+    const _user = await userService.getUserWithQuery({ email: email });
     if (!_user) throw new Error('User not found');
     // generate and hash OTP
     const generatedOtp = Math.floor(1000 + Math.random() * 9000);
@@ -370,7 +317,7 @@ export const resetPassword = async (
       throw new Error('Invalid otp');
     }
     // check user
-    const _user = await authService.getUserDetailsById(
+    const _user = await userService.getUserDetailsById(
       otpPayolad.userId,
       otpPayolad.userType
     );

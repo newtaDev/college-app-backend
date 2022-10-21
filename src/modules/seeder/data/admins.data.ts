@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 import { UserType } from '../../../utils/enums';
-import { I_Admin } from '../../user/admin.model';
+import { I_Admin } from '../../user/admin/admin.model';
 import { adminIds, superAdminIds } from './ids';
 
 export const importSuperAdminsData: (I_Admin & {

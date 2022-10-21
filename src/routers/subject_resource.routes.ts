@@ -7,7 +7,7 @@ import { subjectPostController } from '../modules/subject_resource/subject_resou
 import { subjectPostValidator } from '../modules/subject_resource/subject_resource.validator';
 import { fileServices } from '../shared/services/file.services';
 
-export class SubjectResourceRoutes implements I_BaseRouter {
+export class SubjectResourceRouter implements I_BaseRouter {
   constructor() {
     this.router = Router();
     this.initRoutes();

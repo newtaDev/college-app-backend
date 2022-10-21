@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { authMiddleware } from '../../middlewares/auth_middleware';
 import { validateSchemaMiddleware } from '../../middlewares/validation_middleware';
 import { authController } from '../../modules/user/auth/auth.controller';
 import { authValidator } from '../../modules/user/auth/auth.validator';
@@ -10,7 +9,7 @@ export class AuthRouter implements I_BaseRouter {
     this.router = Router();
     this.initRoutes();
   }
-  path = '/user';
+  path = '/user/auth';
   router: Router;
   private initRoutes(): void {
     /// Login routes
@@ -18,13 +17,6 @@ export class AuthRouter implements I_BaseRouter {
       `${this.path}/login`,
       validateSchemaMiddleware({ body: authValidator.validateUserLogin }),
       authController.loginUser
-    );
-
-    /// Loged in User details from token
-    this.router.get(
-      `${this.path}/details`,
-      authMiddleware(),
-      authController.getUserDetailsFromToken
     );
 
     /// registration routes
@@ -57,16 +49,6 @@ export class AuthRouter implements I_BaseRouter {
       authController.registerAsAdmin
     );
 
-    this.router.post(
-      `${this.path}/changePassword`,
-      [
-        authMiddleware(),
-        validateSchemaMiddleware({
-          body: authValidator.validateChangePasswordBody,
-        }),
-      ],
-      authController.changePassword
-    );
     this.router.get(
       `${this.path}/forgotPassword`,
       validateSchemaMiddleware({

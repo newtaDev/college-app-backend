@@ -2,8 +2,8 @@ import Joi from 'joi';
 import { UserType } from '../../../utils/enums';
 import { joiObject } from '../../../shared/helpers/joi.helper';
 import { Validators } from '../../../shared/validators/validators';
-import { I_Admin } from '../admin.model';
-import { I_Faculty } from '../faculty.model';
+import { I_Admin } from '../admin/admin.model';
+import { I_Faculty } from '../faculty/faculty.model';
 import { I_Student } from '../student/student.model';
 import { I_Teacher } from '../teacher/teacher.model';
 export const validateTeacherRegistration = joiObject<I_Teacher>({

@@ -1,10 +1,10 @@
 import mongoose, { Model, Schema, Types, ValidatorProps } from 'mongoose';
 import bcrypt from 'bcrypt';
-import { UserType } from '../../utils/enums';
-import { facultyUsersList, FacultyUserTypes } from '../../utils/roles';
-import { docHooks, queryHooks } from '../../utils/mongoose';
-import logger from '../../utils/logger';
-import { Validators } from '../../shared/validators/validators';
+import { UserType } from '../../../utils/enums';
+import { facultyUsersList, FacultyUserTypes } from '../../../utils/roles';
+import { docHooks, queryHooks } from '../../../utils/mongoose';
+import logger from '../../../utils/logger';
+import { Validators } from '../../../shared/validators/validators';
 
 export interface I_Faculty {
   name: string;
