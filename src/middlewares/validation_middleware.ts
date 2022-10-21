@@ -2,7 +2,7 @@ import { Response, Request, NextFunction } from 'express';
 import Joi, { ValidationError } from 'joi';
 import { ApiException } from '../shared/exceptions/api_exceptions';
 import { I_RequestValidator } from '../shared/interfaces/validation_interfaces';
-import { multerServices } from '../shared/services/multer_services';
+import { fileServices } from '../shared/services/file.services';
 
 export const validateSchemaMiddleware =
   ({ body, params, query, formDataFiles, formDataFile }: I_RequestValidator) =>
@@ -21,7 +21,7 @@ export const validateSchemaMiddleware =
 
       schemaType = '[ Form Data Files ] ';
       const multerFiles =
-        multerServices.convertListOfFilesToObjectWithKeyValues(
+        fileServices.convertListOfFilesToObjectWithKeyValues(
           (req.files || []) as Express.Multer.File[]
         );
 

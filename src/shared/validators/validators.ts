@@ -1,6 +1,7 @@
 import { isValidMongoId } from './mongoose.validators';
 import Joi from 'joi';
 import { joiObject } from '../helpers/joi.helper';
+import { fileServices } from '../services/file.services';
 
 // contains basic validations
 export class Validators {
@@ -72,9 +73,21 @@ export class Validators {
     });
   }
   static validImage() {
-    const imageFormats = ['image/jpeg', 'image/png', 'image/webp'];
     return joiObject({
-      mimetype: Joi.string().valid(...Object.values(imageFormats)),
+      mimetype: Joi.string().valid(
+        ...Object.values(fileServices.imgFileFormats)
+      ),
+    }).unknown();
+  }
+  static validFile() {
+    const acceptedFormats = [
+      ...fileServices.imgFileFormats,
+      ...fileServices.docFileFormats,
+      ...fileServices.audioFileFormats,
+      ...fileServices.videoFileFormats,
+    ];
+    return joiObject({
+      mimetype: Joi.string().valid(...Object.values(acceptedFormats)),
     }).unknown();
   }
   static isValidImage(file: Express.Multer.File) {

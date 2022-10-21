@@ -12,7 +12,7 @@ type TeacherDoc =
 
 export const generateWithAssignedSubjects = async (teacherDoc: TeacherDoc) => {
   if (teacherDoc) {
-    const assignedSubjects = await subjectService.findAssignedSubjectsOfTeacher(
+    const assignedSubjects = await subjectService.getAssignedSubjectsOfTeacher(
       teacherDoc._id.toString()
     );
     const _teacher = {
@@ -36,7 +36,7 @@ export const listAll = async (query?: FilterQuery<I_Teacher>) => {
   for (let index = 0; index < teachers.length; index++) {
     if (teachers[index]) {
       const assignedSubjects =
-        await subjectService.findAssignedSubjectsOfTeacher(
+        await subjectService.getAssignedSubjectsOfTeacher(
           teachers[index]._id.toString()
         );
       const _doc = {

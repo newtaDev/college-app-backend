@@ -8,7 +8,8 @@ export class AppKeys {
   static port = process.env.PORT;
   static env = process.env.NODE_ENV;
   static aws_bucket_name = _Secrets.AWS_BUCKET_NAME;
-  static aws_s3_anouncemet_folder_name = 'announcements/';
+  static aws_s3_anouncemet_folder = 'announcements/';
+  static aws_s3_subject_resources_folder = 'subject_resources/';
   static aws_bucket_region = _Secrets.AWS_BUCKET_REGION;
   static aws_user_access_key = _Secrets.AWS_USER_ACCESS_KEY;
   static aws_user_secret_access_key = _Secrets.AWS_USER_SECRET_ACCESS_KEY;

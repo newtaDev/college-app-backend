@@ -4,6 +4,7 @@ import { AppKeys } from '../config/keys/app_keys';
 import { AnnouncementRouter } from './announcement.routes';
 import { AttendanceRouter } from './attendance.routes';
 import { ClassRouter } from './class.routes';
+import { SubjectResourceRoutes } from './subject_resource.routes';
 import { CollegeRouter } from './college.routes';
 import { CourseRouter } from './course.routes';
 import { SeederRouter } from './seeder.routes';
@@ -65,4 +66,5 @@ export const appRoutes = [
   new ClassTimeTableRouter(),
   new AttendanceRouter(),
   new AnnouncementRouter(),
+  new SubjectResourceRoutes(),
 ];

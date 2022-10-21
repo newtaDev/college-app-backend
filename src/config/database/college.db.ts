@@ -9,6 +9,7 @@ import { Admin } from '../../modules/user/admin.model';
 import { Faculty } from '../../modules/user/faculty.model';
 import { Student } from '../../modules/user/student/student.model';
 import { Teacher } from '../../modules/user/teacher/teacher.model';
+import { SubjectResource } from '../../modules/subject_resource/subject_resource.model';
 
 /// This will be the default db
 export const collegeDb = {
@@ -24,5 +25,6 @@ export const collegeDb = {
   Subject,
   ClassTimeTable,
   Attendance,
-   Announcement,
+  Announcement,
+  SubjectResource
 };

@@ -14,7 +14,7 @@ export const listAll = (query?: FilterQuery<I_Subject>) =>
 export const findById = (subjectId: string) =>
   collegeDb.Subject.findById(subjectId);
 
-export const findAssignedSubjectsOfTeacher = (teacherId: string) =>
+export const getAssignedSubjectsOfTeacher = (teacherId: string) =>
   collegeDb.Subject.find({ assignedTo: teacherId }).populate([
     'courseId',
     'classId',

@@ -4,8 +4,7 @@ import { successResponse } from '../../shared/interfaces/req_res_interfaces';
 import { s3Services } from '../../shared/services/aws/s3_services';
 import { AnnouncementLayoutType } from '../../utils/enums';
 import { announcementServices } from './announcement.service';
-import { v4 as uuid } from 'uuid';
-import { multerServices } from '../../shared/services/multer_services';
+import { fileServices } from '../../shared/services/file.services';
 import { I_AnnouncementFormDataFiles } from './announcement.model';
 
 import {
@@ -15,7 +14,6 @@ import {
 import { getModelNameFromUserType } from '../../shared/helpers/mongoose.helper';
 import { Types } from 'mongoose';
 import { AppKeys } from '../../config/keys/app_keys';
-import sharp from 'sharp';
 
 export const create = async (
   req: Request,
@@ -24,7 +22,7 @@ export const create = async (
 ) => {
   try {
     let createAnnouncementBody = req.body;
-    const multerFiles = multerServices.convertListOfFilesToObjectWithKeyValues(
+    const multerFiles = fileServices.convertListOfFilesToObjectWithKeyValues(
       req.files as Express.Multer.File[]
     ) as I_AnnouncementFormDataFiles;
     // validate
@@ -232,7 +230,7 @@ export const deleteById = async (
 
     if (_announcement?.imageName) {
       await s3Services.deleteFileFromS3(
-        `announcements/${_announcement?.imageName}`
+        `${AppKeys.aws_s3_anouncemet_folder}${_announcement?.imageName}`
       );
     }
 
@@ -243,7 +241,7 @@ export const deleteById = async (
         index++
       ) {
         await s3Services.deleteFileFromS3(
-          `announcements/${_announcement?.multipleImages[index]}`
+          `${AppKeys.aws_s3_anouncemet_folder}${_announcement?.multipleImages[index]}`
         );
       }
     }
@@ -259,7 +257,7 @@ export const deleteById = async (
   }
 };
 const _validateAnnouncementImageFiles = (req: Request) => {
-  const multerFiles = multerServices.convertListOfFilesToObjectWithKeyValues(
+  const multerFiles = fileServices.convertListOfFilesToObjectWithKeyValues(
     req.files as Express.Multer.File[]
   ) as I_AnnouncementFormDataFiles;
 
@@ -278,34 +276,21 @@ const _validateAnnouncementImageFiles = (req: Request) => {
       throw Error('[ multipleFiles ] filed is required');
   }
 };
-const _generateFileName = (fileName: string) => `${uuid()}-${fileName}`;
 
 const _uploadAnnouncementImagesToS3 = async (
   imageFile: Express.Multer.File | undefined
 ): Promise<string> => {
-  const fileName = _generateFileName(imageFile?.originalname as string);
+  const fileName = fileServices.generatedFileName(
+    imageFile?.originalname as string
+  );
   const contentType = imageFile?.mimetype as string;
-  const resizedImage = await _resizeImage(imageFile);
+  const resizedImage = await fileServices.resizeImage(imageFile);
   await s3Services.uploadFileToS3({
     file: resizedImage,
-    fileName: `${AppKeys.aws_s3_anouncemet_folder_name}${fileName}`,
+    fileName: `${AppKeys.aws_s3_anouncemet_folder}${fileName}`,
     contentType: contentType,
   });
   return fileName;
-};
-
-const _resizeImage = (imageFile: Express.Multer.File | undefined) => {
-  const sizeInMb = (imageFile?.size || 0) / (1024 * 1024);
-  let resizeImageQuality = 40;
-  if (sizeInMb >= 2) {
-    resizeImageQuality = 25;
-  }
-  return sharp(imageFile?.buffer)
-    .rotate()
-    .jpeg({ force: false, quality: resizeImageQuality })
-    .png({ force: false, quality: resizeImageQuality })
-    .webp({ force: false, quality: resizeImageQuality })
-    .toBuffer();
 };
 
 export * as announcementController from './announcement.controller';

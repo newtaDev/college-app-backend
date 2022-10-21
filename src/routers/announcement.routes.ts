@@ -4,7 +4,7 @@ import { authMiddleware } from '../middlewares/auth_middleware';
 import I_BaseRouter from './routes';
 import { announcementController } from '../modules/announcement/announcement.controller';
 import { announcementValidator } from '../modules/announcement/announcement.validator';
-import { multerServices } from '../shared/services/multer_services';
+import { fileServices } from '../shared/services/file.services';
 
 export class AnnouncementRouter implements I_BaseRouter {
   constructor() {
@@ -39,7 +39,7 @@ export class AnnouncementRouter implements I_BaseRouter {
       this.path,
       [
         authMiddleware(),
-        multerServices.multerClient().any(),
+        fileServices.multerClient().any(),
         validateSchemaMiddleware({
           body: announcementValidator.validateCreateBody,
           formDataFiles: announcementValidator.validateCreateFormData,

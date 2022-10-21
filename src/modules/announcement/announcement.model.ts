@@ -65,7 +65,7 @@ announcementSchema.methods.getImageUrl = function () {
   if (this.announcementLayoutType != AnnouncementLayoutType.imageWithText)
     return null;
   return s3Services.getSignedUrlOfFile(
-    `${AppKeys.aws_s3_anouncemet_folder_name}${this.imageName}`
+    `${AppKeys.aws_s3_anouncemet_folder}${this.imageName}`
   );
 };
 
@@ -80,7 +80,7 @@ announcementSchema.methods.getMultipleImageUrls = async function () {
   for (let index = 0; index < this.multipleImages.length; index++) {
     _multiImages.push(
       await s3Services.getSignedUrlOfFile(
-        `${AppKeys.aws_s3_anouncemet_folder_name}${this.multipleImages.at(
+        `${AppKeys.aws_s3_anouncemet_folder}${this.multipleImages.at(
           index
         )}`
       )
