@@ -15,6 +15,7 @@ export const docFileFormats = [
 export const imgFileFormats = ['image/jpeg', 'image/png', 'image/webp'];
 export const videoFileFormats = [
   'video/mp4', // .mp4
+  'video/quicktime', // .mov
 ];
 export const audioFileFormats = [
   'audio/x-wav', //.wav

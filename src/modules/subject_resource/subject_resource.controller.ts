@@ -196,11 +196,17 @@ export const findById = async (
   next: NextFunction
 ) => {
   try {
-    const _subjectResource = await subjectPostService.findById(req.params.resourceId);
+    const _subjectResource = await subjectPostService.findById(
+      req.params.resourceId
+    );
     if (!_subjectResource) throw Error('Subject resource not found');
     const attachments = (await _subjectResource?.getAllAttachmentUrls()) || [];
     const resData: I_SubjectResource = {
       ..._subjectResource.toObject(),
+      comments: _subjectResource.comments.sort(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (a, b) => (b as any).createdAt - (a as any).createdAt
+      ),
       attachments,
     };
     res.send(successResponse(resData));
@@ -220,7 +226,9 @@ export const deleteById = async (
   next: NextFunction
 ) => {
   try {
-    const _subjectResource = await subjectPostService.deleteById(req.params.resourceId);
+    const _subjectResource = await subjectPostService.deleteById(
+      req.params.resourceId
+    );
     if (!_subjectResource) throw Error('Subject resource not found');
     res.send(successResponse(_subjectResource));
   } catch (error) {

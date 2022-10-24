@@ -7,10 +7,9 @@ export const create = (params: I_SubjectResource) =>
 
 export const listAll = () => collegeDb.SubjectResource.find();
 export const getAllSubjectResources = (subjectId: string) =>
-  collegeDb.SubjectResource.find({ subjectId });
+  collegeDb.SubjectResource.find({ subjectId }).sort({ createdAt: -1 });
 
-export const findById = (id: string) => collegeDb.SubjectResource.findById(id);
-
+export const findById = (id: string) => collegeDb.SubjectResource.findById(id).populate('comments.userId');
 export const updateById = (
   id: string,
   updatedData: UpdateQuery<I_SubjectResource>
