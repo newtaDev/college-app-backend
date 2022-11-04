@@ -11,8 +11,6 @@ export const getProfileDetailsById = async (id: string, userType: UserType) => {
       return (await collegeDb.Admin.findById(id))?.toObject();
     case UserType.staff:
       return (await collegeDb.Faculty.findById(id))?.toObject();
-    case UserType.principal:
-      return (await collegeDb.Faculty.findById(id))?.toObject();
     case UserType.student:
       return (
         await collegeDb.Student.findById(id).populate([

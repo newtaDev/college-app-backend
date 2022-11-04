@@ -40,12 +40,6 @@ export const loginUser = (params: {
         ...(params.userId && { _id: params.userId }),
         userType: params.userType,
       }).select('password');
-    case UserType.principal:
-      return collegeDb.Faculty.findOne({
-        ...(params.email && { email: params.email }),
-        ...(params.userId && { _id: params.userId }),
-        userType: params.userType,
-      }).select('password');
     case UserType.student:
       return collegeDb.Student.findOne({
         ...(params.email && { email: params.email }),
@@ -73,8 +67,6 @@ export const resetNewPassword = (
     case UserType.superAdmin:
       return collegeDb.Admin.findOneAndUpdate({ _id: id }, updatedData);
     case UserType.staff:
-      return collegeDb.Faculty.findOneAndUpdate({ _id: id }, updatedData);
-    case UserType.principal:
       return collegeDb.Faculty.findOneAndUpdate({ _id: id }, updatedData);
     case UserType.student:
       return collegeDb.Student.findOneAndUpdate({ _id: id }, updatedData);

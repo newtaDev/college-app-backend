@@ -8,7 +8,6 @@ export const getModelNameFromUserType = (userType: UserType): string => {
     case UserType.admin:
     case UserType.superAdmin:
       return collegeDb.Admin.modelName;
-    case UserType.principal:
     case UserType.staff:
       return collegeDb.Faculty.modelName;
     case UserType.student:

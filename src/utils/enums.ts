@@ -4,8 +4,6 @@ export enum UserType {
   student = 'STUDENT',
 
   staff = 'STAFF',
-  principal = 'PRINCIPAL',
-
   admin = 'ADMIN',
   superAdmin = 'SUPER-ADMIN',
 }

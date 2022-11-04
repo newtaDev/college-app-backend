@@ -1,7 +1,7 @@
 import { UserType } from './enums';
 /// Auth
 export const adminUsersList = [UserType.admin, UserType.superAdmin] as const;
-export const facultyUsersList = [UserType.staff, UserType.principal] as const;
+export const facultyUsersList = [UserType.staff] as const;
 export const studentUsersList = [UserType.student] as const;
 export const teacherUsersList = [UserType.teacher] as const;
 
