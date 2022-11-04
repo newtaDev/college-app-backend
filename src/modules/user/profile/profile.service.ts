@@ -25,7 +25,7 @@ export const getProfileDetailsById = async (id: string, userType: UserType) => {
 
     case UserType.teacher: {
       const teacher = await collegeDb.Teacher.findById(id).populate([
-        'assignedClasses',
+        'accessibleClasses',
       ]);
       return teacherService.generateWithAssignedSubjects(teacher);
     }

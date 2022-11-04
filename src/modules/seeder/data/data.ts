@@ -21,7 +21,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
     )
     .flat(); // to merge two lists into one;
 
-  const randomAssignedClasses = randomCourseWithRandomClasses.map(
+  const randomAccessibleClasses = randomCourseWithRandomClasses.map(
     classes => classes._id
   );
 
@@ -133,7 +133,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
       password: 'Newta1234',
       collegeId: college._id,
       userType: UserType.teacher,
-      assignedClasses: randomAssignedClasses,
+      accessibleClasses: randomAccessibleClasses,
       dob: new Date('03-13-1988'),
       isTestData: true,
     })) as (I_Teacher & { _id: Types.ObjectId })[],

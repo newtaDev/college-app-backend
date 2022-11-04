@@ -33,7 +33,7 @@ const createTeacher1 = {
   password: 'Newta1234',
   collegeId: test_ids.collgeId1,
   userType: UserType.teacher,
-  assignedClasses: [],
+  accessibleClasses: [],
   dob: new Date('03-13-1988'),
 };
 export default {

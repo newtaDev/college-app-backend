@@ -78,13 +78,13 @@ export const findTeacherById = async (
   }
 };
 
-export const getAssignedClasses = async (
+export const getAccessibleClasses = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const _teacher = await teacherService.getAssignedClasses(req.user.id);
+    const _teacher = await teacherService.getAccessibleClasses(req.user.id);
     if (!_teacher) throw Error('Teacher not found');
     res.send(successResponse(_teacher));
   } catch (error) {

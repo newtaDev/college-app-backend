@@ -14,7 +14,7 @@ export interface I_Teacher {
   emoji?: string;
   bio?: string;
   collegeId: Types.ObjectId;
-  assignedClasses: Types.ObjectId[];
+  accessibleClasses: Types.ObjectId[];
   userType: TeacherUserTypes;
   phoneNumber?: number;
   currentAddress?: number;
@@ -54,7 +54,7 @@ export const teacherSchema = new Schema<
       default: UserType.teacher,
       required: true,
     },
-    assignedClasses: {
+    accessibleClasses: {
       type: [Schema.Types.ObjectId],
       default: [],
       required: true,

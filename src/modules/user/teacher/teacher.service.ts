@@ -30,7 +30,7 @@ export const create = async (params: I_Teacher) => {
 
 export const listAll = async (query?: FilterQuery<I_Teacher>) => {
   const teachers = await collegeDb.Teacher.find(query || {}).populate([
-    'assignedClasses',
+    'accessibleClasses',
   ]);
   const teachersList = [];
   for (let index = 0; index < teachers.length; index++) {
@@ -51,7 +51,7 @@ export const listAll = async (query?: FilterQuery<I_Teacher>) => {
 
 export const findById = async (teacherId: string) => {
   const teacher = await collegeDb.Teacher.findById(teacherId).populate([
-    'assignedClasses',
+    'accessibleClasses',
   ]);
   return generateWithAssignedSubjects(teacher);
 };
@@ -64,28 +64,28 @@ export const updateById = async (
     { _id: teacherId },
     updatedData,
     { new: true }
-  ).populate(['assignedClasses']);
+  ).populate(['accessibleClasses']);
   return generateWithAssignedSubjects(teacher);
 };
 
 export const findOne = async (query: FilterQuery<I_Teacher>) => {
   const teacher = await collegeDb.Teacher.findOne(query).populate([
-    'assignedClasses',
+    'accessibleClasses',
   ]);
   return generateWithAssignedSubjects(teacher);
 };
 
 export const deleteById = (teacherId: string) =>
-  collegeDb.Teacher.findByIdAndDelete(teacherId).populate(['assignedClasses']);
+  collegeDb.Teacher.findByIdAndDelete(teacherId).populate(['accessibleClasses']);
 
 export const getCountOfTeachers = (collegeId?: string) =>
   collegeDb.Teacher.find({ collegeId }).count();
 
-export const getAssignedClasses = async (teacherId: string) =>
+export const getAccessibleClasses = async (teacherId: string) =>
   (
     await collegeDb.Teacher.findById(teacherId).populate([
       {
-        path: 'assignedClasses',
+        path: 'accessibleClasses',
         populate: [
           'collegeId',
           'courseId',
@@ -93,8 +93,8 @@ export const getAssignedClasses = async (teacherId: string) =>
         ],
       },
     ])
-  )?.assignedClasses;
-// const getAssignedClasses = (teacherId: string) =>
+  )?.accessibleClasses;
+// const getAccessibleClasses = (teacherId: string) =>
 //   collegeDb.Teacher.aggregate([
 //     {
 //       $match: {
@@ -106,48 +106,48 @@ export const getAssignedClasses = async (teacherId: string) =>
 //     {
 //       $lookup: {
 //         from: 'classes', /// collection name
-//         localField: 'assignedClasses',
+//         localField: 'accessibleClasses',
 //         foreignField: '_id',
-//         as: 'assignedClasses',
+//         as: 'accessibleClasses',
 //       },
 //     },
 //     {
 //       $unwind: {
-//         path: '$assignedClasses',
+//         path: '$accessibleClasses',
 //       },
 //     },
 //     {
 //       $lookup: {
 //         from: 'colleges', /// collection name
-//         localField: 'assignedClasses.collegeId',
+//         localField: 'accessibleClasses.collegeId',
 //         foreignField: '_id',
-//         as: 'assignedClasses.collegeId',
+//         as: 'accessibleClasses.collegeId',
 //       },
 //     },
 //     {
 //       $lookup: {
 //         from: 'courses', /// collection name
-//         localField: 'assignedClasses.courseId',
+//         localField: 'accessibleClasses.courseId',
 //         foreignField: '_id',
-//         as: 'assignedClasses.courseId',
+//         as: 'accessibleClasses.courseId',
 //       },
 //     },
 //     {
 //       /// array will be overwritten to single object
 //       $addFields: {
-//         'assignedClasses.collegeId': {
-//           $arrayElemAt: ['$assignedClasses.collegeId', 0],
+//         'accessibleClasses.collegeId': {
+//           $arrayElemAt: ['$accessibleClasses.collegeId', 0],
 //         },
 
-//         'assignedClasses.courseId': {
-//           $arrayElemAt: ['$assignedClasses.courseId', 0],
+//         'accessibleClasses.courseId': {
+//           $arrayElemAt: ['$accessibleClasses.courseId', 0],
 //         },
 //       },
 //     },
 //     {
 //       $group: {
 //         _id: {
-//           _id: '$assignedClasses',
+//           _id: '$accessibleClasses',
 //         },
 //       },
 //     },

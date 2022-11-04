@@ -8,7 +8,7 @@ import {
   deleteTeacherById,
   findTeacherById,
   updateTeacherById,
-  getAssignedClasses,
+  getAccessibleClasses,
 } from '../../modules/user/teacher/teacher.controller';
 import {
   validateAllTeachersQuery,
@@ -32,9 +32,9 @@ export class TeacherRouter implements I_BaseRouter {
       getAllTeachers
     );
     this.router.get(
-      `${this.path}/assignedClasses`,
+      `${this.path}/accessibleClasses`,
       authMiddleware(),
-      getAssignedClasses
+      getAccessibleClasses
     );
     this.router.get(
       `${this.path}/:teacherId`,
