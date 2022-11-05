@@ -13,6 +13,7 @@ import {
 import {
   validateAllTeachersQuery,
   validateTeacherByIdParam,
+  validateUpdateteacherBody,
 } from '../../modules/user/teacher/teacher.validator';
 
 export class TeacherRouter implements I_BaseRouter {
@@ -50,6 +51,7 @@ export class TeacherRouter implements I_BaseRouter {
         authMiddleware(),
         validateSchemaMiddleware({
           params: validateTeacherByIdParam,
+          body: validateUpdateteacherBody,
         }),
       ],
       updateTeacherById

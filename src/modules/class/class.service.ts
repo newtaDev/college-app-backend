@@ -5,27 +5,33 @@ import { I_Class } from './class.model';
 const create = (params: I_Class) => collegeDb.Class.create(params);
 
 const listAll = (collegeId: string) => collegeDb.Class.find({ collegeId });
-const listAllWithDetails = (collegeId: string) =>
-  collegeDb.Class.find({ collegeId }).populate([
+const listAllWithDetails = (collegeId: string, query?: FilterQuery<I_Class>) =>
+  collegeDb.Class.find({ collegeId, ...(query || {}) }).populate([
+    'collegeId',
+    'courseId',
+    'assignedToId',
+  ]);
+const listAllWithDetailsQuery = ( query: FilterQuery<I_Class>) =>
+  collegeDb.Class.find(query).populate([
     'collegeId',
     'courseId',
     'assignedToId',
   ]);
 
 const findById = (classId: string, collegeId: string) =>
-  collegeDb.Class.findOne({_id:  classId, collegeId });
+  collegeDb.Class.findOne({ _id: classId, collegeId });
 
 const updateById = (
   classId: string,
   collegeId: string,
   updatedData: UpdateQuery<I_Class>
 ) =>
-  collegeDb.Class.findOneAndUpdate({_id:  classId, collegeId }, updatedData, {
+  collegeDb.Class.findOneAndUpdate({ _id: classId, collegeId }, updatedData, {
     new: true,
   });
 
 const deleteById = (classId: string, collegeId: string) =>
-  collegeDb.Class.findOneAndDelete({_id: classId, collegeId });
+  collegeDb.Class.findOneAndDelete({ _id: classId, collegeId });
 
 const findOne = (query: FilterQuery<I_Class>, collegeId: string) =>
   collegeDb.Class.findOne({ collegeId, ...query });
@@ -41,6 +47,7 @@ export default {
   create,
   listAll,
   listAllWithDetails,
+  listAllWithDetailsQuery,
   findById,
   findOne,
   updateById,

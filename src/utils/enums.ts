@@ -24,6 +24,11 @@ export enum AnounceTo {
   staffs = 'STAFFS',
   students = 'STUDENTS',
 }
+export enum AccessibleClassScope {
+  allClasses = 'ALL-CLASSES',
+  byAssignedSubjects = 'BY-ASSIGNED-SUBJECTS',
+  custom = 'CUSTOM',
+}
 export enum AnnouncementLayoutType {
   imageWithText = 'IMAGE_WITH_TEXT',
   multiImageWithText = 'MULTI_IMAGE_WITH_TEXT',

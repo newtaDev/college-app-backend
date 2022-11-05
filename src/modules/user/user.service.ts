@@ -24,7 +24,7 @@ export const getUserWithQuery = async (
   if (student) return student;
   const teacher = await collegeDb.Teacher.findOne(query);
   if (teacher)
-    return await teacherService.generateWithAssignedSubjects(teacher);
+    return await teacherService.generateWithAssignedSubjectsAndClasses(teacher);
   const faculty = await collegeDb.Faculty.findOne(query);
   if (faculty) return faculty;
   const admin = await collegeDb.Admin.findOne(query);
@@ -49,7 +49,7 @@ export const getUserDetailsById = async (id: string, userType: UserType) => {
       const teacher = await collegeDb.Teacher.findById(id).populate([
         'accessibleClasses',
       ]);
-      return teacherService.generateWithAssignedSubjects(teacher);
+      return teacherService.generateWithAssignedSubjectsAndClasses(teacher);
     }
   }
 };

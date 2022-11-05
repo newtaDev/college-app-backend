@@ -37,6 +37,8 @@ export const validateSchemaMiddleware =
           type: errorDetail.type,
         }));
       }
+      console.log(errorDetails);
+      
       return next(
         new ApiException({
           message: 'Validation failed',

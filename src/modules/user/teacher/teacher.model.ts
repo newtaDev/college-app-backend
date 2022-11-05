@@ -1,6 +1,6 @@
 import mongoose, { Model, Schema, Types, ValidatorProps } from 'mongoose';
 import bcrypt from 'bcrypt';
-import { UserType } from '../../../utils/enums';
+import { AccessibleClassScope, UserType } from '../../../utils/enums';
 import { teacherUsersList, TeacherUserTypes } from '../../../utils/roles';
 import { docHooks, queryHooks } from '../../../utils/mongoose';
 import logger from '../../../utils/logger';
@@ -14,6 +14,7 @@ export interface I_Teacher {
   emoji?: string;
   bio?: string;
   collegeId: Types.ObjectId;
+  accessibleClasseScope: AccessibleClassScope;
   accessibleClasses: Types.ObjectId[];
   userType: TeacherUserTypes;
   phoneNumber?: number;
@@ -52,6 +53,12 @@ export const teacherSchema = new Schema<
       type: String,
       enum: teacherUsersList,
       default: UserType.teacher,
+      required: true,
+    },
+    accessibleClasseScope: {
+      type: String,
+      enum: AccessibleClassScope,
+      default: AccessibleClassScope.byAssignedSubjects,
       required: true,
     },
     accessibleClasses: {

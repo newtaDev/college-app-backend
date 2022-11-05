@@ -1,5 +1,7 @@
 import { FilterQuery, UpdateQuery, Document, Types } from 'mongoose';
 import { collegeDb } from '../../../config/database/college.db';
+import { AccessibleClassScope } from '../../../utils/enums';
+import classService from '../../class/class.service';
 import { subjectService } from '../../subject/subject.service';
 import { I_Teacher, I_TeacherMethods } from './teacher.model';
 
@@ -10,22 +12,27 @@ type TeacherDoc =
       } & I_TeacherMethods)
   | null;
 
-export const generateWithAssignedSubjects = async (teacherDoc: TeacherDoc) => {
-  if (teacherDoc) {
-    const assignedSubjects = await subjectService.getAssignedSubjectsOfTeacher(
+export const generateWithAssignedSubjectsAndClasses = async (
+  teacherDoc: TeacherDoc
+) => {
+  if (!teacherDoc) return null;
+  const assignedSubjects =
+    (await subjectService.getAssignedSubjectsOfTeacher(
       teacherDoc._id.toString()
-    );
-    const _teacher = {
-      ...teacherDoc.toObject(),
-      assignedSubjects: assignedSubjects,
-    };
-    return _teacher;
-  }
-  return null;
+    )) || [];
+  const accessibleClasses = await getAccessibleClasses(
+    teacherDoc._id.toString()
+  );
+  const _teacher = {
+    ...teacherDoc.toObject(),
+    assignedSubjects: assignedSubjects,
+    accessibleClasses,
+  };
+  return _teacher;
 };
 export const create = async (params: I_Teacher) => {
   const teacher = await collegeDb.Teacher.create(params);
-  return generateWithAssignedSubjects(teacher);
+  return generateWithAssignedSubjectsAndClasses(teacher);
 };
 
 export const listAll = async (query?: FilterQuery<I_Teacher>) => {
@@ -53,7 +60,7 @@ export const findById = async (teacherId: string) => {
   const teacher = await collegeDb.Teacher.findById(teacherId).populate([
     'accessibleClasses',
   ]);
-  return generateWithAssignedSubjects(teacher);
+  return generateWithAssignedSubjectsAndClasses(teacher);
 };
 
 export const updateById = async (
@@ -65,35 +72,43 @@ export const updateById = async (
     updatedData,
     { new: true }
   ).populate(['accessibleClasses']);
-  return generateWithAssignedSubjects(teacher);
+  return generateWithAssignedSubjectsAndClasses(teacher);
 };
 
 export const findOne = async (query: FilterQuery<I_Teacher>) => {
   const teacher = await collegeDb.Teacher.findOne(query).populate([
     'accessibleClasses',
   ]);
-  return generateWithAssignedSubjects(teacher);
+  return generateWithAssignedSubjectsAndClasses(teacher);
 };
 
 export const deleteById = (teacherId: string) =>
-  collegeDb.Teacher.findByIdAndDelete(teacherId).populate(['accessibleClasses']);
+  collegeDb.Teacher.findByIdAndDelete(teacherId).populate([
+    'accessibleClasses',
+  ]);
 
 export const getCountOfTeachers = (collegeId?: string) =>
   collegeDb.Teacher.find({ collegeId }).count();
 
-export const getAccessibleClasses = async (teacherId: string) =>
-  (
+export const getAccessibleClasses = async (teacherId: string) => {
+  const teacher = await collegeDb.Teacher.findById(teacherId);
+  if (teacher?.accessibleClasseScope == AccessibleClassScope.allClasses) {
+    return await classService.listAllWithDetails(teacher.collegeId.toString());
+  }
+  if (
+    teacher?.accessibleClasseScope == AccessibleClassScope.byAssignedSubjects
+  ) {
+    return await subjectService.getAssignedClassesOfTecherInSubjects(teacherId);
+  }
+  return (
     await collegeDb.Teacher.findById(teacherId).populate([
       {
         path: 'accessibleClasses',
-        populate: [
-          'collegeId',
-          'courseId',
-          { path: 'assignedToId', select: '-password' },
-        ],
+        populate: ['collegeId', 'courseId', 'assignedToId'],
       },
     ])
   )?.accessibleClasses;
+};
 // const getAccessibleClasses = (teacherId: string) =>
 //   collegeDb.Teacher.aggregate([
 //     {
