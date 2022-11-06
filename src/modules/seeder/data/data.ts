@@ -146,6 +146,7 @@ export const importData = collegeIds.map((college, collegeIndex) => {
       collegeId: college._id,
       userType: UserType.staff,
       isTestData: true,
+      isProfileCompleted: true,
     })) as (I_Faculty & { _id: Types.ObjectId })[],
   };
 });

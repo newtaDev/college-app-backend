@@ -36,6 +36,7 @@ export const importAdminsData: (I_Admin & {
     password: 'Newta1234',
     userType: UserType.admin,
     isTestData: true,
+    isProfileCompleted: true,
   },
   {
     _id: adminIds[1],
@@ -45,5 +46,6 @@ export const importAdminsData: (I_Admin & {
     password: 'Newta1234',
     userType: UserType.admin,
     isTestData: true,
+    isProfileCompleted: true,
   },
 ];

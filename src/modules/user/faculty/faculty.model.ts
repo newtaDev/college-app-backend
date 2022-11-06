@@ -13,6 +13,7 @@ export interface I_Faculty {
   password: string;
   collegeId: Types.ObjectId;
   userType: FacultyUserTypes;
+  isProfileCompleted?: boolean;
   isTestData?: boolean;
 }
 interface I_FacultyMethods {
@@ -45,7 +46,8 @@ export const facultySchema = new Schema<
           `${props.value} is not valid username`,
       },
     },
-    password: { type: String, required: true,select:false },
+    password: { type: String, required: true, select: false },
+    isProfileCompleted: { type: Boolean, default: false },
     collegeId: {
       type: Schema.Types.ObjectId,
       required: true,

@@ -13,6 +13,7 @@ export interface I_Admin {
   username: string;
   userType: AdminUserTypes;
   collegeId?: Types.ObjectId;
+  isProfileCompleted?: boolean;
   password: string;
   isTestData?: boolean;
 }
@@ -43,6 +44,7 @@ export const adminSchema = new Schema<I_Admin, AdminModel, I_AdminMethods>(
           `${props.value} is not valid username`,
       },
     },
+    isProfileCompleted: { type: Boolean, default: false },
     password: { type: String, required: true, select: false },
     collegeId: { type: Schema.Types.ObjectId, ref: College },
     userType: {
